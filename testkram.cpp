@@ -162,27 +162,88 @@
 // }
 
 // enable_if example: two ways of using enable_if
-#include <iostream>
+// #include <iostream>
 
-#include "inc/utils/type_traits.hpp"
+// #include "inc/utils/type_traits.hpp"
 
-// 1. the return type (bool) is only valid if T is an integral type:
-template <class T>
-typename ft::enable_if<ft::is_integral<T>::value,bool>::type
-  is_odd (T i) {return bool(i%2);}
+// // 1. the return type (bool) is only valid if T is an integral type:
+// template <class T>
+// typename ft::enable_if<ft::is_integral<T>::value,bool>::type
+//   is_odd (T i) {return bool(i%2);}
 
-// 2. the second template argument is only valid if T is an integral type:
-template < class T,
-           class = typename ft::enable_if<ft::is_integral<T>::value>::type> // some C++11 magic!
-bool is_even (T i) {return !bool(i%2);}
+// // 2. the second template argument is only valid if T is an integral type:
+// template < class T,
+//            class = typename ft::enable_if<ft::is_integral<T>::value>::type> // some C++11 magic!
+// bool is_even (T i) {return !bool(i%2);}
 
-int main() {
+// int main() {
 
-  short int i = 1;    // code does not compile if type of i is not integral
+//   short int i = 1;    // code does not compile if type of i is not integral
+
+//   std::cout << std::boolalpha;
+//   std::cout << "i is odd: " << is_odd(i) << std::endl;
+//   std::cout << "i is even: " << is_even(i) << std::endl;
+
+//   return 0;
+// }
+
+// equal algorithm example
+// #include <iostream>     // std::cout
+// #include <vector>       // std::vector
+
+// #include "inc/algorithm.hpp"    // ft::equal
+
+// bool mypredicate (int i, int j) {
+//   return (i==j);
+// }
+
+// int main () {
+//   int myints[] = {20,40,60,80,100};               //   myints: 20 40 60 80 100
+//   std::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
+
+//   // using default comparison:
+//   if ( ft::equal (myvector.begin(), myvector.end(), myints) )
+//     std::cout << "The contents of both sequences are equal.\n";
+//   else
+//     std::cout << "The contents of both sequences differ.\n";
+
+//                                                    //   myints: 20 40 60 80 100
+//   myvector[3]=81;                                 // myvector: 20 40 60 81 100
+
+//   // using predicate comparison:
+//   if ( ft::equal (myvector.begin(), myvector.end(), myints, mypredicate) )
+//     std::cout << "The contents of both sequences are equal.\n";
+//   else
+//     std::cout << "The contents of both sequences differ.\n";
+
+//   return 0;
+// }
+
+// lexicographical_compare example
+#include <iostream>     // std::cout, std::boolalpha
+#include <cctype>       // std::tolower
+
+#include "inc/algorithm.hpp"    // ft::equal
+
+// a case-insensitive comparison function:
+bool mycomp (char c1, char c2)
+{ return std::tolower(c1)<std::tolower(c2); }
+
+int main () {
+  char foo[]="Apple";
+  char bar[]="apartment";
 
   std::cout << std::boolalpha;
-  std::cout << "i is odd: " << is_odd(i) << std::endl;
-  std::cout << "i is even: " << is_even(i) << std::endl;
+
+  std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
+
+  std::cout << "Using default comparison (operator<): ";
+  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
+  std::cout << '\n';
+
+  std::cout << "Using mycomp as comparison object: ";
+  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
+  std::cout << '\n';
 
   return 0;
 }
