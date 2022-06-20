@@ -1,5 +1,4 @@
-#ifndef PAIR_HPP
-#define PAIR_HPP
+#pragma once
 
 namespace   ft
 {
@@ -16,7 +15,7 @@ namespace   ft
 
         pair(); // default constructor
         template<class U, class V>
-            pair ( const pair<U,V>& pr ); // copy constructor
+            pair ( const pair<U, V>& pr ); // copy constructor
         pair ( const first_type& a, const second_type& b ); // initialization constructor
 
         pair& operator=( const pair& pr );
@@ -27,7 +26,7 @@ namespace   ft
 
     template <class T1, class T2>
     template<class U, class V>
-    pair<T1, T2>::pair ( const pair<U,V>& pr ) : first( pr.first ), second( pr.second ) {}
+    pair<T1, T2>::pair ( const pair<U, V>& pr ) : first( pr.first ), second( pr.second ) {}
 
     template <class T1, class T2>
     pair<T1, T2>::pair ( const first_type& a, const second_type& b ) : first( a ), second( b ) {}
@@ -44,37 +43,37 @@ namespace   ft
     } // assignation constructor
 
     template <class T1, class T2>
-        bool operator== ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs )
+        bool operator== ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
         {
             return ( lhs.first == rhs.first && lhs.second == rhs.second );
         }
     
     template <class T1, class T2>
-        bool operator!= ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs )
+        bool operator!= ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
         {
             return ( !( lhs == rhs ) );
         }
 
     template <class T1, class T2>
-        bool operator<  ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs )
+        bool operator<  ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
         {
              return ( lhs.first < rhs.first || ( !( rhs.first < lhs.first ) && lhs.second < rhs.second ) ); 
         }
 
     template <class T1, class T2>
-        bool operator<= ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs  )
+        bool operator<= ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs  )
         {
             return ( !( rhs < lhs ) );
         }
 
     template <class T1, class T2>
-        bool operator>  ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs )
+        bool operator>  ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
         {
             return ( rhs < lhs );
         }
 
     template <class T1, class T2>
-        bool operator>= ( const pair<T1,T2>& lhs, const pair<T1,T2>& rhs )
+        bool operator>= ( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
         {
             return ( !( lhs < rhs ) );
         }
@@ -85,5 +84,3 @@ namespace   ft
             return ( ft::pair<T1, T2>( x, y ) );
         }
 } // namespace ft
-
-#endif // PAIR_HPP
