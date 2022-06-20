@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utility.hpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
+/*   Updated: 2022/06/20 13:33:22 by alanghan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #pragma once
 
 namespace   ft
@@ -34,7 +46,7 @@ namespace   ft
     template <class T1, class T2>
     pair<T1, T2>    &pair<T1, T2>::operator= ( const pair& pr )
     {
-        if ( this != &ptr )
+        if ( this != &pr )
         {
             this->first = pr.first;
             this->second = pr.second;
