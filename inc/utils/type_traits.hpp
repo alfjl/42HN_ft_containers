@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/20 15:41:46 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/23 12:04:24 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ namespace ft
 
     // enable_if / SFINAE
     
-    template <bool Cond, class T = void>
+    template <bool Cond, typename T = void>
     struct enable_if
     {};
 
-    template<class T>
+    template<typename T>
     struct enable_if<true, T>
     {
         typedef T type;
@@ -30,7 +30,7 @@ namespace ft
 
     // is_integral / integral_constant
 
-    template <class T, T v>
+    template <typename T, T v>
     struct integral_constant
     {
         typedef T                       value_type;
@@ -47,7 +47,7 @@ namespace ft
     typedef integral_constant<bool, true>   true_type;
     typedef integral_constant<bool, false>  false_type;
 
-    template <class T>
+    template <typename T>
     struct is_integral                      : public false_type {};
 
     template <>

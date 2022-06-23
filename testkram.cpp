@@ -47,7 +47,7 @@
 //   return 0;
 // }
 
-// pair::operator= example
+// // pair::operator= example
 // #include <string>       // std::string
 // #include <iostream>     // std::cout
 
@@ -65,7 +65,7 @@
 //   return 0;
 // }
 
-// pair relational operators
+// // pair relational operators
 // #include <iostream>     // std::cout
 
 // #include "inc/utils/utility.hpp"      // ft::pair, ft::make_pair
@@ -84,6 +84,31 @@
 
 //   return 0;
 // }
+
+
+// // pair::pair example
+// #include <string>       // std::string
+// #include <iostream>     // std::cout
+
+// #include "inc/utils/utility.hpp"      // ft::pair, ft::make_pair
+
+// int main () {
+//   ft::pair <std::string,double> product1;                     // default constructor
+//   ft::pair <std::string,double> product2 ("tomatoes",2.30);   // value init
+//   ft::pair <std::string,double> product3 (product2);          // copy constructor
+
+//   product1 = ft::make_pair(std::string("lightbulbs"),0.99);   // using make_pair (move)
+
+//   product2.first = "shoes";                  // the type of first is string
+//   product2.second = 39.90;                   // the type of second is double
+
+//   std::cout << "The price of " << product1.first << " is $" << product1.second << '\n';
+//   std::cout << "The price of " << product2.first << " is $" << product2.second << '\n';
+//   std::cout << "The price of " << product3.first << " is $" << product3.second << '\n';
+//   return 0;
+// }
+
+
 
 // make_pair example
 // #include <iostream>     // std::cout
@@ -220,30 +245,32 @@
 // }
 
 // lexicographical_compare example
-#include <iostream>     // std::cout, std::boolalpha
-#include <cctype>       // std::tolower
+// #include <iostream>     // std::cout, std::boolalpha
+// #include <cctype>       // std::tolower
 
-#include "inc/algorithm.hpp"    // ft::equal
+// #include "inc/algorithm.hpp"    // ft::equal
 
-// a case-insensitive comparison function:
-bool mycomp (char c1, char c2)
-{ return std::tolower(c1)<std::tolower(c2); }
+// // a case-insensitive comparison function:
+// bool mycomp (char c1, char c2)
+// { return std::tolower(c1)<std::tolower(c2); }
 
-int main () {
-  char foo[]="Apple";
-  char bar[]="apartment";
+// int main () {
+//   char foo[]="Apple";
+//   char bar[]="apartment";
 
-  std::cout << std::boolalpha;
+//   std::cout << std::boolalpha;
 
-  std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
+//   std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
 
-  std::cout << "Using default comparison (operator<): ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
-  std::cout << '\n';
+//   std::cout << "Using default comparison (operator<): ";
+//   std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
+//   std::cout << '\n';
 
-  std::cout << "Using mycomp as comparison object: ";
-  std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
-  std::cout << '\n';
+//   std::cout << "Using mycomp as comparison object: ";
+//   std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
+//   std::cout << '\n';
 
-  return 0;
-}
+//   return 0;
+// }
+
+
