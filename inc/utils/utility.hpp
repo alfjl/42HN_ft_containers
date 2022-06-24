@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/23 12:05:32 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/24 14:04:12 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace   ft
 {
 
-    // pair
+    /* -------------------------------- pair -------------------------------- */
     
     template <typename T1, typename T2>
     struct pair

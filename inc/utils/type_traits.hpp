@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/23 12:04:24 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/24 14:04:54 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace ft
 {
 
-    // enable_if / SFINAE
+    /* ------------------------- enable_if / SFINAE ------------------------- */
     
     template <bool Cond, typename T = void>
     struct enable_if
@@ -28,7 +28,7 @@ namespace ft
     };
 
 
-    // is_integral / integral_constant
+    /* ------------------- is_integral / integral_constant ------------------ */
 
     template <typename T, T v>
     struct integral_constant
