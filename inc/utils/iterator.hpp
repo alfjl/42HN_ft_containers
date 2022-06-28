@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/27 13:26:39 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:02:24 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,18 @@ namespace ft
     typedef std::random_access_iterator_tag	random_access_iterator_tag;
 
     /* ------------------------------ iterator ------------------------------ */
+
+    /*
+    ** (https://cplusplus.com/reference/iterator/iterator/)
+    ** This is a base class template that can be used to derive iterator classes from it.
+    ** It is not an iterator class and does not provide any of the functionality an iterator is expected to have.
+    ** This base class only provides some member types, which in fact are not required to be present in any iterator type
+    ** (iterator types have no specific member requirements), but they might be useful,
+    ** since they define the members needed for the default iterator_traits class template
+    ** to generate the appropriate instantiation automatically
+    ** (and such instantiation is required to be valid for all iterator types).
+    */
+    
 
     template <typename Category,               // Category to which the iterator belongs to (see: 'iterator tags')
               typename T,                      // Type of elements pointed by the iterator
@@ -72,6 +84,12 @@ namespace ft
     
     /* -------------------------- reverse_iterator -------------------------- */
     
+    /*
+    ** (https://cplusplus.com/reference/iterator/reverse_iterator/)
+    ** This class reverses the direction in which a bidirectional or
+    ** random-access iterator iterates through a range.
+    */
+    
     template <typename Iterator>
     class reverse_iterator
         : public iterator<typename iterator_traits<Iterator>::iterator_category,
@@ -111,7 +129,7 @@ namespace ft
         reference operator[] (difference_type n) const;
         
         
-    };
+    }; // reverse_iterator
     
     /* reverse_iterator member functions */
     

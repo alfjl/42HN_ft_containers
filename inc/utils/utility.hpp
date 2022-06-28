@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/24 14:04:12 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:23:38 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ namespace   ft
 {
 
     /* -------------------------------- pair -------------------------------- */
+    
+    /*
+    ** (https://cplusplus.com/reference/utility/pair/)
+    ** Pair of values
+    ** This class couples together a pair of values, which may be of different types (T1 and T2).
+    ** The individual values can be accessed through its public members first and second.
+    ** Pairs are a particular case of tuple.
+    */
     
     template <typename T1, typename T2>
     struct pair
