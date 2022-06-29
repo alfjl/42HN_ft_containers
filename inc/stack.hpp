@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:19:06 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/28 15:54:42 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/29 11:46:16 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
     ** The standard container classes vector, deque and list fulfill these requirements. By default, if no container class is specified for a particular stack class instantiation, the standard container deque is used.
     */
 
-    template <typename T, typename Container = std::deque<T>>
+    template <typename T, typename Container = std::deque<T> >
     class stack
     {
         // code
@@ -68,7 +68,7 @@ namespace ft
     /* stack member functions */
 
     template <typename T, typename Container>
-    stack<T, Container>::stack( const container_type& ctnr = container_type() ) : c( ctnr ) {}
+    stack<T, Container>::stack( const container_type& ctnr ) : c( ctnr ) {}
 
     template <typename T, typename Container>
     stack<T, Container>::~stack() {}
@@ -87,19 +87,19 @@ namespace ft
     }
 
     template <typename T, typename Container>
-    stack<T, Container>::size_type stack<T, Container>::size() const // or do we need 'typename' stack<T, Container>::size_type... here?
+    typename stack<T, Container>::size_type stack<T, Container>::size() const
     {
         return ( this->c.size() );
     }
 
     template <typename T, typename Container>
-    stack<T, Container>::value_type& stack<T, Container>::top()
+    typename stack<T, Container>::value_type& stack<T, Container>::top()
     {
         return ( this->c.back() );
     }
 
     template <typename T, typename Container>
-    const stack<T, Container>::value_type& stack<T, Container>::top() const
+    const typename stack<T, Container>::value_type& stack<T, Container>::top() const
     {
         return ( this->c.back() );
     }

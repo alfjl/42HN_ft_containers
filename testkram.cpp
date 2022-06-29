@@ -630,11 +630,283 @@
 // // Output: *********************** ERROR: testkram.cpp:605:18: error: no member named 'rend'/'size'/'rbegin' in namespace 'std'
 // // see code above
 
+
+
+/* ###################################### STACK ##################################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ###################################### WITH STD::DEQUE ########################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+
+// // constructing stacks
+// #include <iostream>       // std::cout
+// #include <vector>         // std::vector
+// #include <deque>          // std::deque
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   std::deque<int> mydeque (3,100);          // deque with 3 elements
+//   std::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   ft::stack<int> first;                    // empty stack
+//   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   ft::stack<int,std::vector<int> > third;  // empty stack using vector
+//   ft::stack<int,std::vector<int> > fourth (myvector);
+
+//   std::cout << "size of first: " << first.size() << '\n';
+//   std::cout << "size of second: " << second.size() << '\n';
+//   std::cout << "size of third: " << third.size() << '\n';
+//   std::cout << "size of fourth: " << fourth.size() << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // size of first: 0
+// // size of second: 3
+// // size of third: 0
+// // size of fourth: 2
+
+
 /* ---------------------------------------------------------------------------------- */
 
+// // stack::empty
+// #include <iostream>       // std::cout
 
-/* ###################################### REVERSE_ITERATOR ##################################### */  //STILL TESTING NEEDED!!!!!!
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   ft::stack<int> mystack;
+//   int sum (0);
+
+//   for (int i=1;i<=10;i++) mystack.push(i);
+
+//   while (!mystack.empty())
+//   {
+//      sum += mystack.top();
+//      mystack.pop();
+//   }
+
+//   std::cout << "total: " << sum << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // total: 55
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::size
+// #include <iostream>       // std::cout
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   ft::stack<int> myints;
+//   std::cout << "0. size: " << myints.size() << '\n';
+
+//   for (int i=0; i<5; i++) myints.push(i);
+//   std::cout << "1. size: " << myints.size() << '\n';
+
+//   myints.pop();
+//   std::cout << "2. size: " << myints.size() << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // 0. size: 0
+// // 1. size: 5
+// // 2. size: 4
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::top
+// #include <iostream>       // std::cout
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   ft::stack<int> mystack;
+
+//   mystack.push(10);
+//   mystack.push(20);
+
+//   mystack.top() -= 5;
+
+//   std::cout << "mystack.top() is now " << mystack.top() << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // mystack.top() is now 15
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::push/pop
+// #include <iostream>       // std::cout
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   ft::stack<int> mystack;
+
+//   for (int i=0; i<5; ++i) mystack.push(i);
+
+//   std::cout << "Popping out elements...";
+//   while (!mystack.empty())
+//   {
+//      std::cout << ' ' << mystack.top();
+//      mystack.pop();
+//   }
+//   std::cout << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // Popping out elements... 4 3 2 1 0
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::push/pop
+// #include <iostream>       // std::cout
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//     ft::stack<int> mystack1;
+//     ft::stack<int> mystack2;
+
+//     for (int i=0; i<5; ++i) mystack1.push(i);
+//     for (int i=0; i<5; ++i) mystack2.push(1);
+
+//   std::cout << "Popping out elements till value the same...\n";
+
+//     int i;
+//     while (mystack1.top() != mystack2.top())
+//     {
+//         std::cout << ' ' << mystack1.top() <<  " -- " << mystack2.top() << std::endl;
+//         mystack1.pop();
+//         mystack2.pop();
+//     }
+
+//   return 0;
+// }
 
 
+// // Output: ***********************
+// // 4 -- 1
+// // 3 -- 1
+// // 2 -- 1
 
 
+/* ###################################### STACK ##################################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ###################################### WITH STD::VECTOR ########################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+
+// // constructing stacks
+// #include <iostream>       // std::cout
+// #include <vector>         // std::vector
+// #include <deque>          // std::deque
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   std::deque<int> mydeque (3,100);          // deque with 3 elements
+//   std::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   ft::stack<int> first;                    // empty stack
+//   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   ft::stack<int,std::vector<int> > third;  // empty stack using vector
+//   ft::stack<int,std::vector<int> > fourth (myvector);
+
+//   std::cout << "size of first: " << first.size() << '\n';
+//   std::cout << "size of second: " << second.size() << '\n';
+//   std::cout << "size of third: " << third.size() << '\n';
+//   std::cout << "size of fourth: " << fourth.size() << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // size of first: 0
+// // size of second: 3
+// // size of third: 0
+// // size of fourth: 2
+
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::empty
+// #include <iostream>       // std::cout
+// #include <vector>         // std::vector
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//   ft::stack<int,std::vector<int> > one;  // empty stack using vector
+
+//   int sum (0);
+
+//   for (int i=1;i<=10;i++) one.push(i);
+
+//   while (!one.empty())
+//   {
+//      sum += one.top();
+//      one.pop();
+//   }
+
+//   std::cout << "total: " << sum << '\n';
+
+//   return 0;
+// }
+
+// // Output: ***********************
+// // total: 55
+
+/* ---------------------------------------------------------------------------------- */
+
+// // stack::push/pop
+// #include <iostream>       // std::cout
+// #include <vector>
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//     ft::stack<int,std::vector<int> > mystack1;
+//     ft::stack<int,std::vector<int> > mystack2;
+
+//     for (int i=0; i<5; ++i) mystack1.push(i);
+//     for (int i=0; i<5; ++i) mystack2.push(1);
+
+//   std::cout << "Popping out elements till value the same...\n";
+
+//     int i;
+//     while (mystack1.top() != mystack2.top())
+//     {
+//         std::cout << ' ' << mystack1.top() <<  " -- " << mystack2.top() << std::endl;
+//         mystack1.pop();
+//         mystack2.pop();
+//     }
+
+//   return 0;
+// }
+
+
+// // Output: ***********************
+// // 4 -- 1
+// // 3 -- 1
+// // 2 -- 1
+
+/* ---------------------------------------------------------------------------------- */
