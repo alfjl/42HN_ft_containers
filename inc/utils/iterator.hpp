@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/28 17:02:24 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:40:40 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@
 
 namespace ft
 {
+
+    /* make own iterator_tag structs and use them later in the iterator typedef and iterator_traits instead of std::..._iterator_tag?
+
+    // struct input_iterator_tag  {};
+    // struct output_iterator_tag {};
+    // struct forward_iterator_tag       : public input_iterator_tag         {};
+    // struct bidirectional_iterator_tag : public forward_iterator_tag       {};
+    // struct random_access_iterator_tag : public bidirectional_iterator_tag {};*/
 
     typedef std::output_iterator_tag		output_iterator_tag;
     typedef std::input_iterator_tag			input_iterator_tag ;
@@ -68,7 +76,7 @@ namespace ft
         typedef T                                       value_type;
         typedef T*                                      pointer;
         typedef T&                                      reference;
-        typedef random_access_iterator_tag              iterator_category;
+        typedef random_access_iterator_tag              iterator_category; // need change to ft::random_a....???? If yes, write structs for all iterator_tags first
     };
 
     template<typename T>
@@ -78,7 +86,7 @@ namespace ft
         typedef T                                       value_type;
         typedef const T*                                pointer;
         typedef const T&                                reference;
-        typedef random_access_iterator_tag              iterator_category;
+        typedef random_access_iterator_tag              iterator_category; // need change to ft::random_a....???? If yes, write structs for all iterator_tags first
     };
 
     

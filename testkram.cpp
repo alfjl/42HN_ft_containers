@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   testkram.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/29 15:15:43 by alanghan          #+#    #+#             */
+/*   Updated: 2022/06/29 15:47:42 by alanghan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <iostream>
 
-/* ###################################### PAIR ###################################### */
+/* ################################ FT::PAIR ################################ */
 
 
 // // check to see if assignation operator of std::pair deletes potential old ptr in pair.second, or not
@@ -27,7 +39,8 @@
 // // ===> RESULT: No! Just assigns new values, but doesn't delete anything.
 
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 // /* test FT::PAIR implementation */
 // // CONSTRUCTORS
 // #include <string>       // std::string
@@ -79,7 +92,8 @@
 // // Home planet: Earth
 // // Planet size: 6371
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 // // // pair relational operators
 // #include <iostream>     // std::cout
 
@@ -105,7 +119,8 @@
 // // foo is less than bar
 // // foo is less than or equal to bar
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 // // make_pair example
 // #include <iostream>     // std::cout
 
@@ -128,7 +143,7 @@
 // // foo: 10, 20
 // // bar: 10, 65
 
-/* ###################################### TYPE_TRAITS ###################################### */
+/* ################################## TYPE_TRAITS ################################## */
 
 // // check SFINAE
 // template <class T>
@@ -180,7 +195,8 @@
 // // 0
 // // 1
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 // // is_integral example
 // #include <iostream>
 
@@ -204,7 +220,8 @@
 // // float: false
 // // double: false
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 // // enable_if example: two ways of using enable_if
 // #include <iostream>
 
@@ -235,7 +252,7 @@
 // // i is odd: true
 // // i is even: false
 
-/* ###################################### ALGORITHMS ###################################### */
+/* ################################## ALGORITHMS ################################## */
 
 // equal algorithm example
 // #include <iostream>     // std::cout
@@ -274,7 +291,7 @@
 // // The contents of both sequence differ.
 
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 // // lexicographical_compare example
 // #include <iostream>     // std::cout, std::boolalpha
 // #include <cctype>       // std::tolower
@@ -309,7 +326,7 @@
 // // Using default comparison (operator<): true
 // // Using mycomp as comparison object: false
 
-/* ###################################### ITERATOR_TRAITS ###################################### */
+/* ################################ FT::ITERATOR_TRAITS ################################ */
 
 // // iterator_traits example
 // #include <iostream>     // std::cout
@@ -327,7 +344,7 @@
 // // int* is a random-access iterator
 
 
-/* ###################################### REVERSE_ITERATOR ##################################### */  //STILL TESTING NEEDED!!!!!!
+/* ################################ FT::REVERSE_ITERATOR ############################### */  //STILL TESTING NEEDED!!!!!!
 
 // // reverse_iterator example
 // #include <iostream>     // std::cout
@@ -360,7 +377,7 @@
 // // Output: ***********************
 // // myvector: 9 8 7 6 5 4 3 2 1 0
 
-/* ---------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
 
 // // reverse_iterator::base example
 // #include <iostream>     // std::cout
@@ -389,7 +406,7 @@
 // // Output: ***********************
 // // myvector: 0 1 2 3 4 5 6 7 8 9
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator+ example
 // #include <iostream>     // std::cout
@@ -415,7 +432,7 @@
 // // // Output: *********************** ERROR: testkram.cpp:408:10: error: no viable overloaded '='
 // // The fourth element from the end is: 6
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator+= example
 // #include <iostream>     // std::cout
@@ -441,7 +458,7 @@
 // // Output: *********************** ERROR: testkram.cpp:432:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // The third element from the end is: 7
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator- example
 // #include <iostream>     // std::cout
@@ -467,7 +484,7 @@
 // // Output: *********************** ERROR: testkram.cpp:460:16: error: no viable overloaded '='
 // // myvector.rend()-3 points to: 2
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator-- example
 // #include <iostream>     // std::cout
@@ -500,7 +517,7 @@
 // // 9 8 7 6 5 4 3 2 1 0
 // // 0 1 2 3 4 5 6 7 8 9
 
-/* ---------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator-= example
 // #include <iostream>     // std::cout
@@ -526,7 +543,7 @@
 // // Output: *********************** ERROR: testkram.cpp:517:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // rev_iterator now points to: 3
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator-> example
 // #include <iostream>     // std::cout
@@ -559,7 +576,7 @@
 // // 2 two
 // // 1 one
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator[] example
 // #include <iostream>     // std::cout
@@ -583,7 +600,7 @@
 // // Output: *********************** ERROR: testkram.cpp:576:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // The fourth element from the end is: 6
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // reverse_iterator example (https://en.cppreference.com/w/cpp/iterator/reverse_iterator/operator_cmp)
 // #include <compare>
@@ -632,8 +649,8 @@
 
 
 
-/* ###################################### STACK ##################################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
-/* ###################################### WITH STD::DEQUE ########################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ################################ FT::STACK ############################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ################################## WITH STD::DEQUE ####################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
 
 // // constructing stacks
 // #include <iostream>       // std::cout
@@ -668,7 +685,7 @@
 // // size of fourth: 2
 
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // stack::empty
 // #include <iostream>       // std::cout
@@ -696,7 +713,7 @@
 // // Output: ***********************
 // // total: 55
 
-/* ---------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------- */
 
 // // stack::size
 // #include <iostream>       // std::cout
@@ -722,7 +739,7 @@
 // // 1. size: 5
 // // 2. size: 4
 
-/* ---------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------ */
 
 // // stack::top
 // #include <iostream>       // std::cout
@@ -746,7 +763,7 @@
 // // Output: ***********************
 // // mystack.top() is now 15
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // stack::push/pop
 // #include <iostream>       // std::cout
@@ -773,7 +790,7 @@
 // // Output: ***********************
 // // Popping out elements... 4 3 2 1 0
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // stack::push/pop
 // #include <iostream>       // std::cout
@@ -808,8 +825,8 @@
 // // 2 -- 1
 
 
-/* ###################################### STACK ##################################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
-/* ###################################### WITH STD::VECTOR ########################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ################################ FT::STACK ############################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ################################# WITH STD::VECTOR ####################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
 
 // // constructing stacks
 // #include <iostream>       // std::cout
@@ -844,7 +861,7 @@
 // // size of fourth: 2
 
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // stack::empty
 // #include <iostream>       // std::cout
@@ -874,7 +891,7 @@
 // // Output: ***********************
 // // total: 55
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
 // // stack::push/pop
 // #include <iostream>       // std::cout
@@ -909,4 +926,45 @@
 // // 3 -- 1
 // // 2 -- 1
 
-/* ---------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+// // stack::push/pop
+// #include <iostream>       // std::cout
+// #include <vector>
+
+// #include "inc/stack.hpp" // ft::stack
+
+// int main ()
+// {
+//     ft::stack<int,std::vector<int> > mystack1;
+//     ft::stack<int,std::vector<int> > mystack2;
+
+//     for (int i=0; i<5; ++i) mystack1.push(i);
+//     for (int i=0; i<5; ++i) mystack2.push(1);
+
+//   std::cout << "Popping out elements till value the same...\n";
+
+//     int i;
+//     while ( !(mystack1.empty() && mystack2.empty()) )
+//     {
+//         if (mystack1.top() <= mystack2.top())
+//         // if (mystack1.top() < mystack2.top())
+//         {
+//             std::cout << ' ' << mystack1.top() <<  " -- " << mystack2.top() << std::endl;
+//         }
+//         mystack1.pop();
+//         mystack2.pop();
+//     }
+
+//   return 0;
+// }
+
+
+// // Output: ***********************
+// // 1 -- 1
+// // 0 -- 1
+
+/* ################################ FT::VECTOR ############################## */
+
+/* -------------------------------------------------------------------------- */
+
