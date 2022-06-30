@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:15:43 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/29 15:47:42 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/30 11:28:33 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,10 @@
 // // foo: 10, 20
 // // bar: 10, 65
 
+
+
 /* ################################## TYPE_TRAITS ################################## */
+
 
 // // check SFINAE
 // template <class T>
@@ -252,7 +255,11 @@
 // // i is odd: true
 // // i is even: false
 
+
+
+
 /* ################################## ALGORITHMS ################################## */
+
 
 // equal algorithm example
 // #include <iostream>     // std::cout
@@ -326,7 +333,11 @@
 // // Using default comparison (operator<): true
 // // Using mycomp as comparison object: false
 
+
+
+
 /* ################################ FT::ITERATOR_TRAITS ################################ */
+
 
 // // iterator_traits example
 // #include <iostream>     // std::cout
@@ -344,7 +355,9 @@
 // // int* is a random-access iterator
 
 
+
 /* ################################ FT::REVERSE_ITERATOR ############################### */  //STILL TESTING NEEDED!!!!!!
+
 
 // // reverse_iterator example
 // #include <iostream>     // std::cout
@@ -647,10 +660,56 @@
 // // Output: *********************** ERROR: testkram.cpp:605:18: error: no member named 'rend'/'size'/'rbegin' in namespace 'std'
 // // see code above
 
+/* ------------------------------------------------------------------------- */
+
+// // iter/reviter4.cpp (The C++ Standard Library - 2nd Edition)
+// // #include <iterator>
+// #include "inc/utils/iterator.hpp"
+// #include <iostream>
+// #include <list>
+// #include <algorithm>
+// using namespace std;
+// int main()
+// {
+// // create list with elements from 1 to 9
+// // list<int> coll = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }; // error: non-aggregate type 'list<int>' cannot be initialized with an initializer list
+// list<int> coll;
+// coll.push_back(1);
+// coll.push_back(2);
+// coll.push_back(3);
+// coll.push_back(4);
+// coll.push_back(5);
+// coll.push_back(6);
+// coll.push_back(7);
+// coll.push_back(8);
+// coll.push_back(9);
+// // find position of element with value 5
+// list<int>::const_iterator pos;
+// pos = find (coll.cbegin(), coll.cend(), // range
+// 5); // value
+// // print value of the element
+// cout << "pos: " << *pos << endl;
+// // convert iterator to reverse iterator
+// list<int>::const_reverse_iterator rpos(pos);
+// // print value of the element to which the reverse iterator refers
+// cout << "rpos: " << *rpos << endl;
+// // convert reverse iterator back to normal iterator
+// list<int>::const_iterator rrpos;
+// rrpos = rpos.base();
+// // print value of the element to which the normal iterator refers
+// cout << "rrpos: " << *rrpos << endl;
+// }
+
+// // Output: ***********************
+// // pos: 5
+// // rpos: 4
+// // rrpos: 5
+
 
 
 /* ################################ FT::STACK ############################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
 /* ################################## WITH STD::DEQUE ####################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+
 
 // // constructing stacks
 // #include <iostream>       // std::cout
@@ -825,8 +884,10 @@
 // // 2 -- 1
 
 
+
 /* ################################ FT::STACK ############################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
 /* ################################# WITH STD::VECTOR ####################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+
 
 // // constructing stacks
 // #include <iostream>       // std::cout
@@ -964,7 +1025,12 @@
 // // 1 -- 1
 // // 0 -- 1
 
+
+
 /* ################################ FT::VECTOR ############################## */
+
+
+// code here...
 
 /* -------------------------------------------------------------------------- */
 

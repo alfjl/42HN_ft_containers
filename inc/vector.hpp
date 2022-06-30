@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:23:05 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/29 17:17:26 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/30 11:14:09 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ namespace ft
     ** For operations that involve inserting or removing elements at positions other than the end, they perform worse than [other dynamic sequence containers (deques, lists and forward_lists)] 
     */
 
-    template < typename T, typename Alloc = allocator<T> >
+    template < typename T, typename Alloc = std::allocator<T> >
     class vector
     {
 

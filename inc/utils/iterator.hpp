@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/30 12:13:22 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/30 12:26:06 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ namespace ft
     };
 
     /* -------------------- auxiliary iterator functions -------------------- */
+
     /*
     ** (The C++ Standard Library - 2nd Edition / 9.3.3 & 9.5)
     */
@@ -321,4 +322,25 @@ namespace ft
             return ( rhs.base() - lhs.base() );
         }
 
+
+    /* ----------------------- random_access_iterator ----------------------- */
+    
+    /*
+    ** follow the general recipe for a user-defined iterator from (The C++ Standard Library - 2nd Edition / 9.6)
+    ** and the info about random_access_iterators from (https://cplusplus.com/reference/iterator/RandomAccessIterator/)
+    ** Random-access iterators are iterators that can be used to access elements at an arbitrary offset position
+    ** relative to the element they point to, offering the same functionality as pointers.
+    */
+    
+    template <typename T>
+    class random_access_iterator
+    {
+        // Provide the necessary five type definitions for the general iterator_traits structure
+        typedef typename Iterator::difference_type      difference_type;
+        typedef typename Iterator::value_type           value_type;
+        typedef typename Iterator::pointer              pointer;
+        typedef typename Iterator::reference            reference;
+        typedef typename Iterator::iterator_category    iterator_category;
+
+    }; // random_access_iterator
 } // namespace ft
