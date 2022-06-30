@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/29 17:40:40 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/06/30 12:13:22 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,35 @@ namespace ft
         typedef random_access_iterator_tag              iterator_category; // need change to ft::random_a....???? If yes, write structs for all iterator_tags first
     };
 
-    
+    /* -------------------- auxiliary iterator functions -------------------- */
+    /*
+    ** (The C++ Standard Library - 2nd Edition / 9.3.3 & 9.5)
+    */
+
+    template <typename InputIterator>
+    inline typename iterator_traits<InputIterator>::difference_type
+    _distance( InputIterator first, InputIterator last, input_iterator_tag )
+    {
+        typename iterator_traits<InputIterator>::difference_type r( 0 );
+        for ( ; first != last; ++first )
+            ++r;
+        return ( r );
+    }
+
+    template <typename RandomAccessIterator>
+    inline typename iterator_traits<RandomAccessIterator>::difference_type
+    _distance( RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag )
+    {
+        return ( last - first );
+    }
+
+    template <typename InputIterator>
+    inline typename iterator_traits<InputIterator>::difference_type
+    distance( InputIterator first, InputIterator last )
+    {
+        return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
+    }
+
     /* -------------------------- reverse_iterator -------------------------- */
     
     /*
