@@ -6,16 +6,18 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/30 17:24:49 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/01 11:38:31 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iterator>
+#include <iterator> // still needed after changing the iterator_tags?
 
 namespace ft
 {
+
+    /* ---------------------------- iterator_tags --------------------------- */
 
     /* make own iterator_tag structs and use them later in the iterator typedef and iterator_traits instead of std::..._iterator_tag?
 
@@ -58,6 +60,8 @@ namespace ft
         typedef Pointer     pointer;
         typedef Reference   reference;
     };
+
+    /* -------------------------- iterator_traits --------------------------- */
 
     template<typename Iterator>
     struct iterator_traits
@@ -112,6 +116,7 @@ namespace ft
         return ( last - first );
     }
 
+    // also valid for forward and bidirectional iterator, since they inherit from input iterator
     template <typename InputIterator>
     inline typename iterator_traits<InputIterator>::difference_type
     distance( InputIterator first, InputIterator last )
@@ -380,17 +385,18 @@ namespace ft
     template <typename T>
     random_access_iterator<T>::random_access_iterator( const random_access_iterator<T>& other ) : _ptr( other.base() ) {}
 
+    template <typename T>
     random_access_iterator<T>::~random_access_iterator() {}
 
     template <typename T>
-    random_access_iterator<T>& random_access_iterator<T>::operator=( const random_access_iterator<Iter>& src )
+    random_access_iterator<T>& random_access_iterator<T>::operator=( const random_access_iterator<T>& src )
     {
         _ptr = src.base();
         return ( *this );
     }
 
     template <typename T>
-    random_access_iterator<T>& operator=( const pointer& src_ptr )
+    random_access_iterator<T>& random_access_iterator<T>::operator=( const pointer& src_ptr )
     {
         _ptr = src_ptr;
         return ( *this );
@@ -445,7 +451,7 @@ namespace ft
     }
 
     template <typename T>
-    random_access_iterator<T> reverse_iterator<T>::operator+( difference_type n ) const
+    random_access_iterator<T> random_access_iterator<T>::operator+( difference_type n ) const
     {
         return random_access_iterator( this->_ptr + n );
     }
@@ -471,7 +477,7 @@ namespace ft
     }
 
     template <typename T>
-    typename random_access_iterator<T>::reference random_access_iterator<T>::operator[](difference_type n) const
+    typename random_access_iterator<T>::reference random_access_iterator<T>::operator[]( difference_type n ) const
     {
         return *( *this->_ptr + n );
     }
