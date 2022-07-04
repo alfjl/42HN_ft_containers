@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:45 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/23 15:21:46 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/04 11:51:33 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@
 
 namespace ft
 {
-    // equal
+
+    /* -------------------------------- equal -------------------------------- */
+
+    /*
+    ** (https://cplusplus.com/reference/algorithm/equal/?kw=equal)
+    ** Compares the elements in the range [first1,last1) with those in the range beginning at first2,
+    ** and returns true if all of the elements in both ranges match.
+    */
 
     template <class InputIterator1, class InputIterator2>
     bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) // equality
@@ -43,7 +50,14 @@ namespace ft
     }
 
 
-    // lexicographical_compare
+    /* ------------------------ lexicographical_compare ---------------------- */
+
+    /*
+    ** (https://cplusplus.com/reference/algorithm/lexicographical_compare/?kw=lexicographical_compare)
+    ** Returns true if the range [first1,last1) compares lexicographically less than the range [first2,last2).
+    ** It involves comparing sequentially the elements that have the same position in both ranges against each other
+    ** until one element is not equivalent to the other.
+    */
 
     template <class InputIterator1, class InputIterator2>
     bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,

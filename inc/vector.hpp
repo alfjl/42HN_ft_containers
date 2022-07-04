@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
+
 #include "utils/iterator.hpp"
+#include "algorithm.hpp"
 
 namespace ft
 {
 
-    /* -------------------------------- stack -------------------------------- */
+    /* -------------------------------- vector ------------------------------- */
 
     /*
     ** (https://cplusplus.com/reference/vector/vector/)
@@ -115,91 +118,320 @@ namespace ft
     }; // vector
 
 
-        explicit vector::vector( const allocator_type& alloc = allocator_type() ) // default constructor (empty container)
-        {
+    /* vector member functions */
 
-        }
+    template < typename T, typename Alloc>
+    vector<T, Alloc>::vector( const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) {}
 
-        explicit vector::vector( size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type() ) // fill constructor
-        {
+    template < typename T, typename Alloc>
+    vector<T, Alloc>::vector( size_type n, const value_type& val, const allocator_type& alloc ) // fill constructor
+    {
 
-        }
+    }
 
-        template <class InputIterator>
-            vector::vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type() ) // range constructor
-            {
+        allocator_type  _allocator;
+        pointer         _begin;
+        pointer         _end;
+        size_type       _capacity;
 
-            }
+    template < typename T, typename Alloc>
+    template <class InputIterator>
+    vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) // range constructor
+    {
 
-        vector::vector( const vector& x ) // copy constructor
-        {
+    }
 
-        }
+    template < typename T, typename Alloc>
+    vector<T, Alloc>::vector( const vector& x ) // copy constructor
+    {
 
-        vector::~vector()
-        {
+    }
 
-        }
+    template < typename T, typename Alloc>
+    vector<T, Alloc>::~vector()
+    {
+
+    }
 
 
-        vector& vector::operator=( const vector& x ); // assignment operator
+    template < typename T, typename Alloc>
+    vector<T, Alloc>& vector<T, Alloc>::operator=( const vector<T, Alloc>& x ) // assignment operator
+    {
 
-        iterator vector::begin();
-        const_iterator vector::begin() const;
+    }
 
-        iterator vector::end();
-        const_iterator vector::end() const;
 
-        reverse_iterator vector::rbegin();
-        const_reverse_iterator vector::rbegin() const;
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::iterator vector<T, Alloc>::begin()
+    {
 
-        reverse_iterator vector::rend();
-        const_reverse_iterator vector::rend() const;
+    }
 
-        size_type vector::size() const;
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_iterator vector<T, Alloc>::begin() const
+    {
 
-        size_type vector::max_size() const;
+    }
 
-        void vector::resize( size_type n, value_type val = value_type() );
 
-        size_type vector::capacity() const;
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::iterator vector<T, Alloc>::end()
+    {
 
-        bool vector::empty() const;
+    }
 
-        void vector::reserve( size_type n );
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_iterator vector<T, Alloc>::end() const
+    {
 
-        reference vector::operator[]( size_type n );
-        const_reference vector::operator[]( size_type n ) const;
+    }
 
-        reference vector::at( size_type n );
-        const_reference vector::at( size_type n ) const;
 
-        reference vector::front();
-        const_reference vector::front() const;
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reverse_iterator vector<T, Alloc>::rbegin()
+    {
 
-        reference vector::back();
-        const_reference vector::back() const;
+    }
 
-        template <class InputIterator>
-            void vector::assign( InputIterator first, InputIterator last ); // range version	
-        void vector::assign( size_type n, const value_type& val ); // fill version
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reverse_iterator vector<T, Alloc>::rbegin() const
+    {
 
-        void vector::push_back( const value_type& val );
+    }
 
-        void vector::pop_back();
 
-        iterator vector::insert( iterator position, const value_type& val ); // single element
-        void vector::insert( iterator position, size_type n, const value_type& val ); // fill version
-        template <class InputIterator>
-            void vector::insert( iterator position, InputIterator first, InputIterator last ); // range version
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reverse_iterator vector<T, Alloc>::rend()
+    {
 
-        iterator vector::erase( iterator position );
-        iterator vector::erase( iterator first, iterator last );
+    }
 
-        void vector::swap( vector& x );
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reverse_iterator vector<T, Alloc>::rend() const
+    {
 
-        void vector::clear();
+    }
 
-        allocator_type vector::get_allocator() const;
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::size_type vector<T, Alloc>::size() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::resize( size_type n, value_type val )
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::size_type vector<T, Alloc>::capacity() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    bool vector<T, Alloc>::empty() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::reserve( size_type n )
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reference vector<T, Alloc>::operator[]( size_type n )
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reference vector<T, Alloc>::operator[]( size_type n ) const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reference vector<T, Alloc>::at( size_type n )
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reference vector<T, Alloc>::at( size_type n ) const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reference vector<T, Alloc>::front()
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reference vector<T, Alloc>::front() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::reference vector<T, Alloc>::back()
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::const_reference vector<T, Alloc>::back() const
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    template <class InputIterator>
+    void vector<T, Alloc>::assign( InputIterator first, InputIterator last ) // range version
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::assign( size_type n, const value_type& val ) // fill version
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::push_back( const value_type& val )
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::pop_back()
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::iterator vector::insert( iterator position, const value_type& val ) // single element
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    template <class InputIterator>
+    void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last ) // range version
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
+    {
+
+    }
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator first, iterator last )
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::swap( vector<T, Alloc>& x )
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    void vector<T, Alloc>::clear()
+    {
+
+    }
+
+
+    template < typename T, typename Alloc>
+    typename vector<T, Alloc>::allocator_type vector<T, Alloc>::get_allocator() const
+    {
+
+    }
+
+
+    /* vector non-member functions */
+
+    template <typename T, typename Alloc>
+    inline bool operator==( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( lhs.size() == rhs.size() && ft::equal( lhs.begin(), lhs.end(), rhs.begin() ) );
+    }
+
+    template <typename T, typename Alloc>
+    inline bool operator!=( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
+    template <typename T, typename Alloc>
+    inline bool operator<( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( ft::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() ) );
+    }
+
+    template <typename T, typename Alloc>
+    inline bool operator<=( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( !( rhs < lhs ) );
+    }
+
+    template <typename T, typename Alloc>
+    inline bool operator>( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( rhs < lhs );
+    }
+
+    template <typename T, typename Alloc>
+    inline bool operator>=( const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs )
+    {
+        return ( !( lhs < rhs ) );
+    }
+
+
+    template< typename T, typename Alloc >
+    void swap( vector<T, Alloc>& lhs, vector<T, Alloc>& rhs )
+    {
+        lhs.swap( rhs );
+    }
 
 } // namespace ft
