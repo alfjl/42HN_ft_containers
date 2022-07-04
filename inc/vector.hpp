@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "utils/type_traits.hpp"
 #include "utils/iterator.hpp"
 #include "algorithm.hpp"
 
@@ -114,11 +115,16 @@ namespace ft
         void clear();
 
         allocator_type get_allocator() const;
-    
+
+    private:
+        iterator make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
+        iterator make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+
     }; // vector
 
 
     /* vector member functions */
+    /* public */
 
     template < typename T, typename Alloc>
     vector<T, Alloc>::vector( const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) {}
@@ -129,10 +135,10 @@ namespace ft
 
     }
 
-        allocator_type  _allocator;
-        pointer         _begin;
-        pointer         _end;
-        size_type       _capacity;
+        // allocator_type  _allocator;
+        // pointer         _begin;
+        // pointer         _end;
+        // size_type       _capacity;
 
     template < typename T, typename Alloc>
     template <class InputIterator>
@@ -157,73 +163,78 @@ namespace ft
     template < typename T, typename Alloc>
     vector<T, Alloc>& vector<T, Alloc>::operator=( const vector<T, Alloc>& x ) // assignment operator
     {
-
+        
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::begin()
     {
-
+        // return ( make_iter( this->_begin ) ); // or just:
+        return ( iterator( this->_begin) );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::begin() const
     {
-
+        // return ( make_iter( this->_begin ) ); // or just:
+        return ( const_iterator( this->_begin ) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::end()
     {
-
+        // return ( make_iter( this->_end ) ); // or just:
+        return ( iterator( this->_end) )
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::end() const
     {
-
+        // return ( make_iter( this->_end ) ); // or just:
+        return ( const_iterator( this->_end ) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reverse_iterator vector<T, Alloc>::rbegin()
     {
-
+        return ( reverse_iterator( this->end() ) );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reverse_iterator vector<T, Alloc>::rbegin() const
     {
-
+        return ( const_reverse_iterator( this->end() ) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reverse_iterator vector<T, Alloc>::rend()
     {
+        return ( reverse_iterator( this->begin() ) );
 
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reverse_iterator vector<T, Alloc>::rend() const
     {
-
+        return ( const_reverse_iterator( this->begin() ) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::size() const
     {
-
+        return ( static_cast<size_type>(this->_end - this->_begin) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
     {
-
+            return ( this->allocator.max_size() );
     }
 
 
@@ -237,14 +248,14 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::capacity() const
     {
-
+        return ( this->_capacity );
     }
 
 
     template < typename T, typename Alloc>
     bool vector<T, Alloc>::empty() const
     {
-
+        return ( this->_begin == this->end );
     }
 
 
@@ -284,26 +295,26 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reference vector<T, Alloc>::front()
     {
-
+        return ( *( this->_begin ) );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reference vector<T, Alloc>::front() const
     {
-
+        return ( *( this->_begin ) );
     }
 
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reference vector<T, Alloc>::back()
     {
-
+        return ( *( this->_end - 1 ) );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reference vector<T, Alloc>::back() const
     {
-
+        return ( *( this->_end - 1 ) );
     }
 
 
@@ -386,6 +397,20 @@ namespace ft
     typename vector<T, Alloc>::allocator_type vector<T, Alloc>::get_allocator() const
     {
 
+    }
+
+    /* private */
+
+    template <typename T, typename Alloc>
+    inline typename vector<T, Alloc>::iterator vector<T, Alloc>::make_iter(pointer ptr)
+    {
+        return ( iterator( ptr ) );
+    }
+
+    template <typename T, typename Alloc>
+    inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::make_iter(const_pointer ptr) const_cast
+    {
+        return ( const_iterator( ptr ) );
     }
 
 
