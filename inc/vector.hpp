@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <stdexcept>
 
 #include "utils/type_traits.hpp"
 #include "utils/iterator.hpp"
@@ -117,8 +118,12 @@ namespace ft
         allocator_type get_allocator() const;
 
     private:
-        iterator make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
-        iterator make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+        iterator _make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
+        iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+
+        size_type _vcalculate_size( size_type n) const; // checks n for validity and returns new size
+        pointer _vallocate(size_type n); // allocate space for n objects
+        void _vdeallocate(); // clears all objects from vector and deallocates space
 
     }; // vector
 
@@ -130,9 +135,14 @@ namespace ft
     vector<T, Alloc>::vector( const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) {}
 
     template < typename T, typename Alloc>
-    vector<T, Alloc>::vector( size_type n, const value_type& val, const allocator_type& alloc ) // fill constructor
+    vector<T, Alloc>::vector( size_type n, const value_type& val, const allocator_type& alloc )  : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // fill constructor
     {
-
+        if ( n != 0 )
+        {
+            this->_begin = this->_vallocate( n );
+            this->_end == this->_begin n;
+            this->construct_at_(  );
+        }
     }
 
         // allocator_type  _allocator;
@@ -156,7 +166,8 @@ namespace ft
     template < typename T, typename Alloc>
     vector<T, Alloc>::~vector()
     {
-
+        if ( this->_begin != nullptr )
+            this->_vdeallocate();
     }
 
 
@@ -170,14 +181,14 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::begin()
     {
-        // return ( make_iter( this->_begin ) ); // or just:
+        // return ( _make_iter( this->_begin ) ); // or just:
         return ( iterator( this->_begin) );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::begin() const
     {
-        // return ( make_iter( this->_begin ) ); // or just:
+        // return ( _make_iter( this->_begin ) ); // or just:
         return ( const_iterator( this->_begin ) );
     }
 
@@ -185,14 +196,14 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::end()
     {
-        // return ( make_iter( this->_end ) ); // or just:
+        // return ( _make_iter( this->_end ) ); // or just:
         return ( iterator( this->_end) )
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::end() const
     {
-        // return ( make_iter( this->_end ) ); // or just:
+        // return ( _make_iter( this->_end ) ); // or just:
         return ( const_iterator( this->_end ) );
     }
 
@@ -402,15 +413,65 @@ namespace ft
     /* private */
 
     template <typename T, typename Alloc>
-    inline typename vector<T, Alloc>::iterator vector<T, Alloc>::make_iter(pointer ptr)
+    inline typename vector<T, Alloc>::iterator vector<T, Alloc>::_make_iter(pointer ptr)
     {
         return ( iterator( ptr ) );
     }
 
     template <typename T, typename Alloc>
-    inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::make_iter(const_pointer ptr) const_cast
+    inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::_make_iter(const_pointer ptr) const_cast
     {
         return ( const_iterator( ptr ) );
+    }
+
+    // checks n against max_size()
+    // checks if n smaller capacity
+    // returns n * 2, but maximum of max_size()
+
+    template <typename T, typename Alloc>
+    typename vector<T, Alloc>::size_type vector<T, Alloc>::_vcalculate_size( size_type n) const
+    {
+        const size_type temp_max_size = this->max_size();
+        const size_type temp_capacity = this->capacity();
+    
+        if ( n > temp_max_size )
+            throw std::length_error( "ft::vector" );
+        if ( n < temp_capacity )
+            return ( temp_capacity );
+        if ( n >= temp_capacity && n >= temp_max_size / 2 )
+            return ( temp_max_size );
+        return ( n * 2 );
+    }
+
+    // throws length_error if n > max_size()
+    // throws ( probably bad_alloc ) if memory run out ( in max_size() )
+    // allocates space for n objects at _begin
+    // sets _end to end of allocated space
+    // sets _capacity to n
+
+    template <typename T, typename Alloc>
+    typename vector<T, Alloc>::pointer vector<T, Alloc>::_vallocate(size_type n)
+    {
+        n = this->_vcalculate_size( n );
+        this->_begin = this->_end = this->allocator.allocate( n );
+        this->_capacity = n;
+    }
+
+    // Check if space was allocated
+    // if yes:
+    // clear all elements
+    // clear allocated space
+    // set nullptr to _begin and _end
+
+    template <typename T, typename Alloc>
+    void vector<T, Alloc>::_vdeallocate()
+    {
+        if ( this->_begin != nullptr )
+        {
+            this->clear();
+            this->_allocator.deallocate( this->_begin, this->capacity() );
+            this->_begin = this->_end = nullptr;
+        }
     }
 
 
