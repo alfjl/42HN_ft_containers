@@ -124,6 +124,8 @@ namespace ft
         size_type _vcalculate_size( size_type n) const; // checks n for validity and returns new size
         pointer _vallocate(size_type n); // allocate space for n objects
         void _vdeallocate(); // clears all objects from vector and deallocates space
+        void _vconstruct_elements( const size_type& n, const value_type& val ); // constructs elements of type val
+        void _vconstruct_copies( const vector& other ); // constructs copies of elements of 'other'
 
     }; // vector
 
@@ -140,27 +142,30 @@ namespace ft
         if ( n != 0 )
         {
             this->_begin = this->_vallocate( n );
-            this->_end == this->_begin n;
-            this->construct_at_(  );
+            this->_end == this->_begin + n;
+            this->_vconstruct_elements( n, val );
         }
     }
 
-        // allocator_type  _allocator;
-        // pointer         _begin;
-        // pointer         _end;
-        // size_type       _capacity;
 
+    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Weiterarbeiten %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+    /* stimmt 162? What about enable if/is_integral? */
     template < typename T, typename Alloc>
     template <class InputIterator>
-    vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) // range constructor
+    vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
+        // add enable_if. But how? why? and were get infos from?
     {
+        size_type   n = static_cast(size_type)( ft::distance( first, last ) );
 
+        this->_begin = this->_vallocate( n );
+        this->_end = this->_begin + n;
+        this->_vconstruct_copies( x );
     }
 
     template < typename T, typename Alloc>
     vector<T, Alloc>::vector( const vector& x ) // copy constructor
     {
-
+        *this = x;
     }
 
     template < typename T, typename Alloc>
@@ -174,7 +179,16 @@ namespace ft
     template < typename T, typename Alloc>
     vector<T, Alloc>& vector<T, Alloc>::operator=( const vector<T, Alloc>& x ) // assignment operator
     {
-        
+        if ( this != &x )
+        {
+            this->_vdeallocate();
+            this->_alloc = x._alloc;
+            size_type n = x.capacity();
+            this->_begin = this->_vallocate( n );
+            this->_end = this->_begin + n; // or: 'this->_end = this->_begin + x.size()' ?
+            this->_vconstruct_copies( x );
+        }
+        return ( *this );
     }
 
 
@@ -472,6 +486,20 @@ namespace ft
             this->_allocator.deallocate( this->_begin, this->capacity() );
             this->_begin = this->_end = nullptr;
         }
+    }
+
+    void _vconstruct_elements( const size_type& n, const value_type& val )
+    {
+        for ( size_type i = 0; i < n; ++i )
+            this->allocator.construct( this->_begin + i, val );
+    }
+
+    void _vconstruct_copies( const vector& other )
+    {
+        size_type temp_n = other.size();
+
+        for ( size_type i = 0; i < temp_n; ++i )
+            this->allocator.construct( this->begin + i, other[i] );
     }
 
 
