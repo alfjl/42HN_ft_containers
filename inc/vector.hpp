@@ -126,6 +126,7 @@ namespace ft
         void _vdeallocate(); // clears all objects from vector and deallocates space
         void _vconstruct_elements( const size_type& n, const value_type& val ); // constructs elements of type val
         void _vconstruct_copies( const vector& other ); // constructs copies of elements of 'other'
+        void _vdestruct_at_end( pointer _new_end )
 
     }; // vector
 
@@ -149,7 +150,7 @@ namespace ft
 
 
     /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Weiterarbeiten %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-    /* stimmt 162? What about enable if/is_integral? */
+    /* What about enable if/is_integral? */
     template < typename T, typename Alloc>
     template <class InputIterator>
     vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
@@ -159,7 +160,8 @@ namespace ft
 
         this->_begin = this->_vallocate( n );
         this->_end = this->_begin + n;
-        this->_vconstruct_copies( x );
+        for ( ; first != last; ++first )
+            this->push_back( *first );
     }
 
     template < typename T, typename Alloc>
@@ -266,7 +268,12 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::resize( size_type n, value_type val )
     {
+        if ( n == size() )
+            return ;
+        if ( n  ) // do I need the max_size() comaprison here, or is it caught in _vallocate() without any issues?
 
+
+            /*       KEEEP ON WORKING, AFTER RESERVE!!!!!!!    */ 
     }
 
 
@@ -287,7 +294,18 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::reserve( size_type n )
     {
+        if ( n > this->capacity() )
+        {
+            pointer     temp_begin = this->_vallocate( n );
+            size_type   temp_size = this->size();
 
+            for ( size_type i = 0; i < temp_size; ++i )
+                this->_allocator.construct( temp_begin + i, this->_begin[i] );
+            this->_vdeallocate();
+            this->_begin = temp_begin;
+            this->_end = this->_begin + temp_size;
+            this->_capacity = this->_begin + n;
+        }
     }
 
 
@@ -414,7 +432,7 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::clear()
     {
-
+        this->_vdestruct_at_end( this->_begin );
     }
 
 
@@ -488,18 +506,26 @@ namespace ft
         }
     }
 
-    void _vconstruct_elements( const size_type& n, const value_type& val )
+    void vector<T, Alloc>::_vconstruct_elements( const size_type& n, const value_type& val )
     {
         for ( size_type i = 0; i < n; ++i )
             this->allocator.construct( this->_begin + i, val );
     }
 
-    void _vconstruct_copies( const vector& other )
+    void vector<T, Alloc>::_vconstruct_copies( const vector<T, Alloc>::& other )
     {
         size_type temp_n = other.size();
 
         for ( size_type i = 0; i < temp_n; ++i )
             this->allocator.construct( this->begin + i, other[i] );
+    }
+
+    void vector<T, Alloc>::_vdestruct_at_end( pointer _new_end )
+    {
+        pointer _soon_to_be_end = this->_end;
+        while ( _new_end != _soon_to_be_end )
+            this->_allocator.destroy( --_soon_to_be_end );
+        this->_end = _new_end;
     }
 
 
