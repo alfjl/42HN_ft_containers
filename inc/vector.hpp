@@ -312,13 +312,15 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reference vector<T, Alloc>::operator[]( size_type n )
     {
-
+        // return ( this->_begin + n ); // falsch: nur Pointer
+        return ( *( this->_begin + n ) );
+        // return ( this->_begin[n] ); // richtig
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reference vector<T, Alloc>::operator[]( size_type n ) const
     {
-
+        return ( *( this->_begin + n ) );
     }
 
 
@@ -439,7 +441,7 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::allocator_type vector<T, Alloc>::get_allocator() const
     {
-
+        return ( this->_allocator );
     }
 
     /* private */
