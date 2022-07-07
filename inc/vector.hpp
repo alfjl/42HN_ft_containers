@@ -389,7 +389,9 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::push_back( const value_type& val )
     {
-
+        this->reserve( this->size() + 1 );
+        this->_end = this->_allocator.construct( val );
+        ++this->_end;
     }
 
 
