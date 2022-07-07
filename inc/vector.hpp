@@ -398,7 +398,12 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::pop_back()
     {
-
+        if ( !( this->empty() ) )
+        {
+            // this->_allocator.destroy( this->back() ); // is reference (return val from back()0 here ok, or do I need to first decrement _end and use this pointer?)
+            --this->_end;
+            this->_allocator.destroy( this->_end );
+        }
     }
 
 
