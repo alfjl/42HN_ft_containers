@@ -155,6 +155,9 @@ namespace ft
     template <class InputIterator>
     vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
         // add enable_if. But how? why? and were get infos from?
+        // How:
+        // Why: Use 'enable_if(!is_integral...)' to only enable this constructor, if the type handed over is not an integral. Else, the compiler might use it with ints, or similar. 
+        // Where infos:
     {
         size_type   n = static_cast(size_type)( ft::distance( first, last ) );
 
@@ -327,13 +330,19 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::reference vector<T, Alloc>::at( size_type n )
     {
-
+        if ( n < this->size() )
+            return ( *( this->_begin + n ) );
+        else
+            throw std::out_of_range( "ft::vector" );
     }
 
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::const_reference vector<T, Alloc>::at( size_type n ) const
     {
-
+        if ( n < this->size() )
+            return ( *( this->_begin + n ) );
+        else
+            throw std::out_of_range( "ft::vector" );
     }
 
 
@@ -479,16 +488,15 @@ namespace ft
 
     // throws length_error if n > max_size()
     // throws ( probably bad_alloc ) if memory run out ( in max_size() )
-    // allocates space for n objects at _begin
-    // sets _end to end of allocated space
     // sets _capacity to n
+    // allocates space for n objects and returns pointer
 
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::pointer vector<T, Alloc>::_vallocate(size_type n)
     {
         n = this->_vcalculate_size( n );
-        this->_begin = this->_end = this->allocator.allocate( n );
         this->_capacity = n;
+        return ( this->allocator.allocate( n ) );
     }
 
     // Check if space was allocated
