@@ -119,14 +119,14 @@ namespace ft
 
     private:
         iterator _make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
-        iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+        const_iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
 
         size_type _vcalculate_size( size_type n) const; // checks n for validity and returns new size
         pointer _vallocate(size_type n); // allocate space for n objects
         void _vdeallocate(); // clears all objects from vector and deallocates space
         void _vconstruct_elements( const size_type& n, const value_type& val ); // constructs elements of type val
         void _vconstruct_copies( const vector& other ); // constructs copies of elements of 'other'
-        void _vdestruct_at_end( pointer _new_end )
+        void _vdestruct_at_end( pointer _new_end );
 
     }; // vector
 
@@ -271,12 +271,18 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::resize( size_type n, value_type val )
     {
-        if ( n == size() )
+        size_type   temp_size = this->size();
+
+        if ( n == temp_size )
             return ;
-        if ( n  ) // do I need the max_size() comaprison here, or is it caught in _vallocate() without any issues?
-
-
-            /*       KEEEP ON WORKING, AFTER RESERVE!!!!!!!    */ 
+        if ( n < temp_size )
+            this->_vdestruct_at_end(this->_begin + n);
+        else
+        {
+            this->reserve( n );
+            for ( ; temp_size < n; ++temp_size )
+                this->push_back( val );
+        }
     }
 
 
@@ -408,7 +414,7 @@ namespace ft
 
 
     template < typename T, typename Alloc>
-    typename vector<T, Alloc>::iterator vector::insert( iterator position, const value_type& val ) // single element
+    typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
 
     }
@@ -469,7 +475,7 @@ namespace ft
     }
 
     template <typename T, typename Alloc>
-    inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::_make_iter(const_pointer ptr) const_cast
+    inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::_make_iter(const_pointer ptr) const
     {
         return ( const_iterator( ptr ) );
     }
@@ -523,20 +529,23 @@ namespace ft
         }
     }
 
+    template <typename T, typename Alloc>
     void vector<T, Alloc>::_vconstruct_elements( const size_type& n, const value_type& val )
     {
         for ( size_type i = 0; i < n; ++i )
-            this->allocator.construct( this->_begin + i, val );
+            this->_allocator.construct( this->_begin + i, val );
     }
 
-    void vector<T, Alloc>::_vconstruct_copies( const vector<T, Alloc>::& other )
+    template <typename T, typename Alloc>
+    void vector<T, Alloc>::_vconstruct_copies( const vector& other )
     {
         size_type temp_n = other.size();
 
         for ( size_type i = 0; i < temp_n; ++i )
-            this->allocator.construct( this->begin + i, other[i] );
+            this->_allocator.construct( this->_begin + i, other[i] );
     }
 
+    template <typename T, typename Alloc>
     void vector<T, Alloc>::_vdestruct_at_end( pointer _new_end )
     {
         pointer _soon_to_be_end = this->_end;
@@ -544,7 +553,6 @@ namespace ft
             this->_allocator.destroy( --_soon_to_be_end );
         this->_end = _new_end;
     }
-
 
     /* vector non-member functions */
 
