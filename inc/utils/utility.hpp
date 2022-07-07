@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/28 14:23:38 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/07 14:51:40 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,26 @@ namespace   ft
         {
             return ( ft::pair<T1, T2>( x, y ) );
         }
+
+    template <class T> void swap (T& a, T& b)
+    {
+
+    }
+
+    /* -------------------------------- swap -------------------------------- */
+    
+    /*
+    ** (https://cplusplus.com/reference/algorithm/swap/)
+    ** Exchanges the values of a and b.
+    */
+
+    template <typename T>
+    void swap ( T& a, T& b )
+    {
+        T temp( a );
+
+        a = b;
+        b = temp;
+    }
 
 } // namespace ft
