@@ -449,10 +449,22 @@ namespace ft
     }
 
 
+    // An invalid position or range causes undefined behavior.
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
     {
-
+        if ( position == this->back() )
+            this->pop_back();
+        else
+        {
+            for ( iterator it = position; it != this->_end; ++it)
+            {
+                this->allocator.destroy( it );
+                this->allocator.construct( it, *( it + 1 ) );
+            }
+            --this->_end;
+        }
+        return ( position );
     }
 
     template < typename T, typename Alloc>
