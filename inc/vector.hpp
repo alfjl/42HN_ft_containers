@@ -128,7 +128,8 @@ namespace ft
         void _vconstruct_elements( const size_type& n, const value_type& val ); // constructs elements of type val
         void _vconstruct_copies( const vector& other ); // constructs copies of elements of 'other'
         void _vdestruct_at_end( pointer _new_end );
-
+        void _vresize_empty_vector( size_type n );
+    
     }; // vector
 
 
@@ -382,14 +383,28 @@ namespace ft
     template < typename T, typename Alloc>
     template <class InputIterator>
     void vector<T, Alloc>::assign( InputIterator first, InputIterator last ) // range version
+    // equal_if needed here????
     {
+        size_type   n = static_cast(size_type)( ft::distance( first, last ) );
 
+        this->clear();
+        if ( n > this->_capacity )
+            _vresize_empty_vector( n );
+        for ( ; first != last; ++first)
+        {
+            this->_allocator.construct( *first );
+            ++this->_end;
+        }
     }
 
     template < typename T, typename Alloc>
     void vector<T, Alloc>::assign( size_type n, const value_type& val ) // fill version
     {
-
+        this->clear();
+        if ( n > this->_capacity )
+            _vresize_empty_vector( n );
+        for ( size_type i = 0; i < n; ++i )
+            this->_allocator.construct( val );
     }
 
 
@@ -530,6 +545,7 @@ namespace ft
             this->clear();
             this->_allocator.deallocate( this->_begin, this->capacity() );
             this->_begin = this->_end = nullptr;
+            //add '_capacity = 0' here?
         }
     }
 
@@ -556,6 +572,16 @@ namespace ft
         while ( _new_end != _soon_to_be_end )
             this->_allocator.destroy( --_soon_to_be_end );
         this->_end = _new_end;
+    }
+
+    template <typename T, typename Alloc>
+    void vector<T, Alloc>::_vresize_empty_vector( size_type n )
+    {
+        pointer     temp_begin = this->_vallocate( n );
+
+        this->_allocator.deallocate(this->_begin, this->capacity());
+        this->_begin = this->_end = temp_begin;
+        this->_capacity = n;
     }
 
     /* vector non-member functions */
