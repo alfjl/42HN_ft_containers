@@ -467,6 +467,7 @@ namespace ft
         return ( position );
     }
 
+    // Iterators, pointers and references pointing to position (or first) and beyond are invalidated
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator first, iterator last )
     {
@@ -481,8 +482,12 @@ namespace ft
             while ( ; temp != last; ++temp )
                 this->allocator.destroy( temp );
             while ( ; temp != this->_end ; ++temp )
+            {
                 this->allocator.construct( ++temp_two, *( temp ) );
+                this->allocator.destroy( temp );
+            }
         }
+        this->_end = ++temp_two;
         return ( first );
     }
 
