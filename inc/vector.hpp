@@ -129,7 +129,7 @@ namespace ft
         void _vconstruct_copies( const vector& other ); // constructs copies of elements of 'other'
         void _vdestruct_at_end( pointer _new_end );
         void _vresize_empty_vector( size_type n );
-    
+
     }; // vector
 
 
@@ -432,20 +432,64 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
+        iterator    begin = this->_begin();
+        size_type   n = static_cast(size_type)( ft::distance( begin, position ) );
 
+        if ( position == this->_end )
+        {
+            push_back( val );
+            return ( position ); // or does position not point on the point in memory, but on the specific object???? Then: 'return ( --this->_end );'
+        }
+        else
+            this->insert( position, 1, val );
+        return ( this->_make_iter( this->begin + n ) );
     }
 
     template < typename T, typename Alloc>
     void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version
     {
+        if ( position == this->_end )
+        {
+            for ( size_type i = 0; i < n; i++ )
+                push_back( val );
+        }
+        else
+        {
+            size_type   new_size = n + this->size();
+            pointer     new_begin = new_current = this->_vallocate( new_size );
+            // pointer     p = this->_begin + ( position - this->begin() );
+            pointer     p = this->_vmake_pointer( position );
 
+            for ( pointer current = this->_begin; current != this->_end; ++current)
+            {
+                if ( current == p )
+                {
+                    for ( size_type i = 0; i < n; ++i )
+                        this->allocator.construct( ++new_current, val );
+                }
+                this->allocator.construct( ++new_current, *( current ) );
+            }
+            this->_vdeallocate();
+            this->_begin = new_begin;
+            this->_end = this->_begin + new_size;
+        }
     }
 
     template < typename T, typename Alloc>
     template <class InputIterator>
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last ) // range version
     {
+        if ( position == this->_end )
+        {
+            iterator    temp = first;
 
+            while ( ; temp != this->_end ; ++temp )
+                this->allocator.construct( ++temp_two, *( temp ) );;
+        }
+        else
+        {
+            
+        }
     }
 
 
@@ -527,6 +571,20 @@ namespace ft
     inline typename vector<T, Alloc>::const_iterator vector<T, Alloc>::_make_iter(const_pointer ptr) const
     {
         return ( const_iterator( ptr ) );
+    }
+
+// needed????
+    template <typename T, typename Alloc>
+    inline typename vector<T, Alloc>::pointer vector<T, Alloc>::_vmake_pointer(iterator itr)
+    {
+        return ( this->_begin + ( itr - this->begin() ) );
+    }
+
+// needed????
+    template <typename T, typename Alloc>
+    inline typename vector<T, Alloc>::const_pointer vector<T, Alloc>::_vmake_pointer(const_iterator itr) const
+    {
+        return ( this->_begin + ( itr - this->begin() ) );
     }
 
     // checks n against max_size()
@@ -613,6 +671,7 @@ namespace ft
         this->_begin = this->_end = temp_begin;
         this->_capacity = n;
     }
+
 
     /* vector non-member functions */
 
