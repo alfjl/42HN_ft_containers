@@ -453,7 +453,7 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
     {
-        if ( position == this->back() )
+        if ( position == this->_make_iter( this->back() ) )
             this->pop_back();
         else
         {
@@ -470,7 +470,20 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator first, iterator last )
     {
+        if ( first == --last )
+            return ( this->erase( first ) );
+        if ( this->_end <= last )
+            _vdestruct_at_end( --first );
+        else
+        {
+            iterator    temp = temp_two = first;
 
+            while ( ; temp != last; ++temp )
+                this->allocator.destroy( temp );
+            while ( ; temp != this->_end ; ++temp )
+                this->allocator.construct( ++temp_two, *( temp ) );
+        }
+        return ( first );
     }
 
 
