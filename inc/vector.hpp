@@ -433,7 +433,7 @@ namespace ft
     typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
         iterator    begin = this->_begin();
-        size_type   n = static_cast(size_type)( ft::distance( begin, position ) );
+        size_type   n = static_cast( size_type )( ft::distance( begin, position ) );
 
         if ( position == this->_end )
         {
@@ -460,7 +460,7 @@ namespace ft
             // pointer     p = this->_begin + ( position - this->begin() );
             pointer     p = this->_vmake_pointer( position );
 
-            for ( pointer current = this->_begin; current != this->_end; ++current)
+            for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
             {
                 if ( current == p )
                 {
@@ -479,16 +479,34 @@ namespace ft
     template <class InputIterator>
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last ) // range version
     {
+        iterator    temp = first;
+        size_type   n = static_cast( size_type )( ft::distance( first, last ) );
+
+        if ( first == last )
+            return ;
         if ( position == this->_end )
         {
-            iterator    temp = first;
-
-            while ( ; temp != this->_end ; ++temp )
+            while ( ; temp != this->_end ; ++temp ) // is it ok, to compare iterator and pointer like this?
                 this->allocator.construct( ++temp_two, *( temp ) );;
         }
         else
         {
-            
+            size_type   new_size = n + this->size();
+            pointer     new_begin = new_current = this->_vallocate( new_size );
+            pointer     p = this->_vmake_pointer( position );
+
+            for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
+            {
+                if ( current == p )
+                {
+                    for ( ; temp != last; ++temp)
+					    this->_allocator.construct( ++new_curr, *( temp ) ); // do I have to dereference the iterator here?
+                }
+                this->allocator.construct( ++new_current, *( current ) );
+            }
+            this->_vdeallocate();
+            this->_begin = new_begin;
+            this->_end = this->_begin + new_size;
         }
     }
 
@@ -573,14 +591,12 @@ namespace ft
         return ( const_iterator( ptr ) );
     }
 
-// needed????
     template <typename T, typename Alloc>
     inline typename vector<T, Alloc>::pointer vector<T, Alloc>::_vmake_pointer(iterator itr)
     {
         return ( this->_begin + ( itr - this->begin() ) );
     }
 
-// needed????
     template <typename T, typename Alloc>
     inline typename vector<T, Alloc>::const_pointer vector<T, Alloc>::_vmake_pointer(const_iterator itr) const
     {
