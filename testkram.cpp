@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:15:43 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/30 11:28:33 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/11 12:19:24 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1030,7 +1030,31 @@
 /* ################################ FT::VECTOR ############################## */
 
 
-// code here...
+// constructing vectors
+#include <iostream>
+
+#include "inc/vector.hpp"
+
+int main ()
+{
+  // constructors used in the same order as described above:
+  ft::vector<int> first;                                // empty vector of ints
+  ft::vector<int> second (4,100);                       // four ints with value 100
+  ft::vector<int> fourth (second);                       // a copy of third
+//   ft::vector<int> third (second.begin(),second.end());  // iterating through second  TEST AFTERRWARDS!!!!
+//   ft::vector<int> fourth (third);                       // a copy of third
+
+  // the iterator constructor can also be used to construct from arrays:
+//   int myints[] = {16,2,77,29};
+//   ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+
+//   std::cout << "The contents of fifth are:";
+//   for (ft::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+//     std::cout << ' ' << *it;
+//   std::cout << '\n';
+
+  return 0;
+}
 
 /* -------------------------------------------------------------------------- */
 

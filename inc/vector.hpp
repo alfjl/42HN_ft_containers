@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
+/*   Updated: 2022/07/11 16:22:45 by alanghan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #pragma once
 
 #include <memory>
@@ -121,6 +133,8 @@ namespace ft
     private:
         iterator _make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
         const_iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+        pointer _vmake_pointer(iterator itr);
+        const_pointer _vmake_pointer(const_iterator itr) const;
 
         size_type _vcalculate_size( size_type n) const; // checks n for validity and returns new size
         pointer _vallocate(size_type n); // allocate space for n objects
@@ -145,7 +159,7 @@ namespace ft
         if ( n != 0 )
         {
             this->_begin = this->_vallocate( n );
-            this->_end == this->_begin + n;
+            this->_end = this->_begin + n;
             this->_vconstruct_elements( n, val );
         }
     }
@@ -155,13 +169,14 @@ namespace ft
     /* What about enable if/is_integral? */
     template < typename T, typename Alloc>
     template <class InputIterator>
-    vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
+    vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc,
+                                typename ft::enable_if<!( ft::is_integral<InputIterator>::value>::type )> ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
         // add enable_if. But how? why? and were get infos from?
         // How:
         // Why: Use 'enable_if(!is_integral...)' to only enable this constructor, if the type handed over is not an integral. Else, the compiler might use it with ints, or similar. 
         // Where infos:
     {
-        size_type   n = static_cast(size_type)( ft::distance( first, last ) );
+        size_type   n = static_cast<size_type>( ft::distance( first, last ) );
 
         this->_begin = this->_vallocate( n );
         this->_end = this->_begin + n;
@@ -218,7 +233,7 @@ namespace ft
     typename vector<T, Alloc>::iterator vector<T, Alloc>::end()
     {
         // return ( _make_iter( this->_end ) ); // or just:
-        return ( iterator( this->_end) )
+        return ( iterator( this->_end ) );
     }
 
     template < typename T, typename Alloc>
@@ -266,7 +281,7 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
     {
-            return ( this->allocator.max_size() );
+            return ( this->_allocator.max_size() );
     }
 
 
@@ -385,7 +400,7 @@ namespace ft
     void vector<T, Alloc>::assign( InputIterator first, InputIterator last ) // range version
     // equal_if needed here????
     {
-        size_type   n = static_cast(size_type)( ft::distance( first, last ) );
+        size_type   n = static_cast<size_type>( ft::distance( first, last ) );
 
         this->clear();
         if ( n > this->_capacity )
@@ -433,7 +448,7 @@ namespace ft
     typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
         iterator    begin = this->_begin();
-        size_type   n = static_cast( size_type )( ft::distance( begin, position ) );
+        size_type   n = static_cast<size_type>( ft::distance( begin, position ) );
 
         if ( position == this->_end )
         {
@@ -456,18 +471,19 @@ namespace ft
         else
         {
             size_type   new_size = n + this->size();
-            pointer     new_begin = new_current = this->_vallocate( new_size );
+            pointer     new_begin, new_current;
             // pointer     p = this->_begin + ( position - this->begin() );
             pointer     p = this->_vmake_pointer( position );
 
+            new_begin = new_current = this->_vallocate( new_size );
             for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
             {
                 if ( current == p )
                 {
                     for ( size_type i = 0; i < n; ++i )
-                        this->allocator.construct( ++new_current, val );
+                        this->_allocator.construct( ++new_current, val );
                 }
-                this->allocator.construct( ++new_current, *( current ) );
+                this->_allocator.construct( ++new_current, *( current ) );
             }
             this->_vdeallocate();
             this->_begin = new_begin;
@@ -480,29 +496,30 @@ namespace ft
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last ) // range version
     {
         iterator    temp = first;
-        size_type   n = static_cast( size_type )( ft::distance( first, last ) );
+        size_type   n = static_cast<size_type>( ft::distance( first, last ) );
 
         if ( first == last )
             return ;
         if ( position == this->_end )
         {
-            while ( ; temp != this->_end ; ++temp ) // is it ok, to compare iterator and pointer like this?
-                this->allocator.construct( ++temp_two, *( temp ) );;
+            for ( ; temp != this->_end ; ++temp ) // is it ok, to compare iterator and pointer like this?
+                this->push_back( *( temp ) );; // or 'temp' without dereference?
         }
         else
         {
             size_type   new_size = n + this->size();
-            pointer     new_begin = new_current = this->_vallocate( new_size );
+            pointer     new_begin, new_current;
             pointer     p = this->_vmake_pointer( position );
 
+            new_begin = new_current = this->_vallocate( new_size );
             for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
             {
                 if ( current == p )
                 {
                     for ( ; temp != last; ++temp)
-					    this->_allocator.construct( ++new_curr, *( temp ) ); // do I have to dereference the iterator here?
+					    this->_allocator.construct( ++new_current, *( temp ) ); // do I have to dereference the iterator here?
                 }
-                this->allocator.construct( ++new_current, *( current ) );
+                this->_allocator.construct( ++new_current, *( current ) );
             }
             this->_vdeallocate();
             this->_begin = new_begin;
@@ -521,8 +538,8 @@ namespace ft
         {
             for ( iterator it = position; it != this->_end; ++it)
             {
-                this->allocator.destroy( it );
-                this->allocator.construct( it, *( it + 1 ) );
+                this->_allocator.destroy( it );
+                this->_allocator.construct( it, *( it + 1 ) );
             }
             --this->_end;
         }
@@ -539,17 +556,18 @@ namespace ft
             _vdestruct_at_end( --first );
         else
         {
-            iterator    temp = temp_two = first;
+            iterator    temp, temp_two;
+            temp = temp_two = first;
 
-            while ( ; temp != last; ++temp )
-                this->allocator.destroy( temp );
-            while ( ; temp != this->_end ; ++temp )
+            for ( ; temp != last; ++temp )
+                this->_allocator.destroy( temp );
+            for ( ; temp != this->_end ; ++temp )
             {
-                this->allocator.construct( ++temp_two, *( temp ) );
-                this->allocator.destroy( temp );
+                this->_allocator.construct( ++temp_two, *( temp ) );
+                this->_allocator.destroy( temp );
             }
+            this->_end = ++temp_two;
         }
-        this->_end = ++temp_two;
         return ( first );
     }
 
@@ -632,7 +650,7 @@ namespace ft
     {
         n = this->_vcalculate_size( n );
         this->_capacity = n;
-        return ( this->allocator.allocate( n ) );
+        return ( this->_allocator.allocate( n ) );
     }
 
     // Check if space was allocated
