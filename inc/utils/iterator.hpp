@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/12 12:40:46 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/12 16:43:22 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,7 +362,8 @@ namespace ft
 
     public:
         random_access_iterator();
-        random_access_iterator( pointer ptr = nullptr );
+        // random_access_iterator( pointer ptr = nullptr );
+        random_access_iterator( const iterator_type& ptr );
         random_access_iterator( const random_access_iterator& other );
         ~random_access_iterator();
         
@@ -389,9 +390,12 @@ namespace ft
     template <typename T>
     random_access_iterator<T>::random_access_iterator() : _ptr() {}
 
-    template <typename T>
-    random_access_iterator<T>::random_access_iterator( pointer ptr ) : _ptr( ptr ) {}
+    // template <typename T>
+    // random_access_iterator<T>::random_access_iterator( pointer ptr ) : _ptr( ptr ) {}
 
+    template <typename T>
+    random_access_iterator<T>::random_access_iterator( const iterator_type& ptr ) : _ptr( ptr ) {}
+    
     template <typename T>
     random_access_iterator<T>::random_access_iterator( const random_access_iterator<T>& other ) : _ptr( other.base() ) {}
 

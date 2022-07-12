@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/12 11:47:42 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/12 17:57:09 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,28 +167,20 @@ namespace ft
         }
     }
 
-
-    /* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Weiterarbeiten %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
-    /* What about enable if/is_integral? */
     template < typename T, typename Alloc>
     template <class InputIterator>
     vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc,
                                 typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
-        // add enable_if. But how? why? and were get infos from?
-        // How:
-        // Why: Use 'enable_if(!is_integral...)' to only enable this constructor, if the type handed over is not an integral. Else, the compiler might use it with ints, or similar. 
-        // Where infos:
     {
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
 
-        this->_begin = this->_vallocate( n );
-        this->_end = this->_begin + n;
+        this->_end = this->_begin = this->_vallocate( n );
         for ( ; first != last; ++first )
             this->push_back( *first );
     }
 
     template < typename T, typename Alloc>
-    vector<T, Alloc>::vector( const vector& x ) // copy constructor
+    vector<T, Alloc>::vector( const vector& x )  : _allocator(x._allocator), _begin(nullptr), _end(nullptr), _capacity(0) // copy constructor
     {
         *this = x;
     }
@@ -210,7 +202,7 @@ namespace ft
             this->_allocator = x._allocator;
             size_type n = x.capacity();
             this->_begin = this->_vallocate( n );
-            this->_end = this->_begin + n; // or: 'this->_end = this->_begin + x.size()' ?
+            this->_end = this->_begin + x.size();
             this->_vconstruct_copies( x );
         }
         return ( *this );
@@ -221,7 +213,7 @@ namespace ft
     typename vector<T, Alloc>::iterator vector<T, Alloc>::begin()
     {
         // return ( _make_iter( this->_begin ) ); // or just:
-        return ( iterator( this->_begin) );
+        return ( iterator( this->_begin ) );
     }
 
     template < typename T, typename Alloc>
@@ -316,7 +308,7 @@ namespace ft
     template < typename T, typename Alloc>
     bool vector<T, Alloc>::empty() const
     {
-        return ( this->_begin == this->end );
+        return ( this->_begin == this->_end );
     }
 
 
@@ -333,7 +325,6 @@ namespace ft
             this->_vdeallocate();
             this->_begin = temp_begin;
             this->_end = this->_begin + temp_size;
-            this->_capacity = this->_begin + n;
         }
     }
 
@@ -410,10 +401,7 @@ namespace ft
         if ( n > this->_capacity )
             _vresize_empty_vector( n );
         for ( ; first != last; ++first)
-        {
-            this->_allocator.construct( *first );
-            ++this->_end;
-        }
+            this->_allocator.construct( ++this->_end, *( first ) );
     }
 
     template < typename T, typename Alloc>
@@ -423,7 +411,7 @@ namespace ft
         if ( n > this->_capacity )
             _vresize_empty_vector( n );
         for ( size_type i = 0; i < n; ++i )
-            this->_allocator.construct( val );
+            this->_allocator.construct( ++this->_end, val );
     }
 
 
@@ -431,7 +419,7 @@ namespace ft
     void vector<T, Alloc>::push_back( const value_type& val )
     {
         this->reserve( this->size() + 1 );
-        this->_end = this->_allocator.construct( val );
+        this->_allocator.construct( this->_end, val );
         ++this->_end;
     }
 
@@ -451,23 +439,28 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
-        iterator    begin = this->_begin();
+        iterator    begin = this->begin();
+        iterator    end = this->end();
         size_type   n = static_cast<size_type>( ft::distance( begin, position ) );
 
-        if ( position == this->_end )
+        if ( position == end )
         {
             push_back( val );
             return ( position ); // or does position not point on the point in memory, but on the specific object???? Then: 'return ( --this->_end );'
         }
         else
             this->insert( position, 1, val );
-        return ( this->_make_iter( this->begin + n ) );
+        return ( this->_make_iter( this->_begin + n ) );
     }
 
     template < typename T, typename Alloc>
     void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version
     {
-        if ( position == this->_end )
+        iterator    end = this->end();
+        // pointer pos = _vmake_pointer( position ); // works as well
+
+        // if ( pos == this->_end ) // works as well
+        if ( position == end )
         {
             for ( size_type i = 0; i < n; i++ )
                 push_back( val );
@@ -502,13 +495,15 @@ namespace ft
     {
         iterator    temp = first;
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
+        pointer     p = this->_vmake_pointer( position );
+        iterator    end = this->end();
 
         if ( first == last )
             return ;
-        if ( position == this->_end )
+        if ( p == this->_end )
         {
-            for ( ; temp != this->_end ; ++temp ) // is it ok, to compare iterator and pointer like this?
-                this->push_back( *( temp ) );; // or 'temp' without dereference?
+            for ( ; temp != end ; ++temp )
+                this->push_back( *( temp ) );
         }
         else
         {
@@ -522,7 +517,7 @@ namespace ft
                 if ( current == p )
                 {
                     for ( ; temp != last; ++temp)
-					    this->_allocator.construct( ++new_current, *( temp ) ); // do I have to dereference the iterator here?
+					    this->_allocator.construct( ++new_current, *( temp ) );
                 }
                 this->_allocator.construct( ++new_current, *( current ) );
             }
@@ -537,11 +532,12 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
     {
-        if ( position == this->_make_iter( this->back() ) )
+        if ( position == this->_make_iter( --this->_end ) )
             this->pop_back();
         else
         {
-            for ( iterator it = position; it != this->_end; ++it)
+            iterator    end = this->end();
+            for ( iterator it = position; it != end; ++it)
             {
                 this->_allocator.destroy( it );
                 this->_allocator.construct( it, *( it + 1 ) );
@@ -580,10 +576,10 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::swap( vector<T, Alloc>& x )
     {
-        ft::swap(this->_allocator, x->_allocator);
-        ft::swap(this->_begin, x->_begin);
-        ft::swap(this->_end, x->_end);
-        ft::swap(this->_capacity, x->_capacity);
+        ft::swap(this->_allocator, x._allocator);
+        ft::swap(this->_begin, x._begin);
+        ft::swap(this->_end, x._end);
+        ft::swap(this->_capacity, x._capacity);
     }
 
 
@@ -649,7 +645,6 @@ namespace ft
     // throws ( probably bad_alloc ) if memory run out ( in max_size() )
     // sets _capacity to n
     // allocates space for n objects and returns pointer
-
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::pointer vector<T, Alloc>::_vallocate(size_type n)
     {
@@ -663,7 +658,6 @@ namespace ft
     // clear all elements
     // clear allocated space
     // set nullptr to _begin and _end
-
     template <typename T, typename Alloc>
     void vector<T, Alloc>::_vdeallocate()
     {
@@ -696,7 +690,7 @@ namespace ft
     void vector<T, Alloc>::_vdestruct_at_end( pointer _new_end )
     {
         pointer _soon_to_be_end = this->_end;
-        while ( _new_end != _soon_to_be_end )
+        while ( _soon_to_be_end != _new_end )
             this->_allocator.destroy( --_soon_to_be_end );
         this->_end = _new_end;
     }
