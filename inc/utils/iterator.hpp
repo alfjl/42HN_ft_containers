@@ -6,13 +6,15 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/04 11:49:03 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/12 12:40:46 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iterator> // still needed after changing the iterator_tags?
+
+#include "type_traits.hpp"
 
 namespace ft
 {
@@ -28,7 +30,7 @@ namespace ft
     // struct random_access_iterator_tag : public bidirectional_iterator_tag {};*/
 
     typedef std::output_iterator_tag		output_iterator_tag;
-    typedef std::input_iterator_tag			input_iterator_tag ;
+    typedef std::input_iterator_tag			input_iterator_tag;
     typedef std::forward_iterator_tag		forward_iterator_tag;
     typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
     typedef std::random_access_iterator_tag	random_access_iterator_tag;
@@ -147,7 +149,7 @@ namespace ft
         typedef typename iterator_traits<Iterator>::pointer             pointer;
     
     protected:
-        Iterator current; // oder:
+        iterator_type current; // oder:
         // iterator_type current; ?????
     
     public:
@@ -155,6 +157,7 @@ namespace ft
         explicit reverse_iterator( iterator_type it ); // initialization constructor
         template<typename Iter>
             reverse_iterator( const reverse_iterator<Iter>& rev_it ); // copy constructor
+        ~reverse_iterator(); // destructor // needed here? not in source code! Should be default destructor, if not specified here!
 
         template <typename Iter>
             reverse_iterator& operator=( const reverse_iterator<Iter>& src );
@@ -186,6 +189,9 @@ namespace ft
     template <typename Iterator>
     template<typename Iter>
     reverse_iterator<Iterator>::reverse_iterator( const reverse_iterator<Iter>& rev_it ) : current( rev_it.base() ) {}
+
+    template <typename Iterator>
+    reverse_iterator<Iterator>::~reverse_iterator() {}
 
     template <typename Iterator>
     template <typename Iter>
@@ -356,6 +362,7 @@ namespace ft
 
     public:
         random_access_iterator();
+        random_access_iterator( pointer ptr = nullptr );
         random_access_iterator( const random_access_iterator& other );
         ~random_access_iterator();
         
@@ -381,6 +388,9 @@ namespace ft
     
     template <typename T>
     random_access_iterator<T>::random_access_iterator() : _ptr() {}
+
+    template <typename T>
+    random_access_iterator<T>::random_access_iterator( pointer ptr ) : _ptr( ptr ) {}
 
     template <typename T>
     random_access_iterator<T>::random_access_iterator( const random_access_iterator<T>& other ) : _ptr( other.base() ) {}
