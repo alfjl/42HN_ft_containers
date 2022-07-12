@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/11 16:22:45 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/12 11:47:42 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ namespace ft
         explicit vector( const allocator_type& alloc = allocator_type() ); // default constructor (empty container)
         explicit vector( size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type() ); // fill constructor
         template <class InputIterator>
-            vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type() ); // range constructor
+            vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+                    typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range constructor
         vector( const vector& x ); // copy constructor
         ~vector();
 
@@ -109,7 +110,8 @@ namespace ft
         const_reference back() const;
 
         template <class InputIterator>
-            void assign( InputIterator first, InputIterator last ); // range version	
+            void assign( InputIterator first, InputIterator last,
+                        typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range version	
         void assign( size_type n, const value_type& val ); // fill version
 
         void push_back( const value_type& val );
@@ -119,7 +121,8 @@ namespace ft
         iterator insert( iterator position, const value_type& val ); // single element
         void insert( iterator position, size_type n, const value_type& val ); // fill version
         template <class InputIterator>
-            void insert( iterator position, InputIterator first, InputIterator last ); // range version
+            void insert( iterator position, InputIterator first, InputIterator last,
+                        typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range version
 
         iterator erase( iterator position );
         iterator erase( iterator first, iterator last );
@@ -170,7 +173,7 @@ namespace ft
     template < typename T, typename Alloc>
     template <class InputIterator>
     vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc,
-                                typename ft::enable_if<!( ft::is_integral<InputIterator>::value>::type )> ) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
+                                typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
         // add enable_if. But how? why? and were get infos from?
         // How:
         // Why: Use 'enable_if(!is_integral...)' to only enable this constructor, if the type handed over is not an integral. Else, the compiler might use it with ints, or similar. 
@@ -204,7 +207,7 @@ namespace ft
         if ( this != &x )
         {
             this->_vdeallocate();
-            this->_alloc = x._alloc;
+            this->_allocator = x._allocator;
             size_type n = x.capacity();
             this->_begin = this->_vallocate( n );
             this->_end = this->_begin + n; // or: 'this->_end = this->_begin + x.size()' ?
@@ -397,7 +400,8 @@ namespace ft
 
     template < typename T, typename Alloc>
     template <class InputIterator>
-    void vector<T, Alloc>::assign( InputIterator first, InputIterator last ) // range version
+    void vector<T, Alloc>::assign( InputIterator first, InputIterator last,
+                                    typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
     // equal_if needed here????
     {
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
@@ -493,7 +497,8 @@ namespace ft
 
     template < typename T, typename Alloc>
     template <class InputIterator>
-    void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last ) // range version
+    void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last,
+                                    typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
     {
         iterator    temp = first;
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
