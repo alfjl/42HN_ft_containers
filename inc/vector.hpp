@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/13 12:16:58 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/13 17:48:18 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -493,37 +493,62 @@ namespace ft
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last,
                                     typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
     {
-        iterator    temp = first;
-        size_type   n = static_cast<size_type>( ft::distance( first, last ) );
-        pointer     p = this->_vmake_pointer( position );
-        iterator    end = this->end();
+        InputIterator   temp = first;
+        pointer         pos = this->_vmake_pointer( position );
+        size_type       n = static_cast<size_type>( ft::distance( first, last ) );
+        size_type       distance = static_cast<size_type>( ft::distance( this->_begin, pos ) );
+        size_type       old_size = this->size();
+        // iterator        end = this->end();
 
         if ( first == last )
             return ;
-        if ( p == this->_end )
+        if ( pos == this->_end )
         {
-            for ( ; temp != end ; ++temp )
+            for ( ; temp != last; ++temp )
                 this->push_back( *( temp ) );
         }
         else
         {
-            size_type   new_size = n + this->size();
-            pointer     new_begin, new_current;
-            pointer     p = this->_vmake_pointer( position );
+            // // resize (so you have the correct capacity, and already the first few elements)
+            this->resize( old_size + n );
 
-            new_begin = new_current = this->_vallocate( new_size );
-            for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
+            // // push all elements after the position of 'last' in the array
+            // // do it backwards, else some of the values might get overwritten
+                iterator    temp_first = this->begin() + distance;
+                iterator    temp_last = this->begin() + old_size;
+                iterator    new_position = this->begin() + old_size + n;
+
+                for ( ; temp_last != temp_first; --temp_last )
+                    --new_position = temp_last;
+
+            // // // insert the elements of first->last in the array 
+            for ( ; temp != last; ++temp )
             {
-                if ( current == p )
-                {
-                    for ( ; temp != last; ++temp)
-					    this->_allocator.construct( ++new_current, *( temp ) );
-                }
-                this->_allocator.construct( ++new_current, *( current ) );
+                this->_allocator.construct( pos, *( temp ) ); 
+                ++pos;
             }
-            this->_vdeallocate();
-            this->_begin = new_begin;
-            this->_end = this->_begin + new_size;
+            // this->_end = this->_end + n;
+
+
+
+            
+            // size_type   new_size = n + this->size();
+            // pointer     new_begin, new_current;
+            // pointer     p = this->_vmake_pointer( position );
+
+            // new_begin = new_current = this->_vallocate( new_size );
+            // for ( pointer current = this->_begin; current != this->_end; ++current) // is this still correct, if position points after _end? Test std:: version to see, what it is doing.
+            // {
+            //     if ( current == p )
+            //     {
+            //         for ( ; temp != last; ++temp)
+			// 		    this->_allocator.construct( ++new_current, *( temp ) );
+            //     }
+            //     this->_allocator.construct( ++new_current, *( current ) );
+            // }
+            // this->_vdeallocate();
+            // this->_begin = new_begin;
+            // this->_end = this->_begin + new_size;
         }
     }
 
@@ -692,6 +717,7 @@ namespace ft
     void vector<T, Alloc>::_vdestruct_at_end( pointer _new_end )
     {
         pointer _soon_to_be_end = this->_end;
+
         while ( _soon_to_be_end != _new_end )
             this->_allocator.destroy( --_soon_to_be_end );
         this->_end = _new_end;
