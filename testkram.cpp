@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:15:43 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/12 18:03:04 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/13 12:16:23 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1525,41 +1525,41 @@
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ERROR!!!!!! still CHECK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-// // inserting into a vector
+// inserting into a vector
 
-// #include <iostream>
+#include <iostream>
 
-// #include "inc/vector.hpp"
+#include "inc/vector.hpp"
 
-// int main ()
-// {
-//   ft::vector<int> myvector (3,100);
-//   ft::vector<int>::iterator it;
+int main ()
+{
+  ft::vector<int> myvector (3,100);
+  ft::vector<int>::iterator it;
 
-//   it = myvector.begin();
-//   it = myvector.insert ( it , 200 );
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
 
-//   myvector.insert (it,2,300);
+  myvector.insert (it,2,300);
 
-//   // "it" no longer valid, get a new one:
-//   it = myvector.begin();
+  // "it" no longer valid, get a new one:
+  it = myvector.begin();
 
-//   ft::vector<int> anothervector (2,400);
-//   myvector.insert (it+2,anothervector.begin(),anothervector.end());
+  ft::vector<int> anothervector (2,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
 
-//   int myarray [] = { 501,502,503 };
-//   myvector.insert (myvector.begin(), myarray, myarray+3);
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
 
-//   std::cout << "myvector contains:";
-//   for (it=myvector.begin(); it<myvector.end(); it++)
-//     std::cout << ' ' << *it;
-//   std::cout << '\n';
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
 
-//   return 0;
-// }
+  return 0;
+}
 
-// // Output: ***********************
-// // myvector contains: 501 502 503 300 300 400 400 200 100 100 100
+// Output: ***********************
+// myvector contains: 501 502 503 300 300 400 400 200 100 100 100
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ERROR!!!!!! still CHECK @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/12 17:57:09 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/13 12:16:58 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -532,12 +532,13 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
     {
-        if ( position == this->_make_iter( --this->_end ) )
+        pointer     p = this->_vmake_pointer( position );
+
+        if ( p == ( this->_end - 1 ) )
             this->pop_back();
         else
         {
-            iterator    end = this->end();
-            for ( iterator it = position; it != end; ++it)
+            for ( pointer it = p; it != this->_end; ++it)
             {
                 this->_allocator.destroy( it );
                 this->_allocator.construct( it, *( it + 1 ) );
@@ -551,23 +552,24 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator first, iterator last )
     {
+        pointer     temp, temp_two, temp_last;
+        temp_two = temp = this->_vmake_pointer( first );
+        temp_last = this->_vmake_pointer( last );
+
         if ( first == --last )
             return ( this->erase( first ) );
-        if ( this->_end <= last )
-            _vdestruct_at_end( --first );
+        if ( this->end() <= last )
+            _vdestruct_at_end( temp );
         else
-        {
-            iterator    temp, temp_two;
-            temp = temp_two = first;
-
-            for ( ; temp != last; ++temp )
+        {            
+            for ( ; temp != temp_last; ++temp )
                 this->_allocator.destroy( temp );
             for ( ; temp != this->_end ; ++temp )
             {
-                this->_allocator.construct( ++temp_two, *( temp ) );
+                this->_allocator.construct( temp_two++, *( temp ) );
                 this->_allocator.destroy( temp );
             }
-            this->_end = ++temp_two;
+            this->_vdestruct_at_end( temp_two );
         }
         return ( first );
     }
