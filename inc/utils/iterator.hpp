@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/12 16:43:22 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/14 15:21:53 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,23 @@ namespace ft
 
     /* ---------------------------- iterator_tags --------------------------- */
 
-    /* make own iterator_tag structs and use them later in the iterator typedef and iterator_traits instead of std::..._iterator_tag?
+    struct input_iterator_tag  {};
+    struct output_iterator_tag {};
+    struct forward_iterator_tag       : public input_iterator_tag         {};
+    struct bidirectional_iterator_tag : public forward_iterator_tag       {};
+    struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
-    // struct input_iterator_tag  {};
-    // struct output_iterator_tag {};
-    // struct forward_iterator_tag       : public input_iterator_tag         {};
-    // struct bidirectional_iterator_tag : public forward_iterator_tag       {};
-    // struct random_access_iterator_tag : public bidirectional_iterator_tag {};*/
-
-    typedef std::output_iterator_tag		output_iterator_tag;
-    typedef std::input_iterator_tag			input_iterator_tag;
-    typedef std::forward_iterator_tag		forward_iterator_tag;
-    typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
-    typedef std::random_access_iterator_tag	random_access_iterator_tag;
+    typedef ft::output_iterator_tag		    output_iterator_tag;
+    typedef ft::input_iterator_tag			input_iterator_tag;
+    typedef ft::forward_iterator_tag		forward_iterator_tag;
+    typedef ft::bidirectional_iterator_tag	bidirectional_iterator_tag;
+    typedef ft::random_access_iterator_tag	random_access_iterator_tag;
+    
+    // typedef std::output_iterator_tag		output_iterator_tag;
+    // typedef std::input_iterator_tag			input_iterator_tag;
+    // typedef std::forward_iterator_tag		forward_iterator_tag;
+    // typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
+    // typedef std::random_access_iterator_tag	random_access_iterator_tag;
 
     /* ------------------------------ iterator ------------------------------ */
 
@@ -149,8 +153,7 @@ namespace ft
         typedef typename iterator_traits<Iterator>::pointer             pointer;
     
     protected:
-        iterator_type current; // oder:
-        // iterator_type current; ?????
+        iterator_type current;
     
     public:
         reverse_iterator(); // default constructor

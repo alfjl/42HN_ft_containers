@@ -6,13 +6,14 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:19:06 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/29 11:46:16 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/14 16:45:46 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <deque> // only for testing. Later change 'deque' to 'ft::vector' and delete this include statement. Before test with std::deque, std::vector, etc.
+// #include <deque> // delete before hand-in
+#include "./vector.hpp"
 
 namespace ft
 {
@@ -38,7 +39,8 @@ namespace ft
     ** The standard container classes vector, deque and list fulfill these requirements. By default, if no container class is specified for a particular stack class instantiation, the standard container deque is used.
     */
 
-    template <typename T, typename Container = std::deque<T> >
+    // template <typename T, typename Container = std::deque<T> > // still delete before hand-in
+    template <typename T, typename Container = ft::vector<T> >
     class stack
     {
         // code
@@ -62,6 +64,12 @@ namespace ft
         const value_type& top() const;
         void push ( const value_type& val );
         void pop();
+
+        // friends for non-member overloads used in all relational operators
+        template<typename T1, typename Container1>
+            friend bool operator==( const ft::stack<T1,Container1>& lhs, const ft::stack<T1,Container1>& rhs );
+        template<typename T1, typename Container1>
+            friend bool operator<( const ft::stack<T1,Container1>& lhs, const ft::stack<T1,Container1>& rhs );
 
     }; // stack
 
@@ -127,7 +135,7 @@ namespace ft
     template <class T, class Container>
         bool operator!=(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return !( lhs.c == rhs.c );
+            return ( !( lhs == rhs ) );
         }
 
     template <class T, class Container>
@@ -139,19 +147,19 @@ namespace ft
     template <class T, class Container>
         bool operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return !(  rhs.c < lhs.c );
+            return ( !(  rhs < lhs ) );
         }
 
     template <class T, class Container>
         bool operator>(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return ( rhs.c < lhs.c );
+            return ( rhs < lhs );
         }
 
     template <class T, class Container>
         bool operator>=(const stack<T,Container>& lhs, const stack<T,Container>& rhs)
         {
-            return !( lhs.c < rhs.c );
+            return ( !( lhs < rhs ) );
         }
 
 } // namespace ft

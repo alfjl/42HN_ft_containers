@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 15:15:43 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/14 12:18:33 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/14 15:46:58 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,11 +261,12 @@
 /* ################################## ALGORITHMS ################################## */
 
 
-// equal algorithm example
+// // equal algorithm example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/algorithm.hpp"    // ft::equal
+// #include "inc/vector.hpp"    // ft::equal
 
 // bool mypredicate (int i, int j) {
 //   return (i==j);
@@ -273,7 +274,7 @@
 
 // int main () {
 //   int myints[] = {20,40,60,80,100};               //   myints: 20 40 60 80 100
-//   std::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
+//   ft::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
 
 //   // using default comparison:
 //   if ( ft::equal (myvector.begin(), myvector.end(), myints) )
@@ -299,6 +300,7 @@
 
 
 /* -------------------------------------------------------------------------- */
+
 // // lexicographical_compare example
 // #include <iostream>     // std::cout, std::boolalpha
 // #include <cctype>       // std::tolower
@@ -346,7 +348,7 @@
 // #include "inc/utils/iterator.hpp"
 // int main() {
 //   typedef ft::iterator_traits<int*> traits;
-//   if (typeid(traits::iterator_category)==typeid(std::random_access_iterator_tag))
+//   if (typeid(traits::iterator_category)==typeid(ft::random_access_iterator_tag))
 //     std::cout << "int* is a random-access iterator" << std::endl;
 //   return 0;
 // }
@@ -423,15 +425,16 @@
 
 // // reverse_iterator::operator+ example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/utils/iterator.hpp"
+// #include "inc/vector.hpp"
 
 // int main () {
-//   std::vector<int> myvector;
+//   ft::vector<int> myvector;
 //   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
-//   typedef std::vector<int>::iterator iter_type;
+//   typedef ft::vector<int>::iterator iter_type;
 
 //   ft::reverse_iterator<iter_type> rev_it;
 
@@ -442,22 +445,23 @@
 //   return 0;
 // }
 
-// // // Output: *********************** ERROR: testkram.cpp:408:10: error: no viable overloaded '='
+// // // Output: *********************** ERROR (if used with std::vector): testkram.cpp:408:10: error: no viable overloaded '='
 // // The fourth element from the end is: 6
 
 /* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator+= example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/utils/iterator.hpp"
+// #include "inc/vector.hpp"
 
 // int main () {
-//   std::vector<int> myvector;
+//   ft::vector<int> myvector;
 //   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
-//   typedef std::vector<int>::iterator iter_type;
+//   typedef ft::vector<int>::iterator iter_type;
 
 //   ft::reverse_iterator<iter_type> rev_iterator = myvector.rbegin();
 
@@ -468,22 +472,23 @@
 //   return 0;
 // }
 
-// // Output: *********************** ERROR: testkram.cpp:432:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
+// // Output: *********************** ERROR (if used with std::vector): testkram.cpp:432:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // The third element from the end is: 7
 
 /* -------------------------------------------------------------------------- */
 
 // // reverse_iterator::operator- example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/utils/iterator.hpp"
+// #include "inc/vector.hpp"
 
 // int main () {
-//   std::vector<int> myvector;
+//   ft::vector<int> myvector;
 //   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
-//   typedef std::vector<int>::iterator iter_type;
+//   typedef ft::vector<int>::iterator iter_type;
 
 //   ft::reverse_iterator<iter_type> rev_iterator;
 
@@ -494,7 +499,7 @@
 //   return 0;
 // }
 
-// // Output: *********************** ERROR: testkram.cpp:460:16: error: no viable overloaded '='
+// // Output: *********************** ERROR (if used with std::vector): testkram.cpp:460:16: error: no viable overloaded '='
 // // myvector.rend()-3 points to: 2
 
 /* -------------------------------------------------------------------------- */
@@ -534,15 +539,16 @@
 
 // // reverse_iterator::operator-= example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/utils/iterator.hpp"
+// #include "inc/vector.hpp"
 
 // int main () {
-//   std::vector<int> myvector;
+//   ft::vector<int> myvector;
 //   for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
 
-//   typedef std::vector<int>::iterator iter_type;
+//   typedef ft::vector<int>::iterator iter_type;
 
 //   ft::reverse_iterator<iter_type> rev_iterator = myvector.rend();
 
@@ -553,7 +559,7 @@
 //   return 0;
 // }
 
-// // Output: *********************** ERROR: testkram.cpp:517:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
+// // Output: *********************** ERROR (if used with std::vector): testkram.cpp:517:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // rev_iterator now points to: 3
 
 /* -------------------------------------------------------------------------- */
@@ -584,7 +590,7 @@
 //   return 0;
 // }
 
-// // Output: *********************** ERROR: testkram.cpp:541:11: error: no matching member function for call to 'insert'
+// // Output: *********************** ERROR (if ised ith std::map): testkram.cpp:541:11: error: no matching member function for call to 'insert'
 // // 3 three
 // // 2 two
 // // 1 one
@@ -593,15 +599,16 @@
 
 // // reverse_iterator::operator[] example
 // #include <iostream>     // std::cout
-// #include <vector>       // std::vector
+// // #include <vector>       // std::vector
 
 // #include "inc/utils/iterator.hpp"
+// #include "inc/vector.hpp"
 
 // int main () {
-//   std::vector<int> myvector;
+//   ft::vector<int> myvector;
 //   for (int i=0; i<10; i++) myvector.push_back(i);  // myvector: 0 1 2 3 4 5 6 7 8 9
 
-//   typedef std::vector<int>::iterator iter_type;
+//   typedef ft::vector<int>::iterator iter_type;
 
 //   ft::reverse_iterator<iter_type> rev_iterator = myvector.rbegin();
 
@@ -610,7 +617,7 @@
 //   return 0;
 // }
 
-// // Output: *********************** ERROR: testkram.cpp:576:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
+// // Output: *********************** ERROR (if used with std::vctor): testkram.cpp:576:35: error: no viable conversion from 'std::__1::vector<int, std::__1::allocator<int> >::reverse_iterator' (aka 'reverse_iterator<__wrap_iter<int *> >') to 'ft::reverse_iterator<iter_type>' (aka 'reverse_iterator<__wrap_iter<int *> >')
 // // The fourth element from the end is: 6
 
 /* -------------------------------------------------------------------------- */
@@ -713,21 +720,25 @@
 
 // // constructing stacks
 // #include <iostream>       // std::cout
-// #include <vector>         // std::vector
+// // #include <vector>         // std::vector
 // #include <deque>          // std::deque
 
 // #include "inc/stack.hpp" // ft::stack
+// #include "inc/vector.hpp" // ft::vector
 
 // int main ()
 // {
 //   std::deque<int> mydeque (3,100);          // deque with 3 elements
-//   std::vector<int> myvector (2,200);        // vector with 2 elements
+// //   std::vector<int> myvector (2,200);        // vector with 2 elements
+//   ft::vector<int> myvector (2,200);        // vector with 2 elements
 
 //   ft::stack<int> first;                    // empty stack
-//   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+//   ft::stack<int, std::deque<int> > second (mydeque);         // stack initialized to copy of deque
 
-//   ft::stack<int,std::vector<int> > third;  // empty stack using vector
-//   ft::stack<int,std::vector<int> > fourth (myvector);
+// //   ft::stack<int,std::vector<int> > third;  // empty stack using vector
+//   ft::stack<int,ft::vector<int> > third;  // empty stack using vector
+// //   ft::stack<int,std::vector<int> > fourth (myvector);
+//   ft::stack<int> fourth (myvector);
 
 //   std::cout << "size of first: " << first.size() << '\n';
 //   std::cout << "size of second: " << second.size() << '\n';
@@ -885,8 +896,8 @@
 
 
 
-/* ################################ FT::STACK ############################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
-/* ################################# WITH STD::VECTOR ####################### */  //STILL TESTING with ft::vector NEEDED!!!!!!
+/* ################################ FT::STACK ############################### */
+/* ################################# WITH FT::VECTOR ####################### */
 
 
 // // constructing stacks
