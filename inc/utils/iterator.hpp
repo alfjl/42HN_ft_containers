@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/14 15:21:53 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 09:51:51 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,8 @@ namespace ft
     struct forward_iterator_tag       : public input_iterator_tag         {};
     struct bidirectional_iterator_tag : public forward_iterator_tag       {};
     struct random_access_iterator_tag : public bidirectional_iterator_tag {};
-
-    typedef ft::output_iterator_tag		    output_iterator_tag;
-    typedef ft::input_iterator_tag			input_iterator_tag;
-    typedef ft::forward_iterator_tag		forward_iterator_tag;
-    typedef ft::bidirectional_iterator_tag	bidirectional_iterator_tag;
-    typedef ft::random_access_iterator_tag	random_access_iterator_tag;
     
-    // typedef std::output_iterator_tag		output_iterator_tag;
+    // typedef std::output_iterator_tag         output_iterator_tag;
     // typedef std::input_iterator_tag			input_iterator_tag;
     // typedef std::forward_iterator_tag		forward_iterator_tag;
     // typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
@@ -496,7 +490,7 @@ namespace ft
     template <typename T>
     typename random_access_iterator<T>::reference random_access_iterator<T>::operator[]( difference_type n ) const
     {
-        return *( *this->_ptr + n );
+        return *( this->_ptr + n );
     }
     
     
