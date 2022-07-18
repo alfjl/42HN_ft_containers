@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/14 12:17:44 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 12:07:26 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -393,7 +393,6 @@ namespace ft
     template <class InputIterator>
     void vector<T, Alloc>::assign( InputIterator first, InputIterator last,
                                     typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
-    // equal_if needed here????
     {
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
 

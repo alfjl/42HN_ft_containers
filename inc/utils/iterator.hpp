@@ -6,13 +6,13 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 09:51:51 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 12:31:10 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iterator> // still needed after changing the iterator_tags?
+// #include <iterator> // still needed after changing the iterator_tags?
 
 #include "type_traits.hpp"
 
@@ -194,7 +194,7 @@ namespace ft
     template <typename Iter>
     reverse_iterator<Iterator>& reverse_iterator<Iterator>::operator=( const reverse_iterator<Iter>& src )
     {
-        current = src.base();
+        this->current = src.base();
         return ( *this );
     }
 
@@ -325,9 +325,9 @@ namespace ft
             return ( reverse_iterator<Iterator>( rev_it.base() - n ) );
         }
 
-    template <typename Iterator>
-        typename reverse_iterator<Iterator>::difference_type operator-( const reverse_iterator<Iterator>& lhs,
-                                                                        const reverse_iterator<Iterator>& rhs ) // subtraction operator
+    template <typename Iterator1, typename Iterator2>
+        typename reverse_iterator<Iterator1>::difference_type operator-( const reverse_iterator<Iterator1>& lhs,
+                                                                        const reverse_iterator<Iterator2>& rhs ) // subtraction operator
         {
             return ( rhs.base() - lhs.base() );
         }
@@ -363,7 +363,9 @@ namespace ft
         random_access_iterator( const iterator_type& ptr );
         random_access_iterator( const random_access_iterator& other );
         ~random_access_iterator();
-        
+
+        operator random_access_iterator<const T>() const;
+
         random_access_iterator& operator=( const random_access_iterator& src );
         random_access_iterator& operator=( const pointer& src_ptr );
 
@@ -394,10 +396,16 @@ namespace ft
     random_access_iterator<T>::random_access_iterator( const iterator_type& ptr ) : _ptr( ptr ) {}
     
     template <typename T>
-    random_access_iterator<T>::random_access_iterator( const random_access_iterator<T>& other ) : _ptr( other.base() ) {}
+    random_access_iterator<T>::random_access_iterator( const random_access_iterator& other ) : _ptr( other.base() ) {}
 
     template <typename T>
     random_access_iterator<T>::~random_access_iterator() {}
+
+    template<typename T>
+    random_access_iterator<T>::operator random_access_iterator<const T>() const
+    {
+        return ( this->_ptr );
+    }
 
     template <typename T>
     random_access_iterator<T>& random_access_iterator<T>::operator=( const random_access_iterator<T>& src )
@@ -542,6 +550,13 @@ namespace ft
     template <typename T>
         typename random_access_iterator<T>::difference_type operator-( const random_access_iterator<T>& lhs,
                                                                         const random_access_iterator<T>& rhs ) // subtraction operator
+        {
+            return ( lhs.base() - rhs.base() );
+        }
+
+    template <typename T1, typename T2>
+        typename random_access_iterator<T1>::difference_type operator-( const random_access_iterator<T1>& lhs,
+                                                                        const random_access_iterator<T2>& rhs ) // subtraction operator
         {
             return ( lhs.base() - rhs.base() );
         }
