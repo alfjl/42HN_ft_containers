@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 12:31:10 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 13:34:33 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,54 +283,54 @@ namespace ft
     /* reverse_iterator non-member functions */
 
     template <typename Iterator1, typename Iterator2>
-        bool operator==( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( lhs.base() == rhs.base() );
-        }
+    bool operator==( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        bool operator!=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( lhs.base() != rhs.base() );
-        }
+    bool operator!=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( lhs.base() != rhs.base() );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        bool operator<( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( lhs.base() > rhs.base() );
-        }
+    bool operator<( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( lhs.base() > rhs.base() );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        bool operator<=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( lhs.base() >= rhs.base() );
-        }
+    bool operator<=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( lhs.base() >= rhs.base() );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        bool operator>( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( lhs.base() < rhs.base() );
-        }
+    bool operator>( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( lhs.base() < rhs.base() );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        bool operator>=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
-        {
-            return ( rhs.base() <= lhs.base() );
-        }
+    bool operator>=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
+    {
+        return ( rhs.base() <= lhs.base() );
+    }
 
     template <typename Iterator>
-        reverse_iterator<Iterator> operator+( typename reverse_iterator<Iterator>::difference_type n,
-                                                const reverse_iterator<Iterator>& rev_it ) // addition operator
-        {
-            return ( reverse_iterator<Iterator>( rev_it.base() - n ) );
-        }
+    reverse_iterator<Iterator> operator+( typename reverse_iterator<Iterator>::difference_type n,
+                                            const reverse_iterator<Iterator>& rev_it ) // addition operator
+    {
+        return ( reverse_iterator<Iterator>( rev_it.base() - n ) );
+    }
 
     template <typename Iterator1, typename Iterator2>
-        typename reverse_iterator<Iterator1>::difference_type operator-( const reverse_iterator<Iterator1>& lhs,
-                                                                        const reverse_iterator<Iterator2>& rhs ) // subtraction operator
-        {
-            return ( rhs.base() - lhs.base() );
-        }
+    typename reverse_iterator<Iterator1>::difference_type operator-( const reverse_iterator<Iterator1>& lhs,
+                                                                    const reverse_iterator<Iterator2>& rhs ) // subtraction operator
+    {
+        return ( rhs.base() - lhs.base() );
+    }
 
 
     /* ----------------------- random_access_iterator ----------------------- */
@@ -505,60 +505,60 @@ namespace ft
     /* random_access_iterator non-member functions */
 
     template <typename T1, typename T2>
-        bool operator==( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() == rhs.base() );
-        }
+    bool operator==( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        bool operator!=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() != rhs.base() );
-        }
+    bool operator!=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() != rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        bool operator<( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() < rhs.base() );
-        }
+    bool operator<( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() < rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        bool operator<=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() <= rhs.base() );
-        }
+    bool operator<=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() <= rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        bool operator>( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() > rhs.base() );
-        }
+    bool operator>( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() > rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        bool operator>=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
-        {
-            return ( lhs.base() >= rhs.base() );
-        }
+    bool operator>=( const random_access_iterator<T1>& lhs, const random_access_iterator<T2>& rhs )
+    {
+        return ( lhs.base() >= rhs.base() );
+    }
 
     template <typename T>
-        random_access_iterator<T> operator+( typename random_access_iterator<T>::difference_type n,
-                                                const random_access_iterator<T>& rev_it ) // addition operator
-        {
-            return ( random_access_iterator<T>( rev_it.base() + n ) );
-        }
+    random_access_iterator<T> operator+( typename random_access_iterator<T>::difference_type n,
+                                            const random_access_iterator<T>& rev_it ) // addition operator
+    {
+        return ( random_access_iterator<T>( rev_it.base() + n ) );
+    }
 
     template <typename T>
-        typename random_access_iterator<T>::difference_type operator-( const random_access_iterator<T>& lhs,
-                                                                        const random_access_iterator<T>& rhs ) // subtraction operator
-        {
-            return ( lhs.base() - rhs.base() );
-        }
+    typename random_access_iterator<T>::difference_type operator-( const random_access_iterator<T>& lhs,
+                                                                    const random_access_iterator<T>& rhs ) // subtraction operator
+    {
+        return ( lhs.base() - rhs.base() );
+    }
 
     template <typename T1, typename T2>
-        typename random_access_iterator<T1>::difference_type operator-( const random_access_iterator<T1>& lhs,
-                                                                        const random_access_iterator<T2>& rhs ) // subtraction operator
-        {
-            return ( lhs.base() - rhs.base() );
-        }
+    typename random_access_iterator<T1>::difference_type operator-( const random_access_iterator<T1>& lhs,
+                                                                    const random_access_iterator<T2>& rhs ) // subtraction operator
+    {
+        return ( lhs.base() - rhs.base() );
+    }
 
 } // namespace ft

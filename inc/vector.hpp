@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 12:07:26 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 15:17:43 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,6 +442,7 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::insert( iterator position, const value_type& val ) // single element
     {
+
         iterator    begin = this->begin();
         iterator    end = this->end();
         size_type   n = static_cast<size_type>( ft::distance( begin, position ) );
@@ -459,18 +460,15 @@ namespace ft
     template < typename T, typename Alloc>
     void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version
     {
-        iterator    end = this->end();
-        // pointer pos = _vmake_pointer( position ); // works as well
+        pointer pos = _vmake_pointer( position );
 
-        // if ( pos == this->_end ) // works as well
-        if ( position == end )
+        if ( pos == this->_end )
         {
             for ( size_type i = 0; i < n; i++ )
                 push_back( val );
         }
         else
         {
-            pointer         pos = this->_vmake_pointer( position );
             size_type       old_size = this->size();
             size_type       distance = static_cast<size_type>( ft::distance( this->_begin, pos ) );
 
@@ -482,18 +480,11 @@ namespace ft
             iterator    temp_last = this->begin() + old_size;
             iterator    new_position = this->begin() + old_size + n;
 
-            // for ( ; temp_last != temp_first; --temp_last )
-            // {
-            //     *( new_position ) = *( temp_last );
-            //     --new_position;
-            // }
             while ( temp_last != temp_first )
 		        *( --new_position ) = *( --temp_last );
-            // // // insert the elements of first->last in the array 
-            for ( size_type i = 0; i < n; ++i )
+            for ( iterator it = temp_first; it != temp_first + n; ++it )
             {
-                this->_allocator.construct( pos, val ); 
-                ++pos;
+                *it = val;
             }
         }
     }
@@ -503,6 +494,7 @@ namespace ft
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last,
                                     typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
     {
+        
         InputIterator   temp = first;
         pointer         pos = this->_vmake_pointer( position );
         size_type       n = static_cast<size_type>( ft::distance( first, last ) );
