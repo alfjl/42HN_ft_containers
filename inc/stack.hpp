@@ -6,13 +6,12 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:19:06 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/14 16:45:46 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/19 10:25:45 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-// #include <deque> // delete before hand-in
 #include "./vector.hpp"
 
 namespace ft
@@ -39,11 +38,10 @@ namespace ft
     ** The standard container classes vector, deque and list fulfill these requirements. By default, if no container class is specified for a particular stack class instantiation, the standard container deque is used.
     */
 
-    // template <typename T, typename Container = std::deque<T> > // still delete before hand-in
     template <typename T, typename Container = ft::vector<T> >
     class stack
     {
-        // code
+
     public:
         typedef Container                                   container_type;
         typedef typename container_type::value_type         value_type;
