@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/19 16:57:57 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/19 18:40:46 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ namespace ft
         template <class InputIterator>
             vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range constructor
-        vector( const vector& x ); // copy constructor
+        vector( const vector& src ); // copy constructor
         ~vector();
 
-        vector& operator=( const vector& x ); // assignment operator
+        vector& operator=( const vector& other ); // assignment operator
 
         // Iterators:
         iterator begin();
@@ -171,9 +171,9 @@ namespace ft
     }
 
     template < typename T, typename Alloc>
-    vector<T, Alloc>::vector( const vector& x )  : _allocator(x._allocator), _begin(nullptr), _end(nullptr), _capacity(0) // copy constructor
+    vector<T, Alloc>::vector( const vector& src )  : _allocator(src._allocator), _begin(nullptr), _end(nullptr), _capacity(0) // copy constructor
     {
-        *this = x;
+        *this = src;
     }
 
     template < typename T, typename Alloc>
@@ -185,16 +185,16 @@ namespace ft
 
 
     template < typename T, typename Alloc>
-    vector<T, Alloc>& vector<T, Alloc>::operator=( const vector<T, Alloc>& x ) // assignment operator
+    vector<T, Alloc>& vector<T, Alloc>::operator=( const vector<T, Alloc>& other ) // assignment operator
     {
-        if ( this != &x )
+        if ( this != &other )
         {
             this->_vdeallocate();
-            this->_allocator = x._allocator;
-            size_type n = x.capacity();
+            this->_allocator = other._allocator;
+            size_type n = other.capacity();
             this->_begin = this->_vallocate( n );
-            this->_end = this->_begin + x.size();
-            this->_vconstruct_copies( x );
+            this->_end = this->_begin + other.size();
+            this->_vconstruct_copies( other );
         }
         return ( *this );
     }
