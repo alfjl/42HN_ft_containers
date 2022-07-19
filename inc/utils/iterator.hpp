@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 13:34:33 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/19 10:05:49 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,29 +99,39 @@ namespace ft
     ** (The C++ Standard Library - 2nd Edition / 9.3.3 & 9.5)
     */
 
+    // template <typename InputIterator>
+    // inline typename iterator_traits<InputIterator>::difference_type
+    // _distance( InputIterator first, InputIterator last, input_iterator_tag )
+    // {
+    //     typename iterator_traits<InputIterator>::difference_type r( 0 );
+    //     for ( ; first != last; ++first )
+    //         ++r;
+    //     return ( r );
+    // }
+
+    // template <typename RandomAccessIterator>
+    // inline typename iterator_traits<RandomAccessIterator>::difference_type
+    // _distance( RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag )
+    // {
+    //     return ( last - first );
+    // }
+
+    // // also valid for forward and bidirectional iterator, since they inherit from input iterator
+    // template <typename InputIterator>
+    // inline typename iterator_traits<InputIterator>::difference_type
+    // distance( InputIterator first, InputIterator last )
+    // {
+    //     return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
+    // }
+
     template <typename InputIterator>
     inline typename iterator_traits<InputIterator>::difference_type
-    _distance( InputIterator first, InputIterator last, input_iterator_tag )
+    distance( InputIterator first, InputIterator last )
     {
         typename iterator_traits<InputIterator>::difference_type r( 0 );
         for ( ; first != last; ++first )
             ++r;
         return ( r );
-    }
-
-    template <typename RandomAccessIterator>
-    inline typename iterator_traits<RandomAccessIterator>::difference_type
-    _distance( RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag )
-    {
-        return ( last - first );
-    }
-
-    // also valid for forward and bidirectional iterator, since they inherit from input iterator
-    template <typename InputIterator>
-    inline typename iterator_traits<InputIterator>::difference_type
-    distance( InputIterator first, InputIterator last )
-    {
-        return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
     }
 
     /* -------------------------- reverse_iterator -------------------------- */
@@ -315,7 +325,7 @@ namespace ft
     template <typename Iterator1, typename Iterator2>
     bool operator>=( const reverse_iterator<Iterator1>& lhs, const reverse_iterator<Iterator2>& rhs )
     {
-        return ( rhs.base() <= lhs.base() );
+        return ( lhs.base() <= rhs.base() );
     }
 
     template <typename Iterator>

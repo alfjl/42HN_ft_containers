@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 15:17:43 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/18 17:42:04 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,7 +400,10 @@ namespace ft
         if ( n > this->_capacity )
             _vresize_empty_vector( n );
         for ( ; first != last; ++first)
-            this->_allocator.construct( ++this->_end, *( first ) );
+        {
+            this->_allocator.construct( this->_end, *( first ) );
+            ++this->_end;
+        }
     }
 
     template < typename T, typename Alloc>
@@ -410,7 +413,10 @@ namespace ft
         if ( n > this->_capacity )
             _vresize_empty_vector( n );
         for ( size_type i = 0; i < n; ++i )
-            this->_allocator.construct( ++this->_end, val );
+        {
+            this->_allocator.construct( this->_end, val );
+            ++this->_end;
+        }
     }
 
 
