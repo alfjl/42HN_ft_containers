@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:19:06 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/19 10:25:45 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/19 17:00:13 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,25 @@ namespace ft
         container_type  c;
     
     public:
+        // Constructor / Destructor / Assignment
         explicit stack ( const container_type& ctnr = container_type() );
         ~stack();
 
         stack& operator=( const stack& other );
 
+        // Capacity:
         bool empty() const;
         size_type size() const;
+
+        // Element access:
         value_type& top();
         const value_type& top() const;
+
+        // Modifiers:
         void push ( const value_type& val );
         void pop();
 
-        // friends for non-member overloads used in all relational operators
+        // Friends for non-member overloads used in all relational operators
         template<typename T1, typename Container1>
             friend bool operator==( const ft::stack<T1,Container1>& lhs, const ft::stack<T1,Container1>& rhs );
         template<typename T1, typename Container1>

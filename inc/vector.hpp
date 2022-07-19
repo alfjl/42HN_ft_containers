@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/18 17:42:04 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:57:57 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ namespace ft
         size_type       _capacity;
 
     public:
+        // Constructors / Destructor / Assignment
         explicit vector( const allocator_type& alloc = allocator_type() ); // default constructor (empty container)
         explicit vector( size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type() ); // fill constructor
         template <class InputIterator>
@@ -71,74 +72,64 @@ namespace ft
         vector( const vector& x ); // copy constructor
         ~vector();
 
-        vector& operator= ( const vector& x ); // assignment operator
+        vector& operator=( const vector& x ); // assignment operator
 
+        // Iterators:
         iterator begin();
         const_iterator begin() const;
-
         iterator end();
         const_iterator end() const;
-
         reverse_iterator rbegin();
         const_reverse_iterator rbegin() const;
-
         reverse_iterator rend();
         const_reverse_iterator rend() const;
 
+        // Capacity:
         size_type size() const;
-
         size_type max_size() const;
-
         void resize( size_type n, value_type val = value_type() );
-
         size_type capacity() const;
-
         bool empty() const;
-
         void reserve( size_type n );
 
+        // Element access:
         reference operator[]( size_type n );
         const_reference operator[]( size_type n ) const;
-
         reference at( size_type n );
         const_reference at( size_type n ) const;
-
         reference front();
         const_reference front() const;
-
         reference back();
         const_reference back() const;
 
+        // Modifiers:
         template <class InputIterator>
             void assign( InputIterator first, InputIterator last,
                         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range version	
         void assign( size_type n, const value_type& val ); // fill version
-
         void push_back( const value_type& val );
-
         void pop_back();
-
         iterator insert( iterator position, const value_type& val ); // single element
         void insert( iterator position, size_type n, const value_type& val ); // fill version
         template <class InputIterator>
             void insert( iterator position, InputIterator first, InputIterator last,
                         typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0 ); // range version
-
         iterator erase( iterator position );
         iterator erase( iterator first, iterator last );
-
         void swap( vector& x );
-
         void clear();
 
+        // Allocator:
         allocator_type get_allocator() const;
 
     private:
+        // Conversions:
         iterator _make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
         const_iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
         pointer _vmake_pointer(iterator itr);
         const_pointer _vmake_pointer(const_iterator itr) const;
 
+        // Memory Management / Construction / Destruction
         size_type _vcalculate_size( size_type n) const; // checks n for validity and returns new size
         pointer _vallocate(size_type n); // allocate space for n objects
         void _vdeallocate(); // clears all objects from vector and deallocates space
