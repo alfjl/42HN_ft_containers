@@ -35,7 +35,7 @@ namespace ft
     */
 
     template <class T>
-    struct less : ft::binary_function <T,T,bool>
+    struct less : ft::binary_function<T,T,bool>
     {
     public:
         bool operator() ( const T& x, const T& y ) const;
