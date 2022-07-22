@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/19 18:40:46 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/20 15:03:33 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 #include "utils/iterator.hpp"
 #include "utils/utility.hpp"
 #include "algorithm.hpp"
+
+#ifndef nullptr
+#define nullptr NULL
+#endif
 
 namespace ft
 {
