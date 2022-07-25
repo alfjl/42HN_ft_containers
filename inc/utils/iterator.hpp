@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/19 10:05:49 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/07/25 16:03:45 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,149 @@ namespace ft
         return ( rhs.base() - lhs.base() );
     }
 
+    /* ----------------------- bidirectional_iterator ----------------------- */
+    
+    /*
+    ** follow the general recipe for a user-defined iterator from (The C++ Standard Library - 2nd Edition / 9.6)
+    ** and the info about bidirectional_iterators from (https://cplusplus.com/reference/iterator/RandomAccessIterator/)
+    ** Bidirectional iterators are iterators that can be used to access the sequence of elements in a range
+    ** in both directions (towards the end and towards the beginning).
+    */
+    
+    template <typename T>
+    class bidirectional_iterator
+    {
+    public:
+        // Provide the necessary five type definitions for the general iterator_traits structure
+        typedef T*                                                          iterator_type;
+        typedef typename iterator_traits<iterator_type>::iterator_category  iterator_category;
+        typedef typename iterator_traits<iterator_type>::value_type         value_type;
+        typedef typename iterator_traits<iterator_type>::difference_type    difference_type;
+        typedef typename iterator_traits<iterator_type>::pointer            pointer;
+        typedef typename iterator_traits<iterator_type>::reference          reference;
+
+    private:
+        iterator_type   _ptr;
+
+    public:
+        bidirectional_iterator();
+        bidirectional_iterator( const iterator_type& ptr );
+        bidirectional_iterator( const bidirectional_iterator& other );
+        ~bidirectional_iterator();
+
+        operator bidirectional_iterator<const T>() const;
+
+        bidirectional_iterator& operator=( const bidirectional_iterator& src );
+        bidirectional_iterator& operator=( const pointer& src_ptr );
+
+        iterator_type base() const;
+        reference operator*() const;
+        pointer operator->() const;
+        bidirectional_iterator& operator++();
+        bidirectional_iterator  operator++(int);
+        bidirectional_iterator& operator--();
+        bidirectional_iterator  operator--(int);
+        
+    }; // bidirectional_iterator
+
+    /* bidirectional_iterator member functions */
+    
+    template <typename T>
+    bidirectional_iterator<T>::bidirectional_iterator() : _ptr() {}
+
+    // template <typename T>
+    // bidirectional_iterator<T>::bidirectional_iterator( pointer ptr ) : _ptr( ptr ) {}
+
+    template <typename T>
+    bidirectional_iterator<T>::bidirectional_iterator( const iterator_type& ptr ) : _ptr( ptr ) {}
+    
+    template <typename T>
+    bidirectional_iterator<T>::bidirectional_iterator( const bidirectional_iterator& other ) : _ptr( other.base() ) {}
+
+    template <typename T>
+    bidirectional_iterator<T>::~bidirectional_iterator() {}
+
+    template<typename T>
+    bidirectional_iterator<T>::operator bidirectional_iterator<const T>() const
+    {
+        return ( this->_ptr );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>& bidirectional_iterator<T>::operator=( const bidirectional_iterator<T>& src )
+    {
+        _ptr = src.base();
+        return ( *this );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>& bidirectional_iterator<T>::operator=( const pointer& src_ptr )
+    {
+        _ptr = src_ptr;
+        return ( *this );
+    }
+
+    template <typename T>
+    typename bidirectional_iterator<T>::iterator_type bidirectional_iterator<T>::base() const
+    {
+        return ( this->_ptr );
+    }
+
+    template <typename T>
+    typename bidirectional_iterator<T>::reference bidirectional_iterator<T>::operator*() const
+    {
+        return ( *(this->_ptr) );
+    }
+
+    template <typename T>
+    typename bidirectional_iterator<T>::pointer bidirectional_iterator<T>::operator->() const
+    {
+        return ( this->_ptr );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>& bidirectional_iterator<T>::operator++()
+    {
+        ++( this->_ptr );
+        return ( *this );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>  bidirectional_iterator<T>::operator++( int )
+    {
+        bidirectional_iterator  temp = *this;
+        ++( this->_ptr );
+        return ( temp );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>& bidirectional_iterator<T>::operator--()
+    {
+        --( this->_ptr );
+        return ( *this );
+    }
+
+    template <typename T>
+    bidirectional_iterator<T>  bidirectional_iterator<T>::operator--( int )
+    {
+        bidirectional_iterator  temp = *this;
+        --( this->_ptr );
+        return ( temp );
+    }
+
+    /* bidirectional_iterator non-member functions */
+
+    template <typename T1, typename T2>
+    bool operator==( const bidirectional_iterator<T1>& lhs, const bidirectional_iterator<T2>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
+
+    template <typename T1, typename T2>
+    bool operator!=( const bidirectional_iterator<T1>& lhs, const bidirectional_iterator<T2>& rhs )
+    {
+        return ( lhs.base() != rhs.base() );
+    }
 
     /* ----------------------- random_access_iterator ----------------------- */
     
