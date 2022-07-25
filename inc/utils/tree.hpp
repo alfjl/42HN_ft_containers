@@ -7,6 +7,81 @@
 namespace ft
 {
 
+    /* --------------------------- tree algorithms ---------------------------- */
+
+    /*
+    ** A collection of useful algorithms for the implemented red black tree
+    */
+
+    // Returns true if node_ptr is a left child of its parent, else false
+    template <typename NodePtr>
+    bool tree_is_left_child( NodePtr node_ptr )
+    {
+        return ( node_ptr == node_ptr->parent->left );
+    }
+
+    // Returns a pointer to the left-most node under node_ptr.
+    template <typename NodePtr>
+    NodePtr tree_min( NodePtr node_ptr )
+    {
+        while (node_ptr->left != nullptr)
+            node_ptr = node_ptr->left;
+        return node_ptr;
+    }
+
+    // Returns a pointer to the right-most node under node_ptr.
+    template <typename NodePtr>
+    NodePtr tree_max( NodePtr node_ptr )
+    {
+        while (node_ptr->right != nullptr)
+            node_ptr = node_ptr->right;
+        return node_ptr;
+    }
+
+// // Returns:  pointer to the next in-order node after __x.
+// // Precondition:  __x != nullptr.
+// template <class _NodePtr>
+// _NodePtr
+// __tree_next(_NodePtr __x) _NOEXCEPT
+// {
+//     if (__x->__right_ != nullptr)
+//         return __tree_min(__x->__right_);
+//     while (!__tree_is_left_child(__x))
+//         __x = __x->__parent_unsafe();
+//     return __x->__parent_unsafe();
+// }
+
+// template <class _EndNodePtr, class _NodePtr>
+// inline _LIBCPP_INLINE_VISIBILITY
+// _EndNodePtr
+// __tree_next_iter(_NodePtr __x) _NOEXCEPT
+// {
+//     if (__x->__right_ != nullptr)
+//         return static_cast<_EndNodePtr>(__tree_min(__x->__right_));
+//     while (!__tree_is_left_child(__x))
+//         __x = __x->__parent_unsafe();
+//     return static_cast<_EndNodePtr>(__x->__parent_);
+// }
+
+// // Returns:  pointer to the previous in-order node before __x.
+// // Precondition:  __x != nullptr.
+// // Note: __x may be the end node.
+// template <class _NodePtr, class _EndNodePtr>
+// inline _LIBCPP_INLINE_VISIBILITY
+// _NodePtr
+// __tree_prev_iter(_EndNodePtr __x) _NOEXCEPT
+// {
+//     if (__x->__left_ != nullptr)
+//         return __tree_max(__x->__left_);
+//     _NodePtr __xx = static_cast<_NodePtr>(__x);
+//     while (__tree_is_left_child(__xx))
+//         __xx = __xx->__parent_unsafe();
+//     return __xx->__parent_unsafe();
+// }
+
+
+
+
     /* ------------------------------ tree_node ------------------------------- */
 
     /*
@@ -25,11 +100,11 @@ namespace ft
     class tree_node
     {
     private:
-        node_state   colour;
-        T           data;
-        tree_node    *parent;
-        tree_node    *left;
-        tree_node    *right;
+        node_state        colour;
+        T                 data;
+        tree_node         *parent;
+        tree_node         *left;
+        tree_node         *right;
     public:
         tree_node();
         tree_node( const tree_node &other);
@@ -66,18 +141,22 @@ namespace ft
 
     /* --------------------------- Tree Iterator ----------------------------- */
 
-    template <typename T, typename NodePtr>
+    /*
+    ** A bidirectional_iterator, with typenames T and NodePtr
+    */
+
+    template <typename NodePtr, typename T>
     class tree_iterator
     {
     public:
-        typedef typename tree_iterator_tag              iterator_category;
+        typedef typename bidierctional_iterator_tag     iterator_category;
         typedef typename T                              value_type;
         typedef typename ptrdiff_t                      difference_type;
         typedef typename T*                             pointer;
         typedef typename T&                             reference;
 
     private:
-        NodePtr current_node;
+        NodePtr _node_ptr;
 
     public:
         tree_iterator();
@@ -88,9 +167,9 @@ namespace ft
         operator tree_iterator<const T>() const;
 
         tree_iterator& operator=( const tree_iterator& src );
-        tree_iterator& operator=( const pointer& src_ptr );
+        tree_iterator& operator=( const NodePtr& src_ptr );
 
-        iterator_type base() const;
+        NodePtr base() const;
         reference operator*() const;
         pointer operator->() const;
         tree_iterator& operator++();
@@ -100,103 +179,117 @@ namespace ft
 
     }; // tree_iterator
 
-        /* bidirectional_iterator member functions */
+    /* bidirectional_iterator member functions */
     
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>::tree_iterator() : _ptr() {}
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>::tree_iterator() : _node_ptr() {}
 
-    // template <typename T, typename NodePtr>
-    // tree_iterator<T, NodePtr>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
+    // template <typename NodePtr, typename T>
+    // tree_iterator<NodePtr, T>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>::tree_iterator( const NodePtr& ptr ) : _ptr( ptr ) {}
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>::tree_iterator( const NodePtr& ptr ) : _node_ptr( ptr ) {}
     
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>::tree_iterator( const tree_iterator& other ) : _ptr( other.base() ) {}
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>::tree_iterator( const tree_iterator& other ) : _node_ptr( other._node_ptr ) {}
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>::~tree_iterator() {}
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>::~tree_iterator() {}
 
-    // template <typename T, typename NodePtr>
-    // tree_iterator<T, NodePtr>::operator tree_iterator<const T, const NodePtr>() const
+    // template <typename NodePtr, typename T>
+    // tree_iterator<NodePtr, T>::operator tree_iterator<const T, const NodePtr>() const
     // {
     //     return ( this->_ptr );
     // }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>& tree_iterator<T, NodePtr>::operator=( const tree_iterator<T, NodePtr>& src )
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator=( const tree_iterator& src )
     {
-        _ptr = src.base();
+        if ( this != &src )
+            this->_node_ptr = src._node_ptr;
         return ( *this );
     }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>& tree_iterator<T, NodePtr>::operator=( const pointer& src_ptr )
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator=( const NodePtr& src_ptr )
     {
-        _ptr = src_ptr;
+        this->_node_ptr = src_ptr;
         return ( *this );
     }
 
-    template <typename T, typename NodePtr>
-    typename tree_iterator<T, NodePtr>::iterator_type tree_iterator<T, NodePtr>::base() const
+    template <typename NodePtr, typename T>
+    NodePtr tree_iterator<NodePtr, T>::base() const
     {
-        return ( this->_ptr );
+        return ( this->_node_ptr );
     }
 
-    template <typename T, typename NodePtr>
-    typename tree_iterator<T, NodePtr>::reference tree_iterator<T, NodePtr>::operator*() const
+    template <typename NodePtr, typename T>
+    typename tree_iterator<NodePtr, T>::reference tree_iterator<NodePtr, T>::operator*() const
     {
-        return ( *(this->_ptr) );
+        return ( this->_node_ptr->data );
     }
 
-    template <typename T, typename NodePtr>
-    typename tree_iterator<T, NodePtr>::pointer tree_iterator<T, NodePtr>::operator->() const
+    template <typename NodePtr, typename T>
+    typename tree_iterator<NodePtr, T>::pointer tree_iterator<NodePtr, T>::operator->() const
     {
-        return ( this->_ptr );
+        return ( &( this->_node_ptr->data ) );
     }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>& tree_iterator<T, NodePtr>::operator++()
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator++()
     {
-        ++( this->_ptr );
-        return ( *this );
+
+        // code....
+
+        // _ptr_ = static_cast<__iter_pointer>(
+    //       __tree_next_iter<__end_node_pointer>(static_cast<__node_base_pointer>(__ptr_)));
+    //   return *this;
+
+        // ++( this->_node_ptr );
+        // return ( *this );
     }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>  tree_iterator<T, NodePtr>::operator++( int )
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator++( int )
     {
-        bidirectional_iterator  temp = *this;
-        ++( this->_ptr );
-        return ( temp );
+        tree_iterator   it = *this;
+        ++( this->_node_ptr );
+        return ( it );
     }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>& tree_iterator<T, NodePtr>::operator--()
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator--()
     {
-        --( this->_ptr );
-        return ( *this );
+                // code....
+
+        // __ptr_ = static_cast<__iter_pointer>(__tree_prev_iter<__node_base_pointer>(
+    //       static_cast<__end_node_pointer>(__ptr_)));
+    //   return *this;
+
+        // --( this->_node_ptr );
+        // return ( *this );
     }
 
-    template <typename T, typename NodePtr>
-    tree_iterator<T, NodePtr>  tree_iterator<T, NodePtr>::operator--( int )
+    template <typename NodePtr, typename T>
+    tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator--( int )
     {
-        bidirectional_iterator  temp = *this;
-        --( this->_ptr );
-        return ( temp );
+        tree_iterator   it = *this;
+        --( this->_node_ptr );
+        return ( it );
     }
 
     /* bidirectional_iterator non-member functions */
 
-    template <typename T1, typename T2>
-    bool operator==( const bidirectional_iterator<T1>& lhs, const bidirectional_iterator<T2>& rhs )
+    template <typename NodePtr, typename T>
+    bool operator==( const tree_iterator<NodePtr, T>& lhs, const tree_iterator<NodePtr, T>& rhs )
     {
-        return ( lhs.base() == rhs.base() );
+        return ( lhs._node_ptr == rhs._node_ptr );
     }
 
-    template <typename T1, typename T2>
-    bool operator!=( const bidirectional_iterator<T1>& lhs, const bidirectional_iterator<T2>& rhs )
+    template <typename NodePtr, typename T>
+    bool operator!=( const tree_iterator<NodePtr, T>& lhs, const tree_iterator<NodePtr, T>& rhs )
     {
-        return ( lhs.base() != rhs.base() );
+        return ( !( lhs == rhs ) );
     }
 
 
