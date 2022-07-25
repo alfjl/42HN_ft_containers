@@ -6,6 +6,7 @@
 #include "utils/iterator.hpp"
 #include "utils/utility.hpp"
 #include "utils/functional.hpp"
+#include "utils/tree.hpp"
 
 #ifndef nullptr
 #define nullptr NULL
@@ -80,7 +81,7 @@ namespace ft
         }; // value_compare
 
     private:
-        typedef ft::binary_search_tree<value_type, value_compare, allocator_type>   base;
+        typedef ft::red_black_tree<value_type, value_compare, allocator_type>   base;
 
         base    tree;
 
