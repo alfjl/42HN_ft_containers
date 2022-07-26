@@ -109,8 +109,8 @@ namespace ft
 
     enum node_state
     {
-        red = 1,
-        black = 0
+        RED = 1,
+        BLACK = 0
     };
 
     template <typename T>
@@ -131,10 +131,10 @@ namespace ft
     };
 
     template <typename T>
-    tree_node<T>::tree_node() : colour(black), data(), parent(), left(), right() {}
+    tree_node<T>::tree_node() : colour(BLACK), data(), parent(), left(), right() {}
 
     template <typename T>
-    tree_node<T>::tree_node( const tree_node &other) : colour(black), data(), parent(), left(), right()
+    tree_node<T>::tree_node( const tree_node &other) : colour(BLACK), data(), parent(), left(), right()
     {
         *this = other;
     }
@@ -181,7 +181,7 @@ namespace ft
         tree_iterator( const tree_iterator& other );
         ~tree_iterator();
 
-        operator tree_iterator<const T>() const;
+        // operator tree_iterator<const T>() const;
 
         tree_iterator& operator=( const tree_iterator& src );
         tree_iterator& operator=( const NodePtr& src_ptr );
@@ -262,8 +262,8 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator++( int )
     {
-        tree_iterator   it = *this;
-        ++( this->_node_ptr );
+        tree_iterator   it = *( this );
+        ++( this->_node_ptr );  // or ++( *( this ) )?
         return ( it );
     }
 
@@ -277,8 +277,8 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator--( int )
     {
-        tree_iterator   it = *this;
-        --( this->_node_ptr );
+        tree_iterator   it = *( this );
+        --( this->_node_ptr ); // or --( *( this ) )?
         return ( it );
     }
 
@@ -306,52 +306,64 @@ namespace ft
     class tree_const_iterator
     {
     public:
-        typedef typename bidirectional_iterator_tag     iterator_category;
-        typedef typename T                              value_type;
-        typedef typename ptrdiff_t                      difference_type;
-        typedef typename const T*                       pointer;
-        typedef typename const T&                       reference;
+        typedef typename bidirectional_iterator_tag         iterator_category;
+        typedef typename T                                  value_type;
+        typedef typename ptrdiff_t                          difference_type;
+        typedef const T*                                    pointer;
+        typedef const T&                                    reference;
+
+    // private:
+        // typedef tree_iterator<value_type, __node_pointer>   non_const_iterator;
 
     private:
-        NodePtr _node_ptr;
+        ConstNodePtr _node_ptr;
 
     public:
         tree_const_iterator();
         tree_const_iterator( const ConstNodePtr& ptr );
-        tree_iconst_terator( const tree_iterator& other );
+        tree_const_iterator( const tree_const_iterator& other );
+        // tree_const_iterator( non_const_iterator non_const_other ); // maybe try this way first:
+        tree_const_iterator( tree_iterator non_const_other );
         ~tree_const_iterator();
 
-        operator tree_iterator<const T>() const;
+        // operator tree_const_iterator<const T>() const;
 
-        tree_iterator& operator=( const tree_iterator& src );
-        tree_iterator& operator=( const ConstNodePtr& src_ptr );
+        tree_const_iterator& operator=( const tree_const_iterator& src );
+        tree_const_iterator& operator=( const ConstNodePtr& src_ptr );
 
         ConstNodePtr base() const;
         reference operator*() const;
         pointer operator->() const;
-        tree_iterator& operator++();
-        tree_iterator  operator++(int);
-        tree_iterator& operator--();
-        tree_iterator  operator--(int);
+        tree_const_iterator& operator++();
+        tree_const_iterator  operator++(int);
+        tree_const_iterator& operator--();
+        tree_const_iterator  operator--(int);
 
     }; // tree_const_iterator
 
     /* tree_const_iterator member functions */
     
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>::tree_iterator() : _node_ptr() {}
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator() : _node_ptr() {}
 
     // template <typename NodePtr, typename T>
     // tree_iterator<NodePtr, T>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>::tree_iterator( const NodePtr& ptr ) : _node_ptr( ptr ) {}
-    
-    template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>::tree_iterator( const tree_iterator& other ) : _node_ptr( other._node_ptr ) {}
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const ConstNodePtr& ptr ) : _node_ptr( ptr ) {}    
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>::~tree_iterator() {}
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const tree_const_iterator& other ) : _node_ptr( other._node_ptr ) {}
+
+    // template <typename ConstNodePtr, typename T>
+    // tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( non_const_iterator non_const_other ) : _node_ptr( non_const_other._node_ptr ) {} //  maybe try this way first:
+
+    template <typename ConstNodePtr, typename T>
+    template <typename NodePtr, typename T>
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( tree_iterator<NodePtr, T> non_const_other ) : _node_ptr( non_const_other._node_ptr ) {}
+
+    template <typename ConstNodePtr, typename T>
+    tree_const_iterator<ConstNodePtr, T>::~tree_const_iterator() {}
 
     // template <typename NodePtr, typename T>
     // tree_iterator<NodePtr, T>::operator tree_iterator<const T, const NodePtr>() const
@@ -360,7 +372,7 @@ namespace ft
     // }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator=( const tree_iterator& src )
+    tree_const_iterator<ConstNodePtr, T>& tree_const_iterator<ConstNodePtr, T>::operator=( const tree_const_iterator& src )
     {
         if ( this != &src )
             this->_node_ptr = src._node_ptr;
@@ -368,70 +380,70 @@ namespace ft
     }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator=( const ConstNodePtr& src_ptr )
+    tree_const_iterator<ConstNodePtr, T>& tree_const_iterator<ConstNodePtr, T>::operator=( const ConstNodePtr& src_ptr )
     {
         this->_node_ptr = src_ptr;
         return ( *this );
     }
 
     template <typename ConstNodePtr, typename T>
-    ConstNodePtr tree_iterator<ConstNodePtr, T>::base() const
+    ConstNodePtr tree_const_iterator<ConstNodePtr, T>::base() const
     {
         return ( this->_node_ptr );
     }
 
     template <typename ConstNodePtr, typename T>
-    typename tree_iterator<NodePtr, T>::reference tree_iterator<ConstNodePtr, T>::operator*() const
+    typename tree_const_iterator<ConstNodePtr, T>::reference tree_const_iterator<ConstNodePtr, T>::operator*() const
     {
         return ( this->_node_ptr->data );
     }
 
     template <typename ConstNodePtr, typename T>
-    typename tree_iterator<ConstNodePtr, T>::pointer tree_iterator<ConstNodePtr, T>::operator->() const
+    typename tree_const_iterator<ConstNodePtr, T>::pointer tree_const_iterator<ConstNodePtr, T>::operator->() const
     {
         return ( &( this->_node_ptr->data ) );
     }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator++()
+    tree_const_iterator<ConstNodePtr, T>& tree_const_iterator<ConstNodePtr, T>::operator++()
     {
         this->_node_ptr = tree_next_iter<value_type>( this->_node_ptr );
         return ( *this );
     }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>  tree_iterator<ConstNodePtr, T>::operator++( int )
+    tree_const_iterator<ConstNodePtr, T>  tree_const_iterator<ConstNodePtr, T>::operator++( int )
     {
         tree_iterator   it = *this;
-        ++( this->_node_ptr );
+        ++( this->_node_ptr ); // or ++( *( this ) )?
         return ( it );
     }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator--()
+    tree_const_iterator<ConstNodePtr, T>& tree_const_iterator<ConstNodePtr, T>::operator--()
     {
         this->_node_ptr = tree_prev_iter<value_type>( this->_node_ptr );
         return ( *this );
     }
 
     template <typename ConstNodePtr, typename T>
-    tree_iterator<ConstNodePtr, T>  tree_iterator<ConstNodePtr, T>::operator--( int )
+    tree_const_iterator<ConstNodePtr, T>  tree_const_iterator<ConstNodePtr, T>::operator--( int )
     {
-        tree_iterator   it = *this;
-        --( this->_node_ptr );
+        tree_const_iterator   it = *this;
+        --( this->_node_ptr ); // or --( *( this ) )?
         return ( it );
     }
 
     /* tree_const_iterator non-member functions */
 
     template <typename ConstNodePtr, typename T>
-    bool operator==( const tree_iterator<ConstNodePtr, T>& lhs, const tree_iterator<ConstNodePtr, T>& rhs )
+    bool operator==( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
     {
         return ( lhs._node_ptr == rhs._node_ptr );
     }
 
     template <typename ConstNodePtr, typename T>
-    bool operator!=( const tree_iterator<ConstNodePtr, T>& lhs, const tree_iterator<ConstNodePtr, T>& rhs )
+    bool operator!=( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
     {
         return ( !( lhs == rhs ) );
     }
@@ -497,10 +509,40 @@ namespace ft
 same number of black nodes
     */
     template <typename T, typename Compare, typename Allocator>
-    class red_black_tree : public binary_search_tree
+    class red_black_tree : public binary_search_tree<typename T, typename Compare, typename Allocator>
     {
 
         // code...
 
+        // queries (search min, max, successor, precursor) from BST
+
+        // updates (insert, delete/erase) <- recolour and reorder (via rotation = right_rotate(node) left_rotate(node))
+        // RB_insert(x) -> tree_insert(x)
+            // -> might violate rule that red node need sblack parent
+            // solution: move problem up the tree, until we can fix it via recolouring and/or rotation
+            // steps:
+            // tree_insert(x) (BST)
+            // colour x = red
+            //  (walk up the tree) while x != root && colour x == red
+            // 6 cases (3 left, and 3 right):
+            // if p[p[x]] == p[p[x]]->left
+                // 3 cases:
+                // 1. y = p[p[x]]->right (= uncle/aunt of x)
+                // if colour[y] == RED -> we recolour   CASE 1
+                  // else if x == p[x]->right  CASE 2
+                  // after that do CASE 3
+            // else: do it the same but right, instead of left
+            // after that, always colour root to BLACK (just in case)
+
+
+            // 3 CASES:
+            // CASE 1:
+                // recolour p[x], p[p[x]] & y and change x to p[p[x]] (and go on in the loop) -> pushes the problem up the tree
+            // CASE 2:
+                // left rotation on p[x] so x is now left child
+            // CASE 3
+                // right rotate of p[p[x]]
+
     }; // red_black_tree
+
 } // namespace ft
