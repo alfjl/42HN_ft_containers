@@ -51,34 +51,51 @@ namespace ft
 //     return __x->__parent_unsafe();
 // }
 
-// template <class _EndNodePtr, class _NodePtr>
-// inline _LIBCPP_INLINE_VISIBILITY
-// _EndNodePtr
-// __tree_next_iter(_NodePtr __x) _NOEXCEPT
-// {
-//     if (__x->__right_ != nullptr)
-//         return static_cast<_EndNodePtr>(__tree_min(__x->__right_));
-//     while (!__tree_is_left_child(__x))
-//         __x = __x->__parent_unsafe();
-//     return static_cast<_EndNodePtr>(__x->__parent_);
-// }
+    // template <class _EndNodePtr, class _NodePtr>
+    // inline _LIBCPP_INLINE_VISIBILITY
+    // _EndNodePtr
+    // __tree_next_iter(_NodePtr __x) _NOEXCEPT
+    // {
+    //     if (__x->__right_ != nullptr)
+    //         return static_cast<_EndNodePtr>(__tree_min(__x->__right_));
+    //     while (!__tree_is_left_child(__x))
+    //         __x = __x->__parent_unsafe();
+    //     return static_cast<_EndNodePtr>(__x->__parent_);
+    // }
+    template <typename NodePtr>
+    NodePtr tree_next_iter( NodePtr node_ptr )
+    {
+        if ( node_ptr->right != nullptr )
+            return ( tree_min( node_ptr->right ) );
+        while ( !( tree_is_left_child( node_ptr ) ) )
+            node_ptr = node_ptr->parent;
+        return ( node_ptr->parent );
+    }
 
-// // Returns:  pointer to the previous in-order node before __x.
-// // Precondition:  __x != nullptr.
-// // Note: __x may be the end node.
-// template <class _NodePtr, class _EndNodePtr>
-// inline _LIBCPP_INLINE_VISIBILITY
-// _NodePtr
-// __tree_prev_iter(_EndNodePtr __x) _NOEXCEPT
-// {
-//     if (__x->__left_ != nullptr)
-//         return __tree_max(__x->__left_);
-//     _NodePtr __xx = static_cast<_NodePtr>(__x);
-//     while (__tree_is_left_child(__xx))
-//         __xx = __xx->__parent_unsafe();
-//     return __xx->__parent_unsafe();
-// }
-
+    // // Returns:  pointer to the previous in-order node before __x.
+    // // Precondition:  __x != nullptr.
+    // // Note: __x may be the end node.
+    // template <class _NodePtr, class _EndNodePtr>
+    // inline _LIBCPP_INLINE_VISIBILITY
+    // _NodePtr
+    // __tree_prev_iter(_EndNodePtr __x) _NOEXCEPT
+    // {
+    //     if (__x->__left_ != nullptr)
+    //         return __tree_max(__x->__left_);
+    //     _NodePtr __xx = static_cast<_NodePtr>(__x);
+    //     while (__tree_is_left_child(__xx))
+    //         __xx = __xx->__parent_unsafe();
+    //     return __xx->__parent_unsafe();
+    // }
+    template <typename NodePtr>
+    NodePtr tree_prev_iter( NodePtr node_ptr )
+    {
+        if ( node_ptr->left != nullptr )
+            return ( tree_max( node_ptr->left ) );
+        while ( tree_is_left_child( node_ptr ) )
+            node_ptr = node_ptr->parent;
+        return ( node_ptr->parent );
+    }
 
 
 
@@ -142,14 +159,14 @@ namespace ft
     /* --------------------------- Tree Iterator ----------------------------- */
 
     /*
-    ** A bidirectional_iterator, with typenames T and NodePtr
+    ** A bidirectional_iterator, with typenames NodePtr and T
     */
 
     template <typename NodePtr, typename T>
     class tree_iterator
     {
     public:
-        typedef typename bidierctional_iterator_tag     iterator_category;
+        typedef typename bidirectional_iterator_tag     iterator_category;
         typedef typename T                              value_type;
         typedef typename ptrdiff_t                      difference_type;
         typedef typename T*                             pointer;
@@ -179,7 +196,7 @@ namespace ft
 
     }; // tree_iterator
 
-    /* bidirectional_iterator member functions */
+    /* tree_iterator member functions */
     
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>::tree_iterator() : _node_ptr() {}
@@ -238,15 +255,8 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator++()
     {
-
-        // code....
-
-        // _ptr_ = static_cast<__iter_pointer>(
-    //       __tree_next_iter<__end_node_pointer>(static_cast<__node_base_pointer>(__ptr_)));
-    //   return *this;
-
-        // ++( this->_node_ptr );
-        // return ( *this );
+        this->_node_ptr = tree_next_iter<value_type>( this->_node_ptr );
+        return ( *this );
     }
 
     template <typename NodePtr, typename T>
@@ -260,14 +270,8 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator--()
     {
-                // code....
-
-        // __ptr_ = static_cast<__iter_pointer>(__tree_prev_iter<__node_base_pointer>(
-    //       static_cast<__end_node_pointer>(__ptr_)));
-    //   return *this;
-
-        // --( this->_node_ptr );
-        // return ( *this );
+        this->_node_ptr = tree_prev_iter<value_type>( this->_node_ptr );
+        return ( *this );
     }
 
     template <typename NodePtr, typename T>
@@ -278,7 +282,7 @@ namespace ft
         return ( it );
     }
 
-    /* bidirectional_iterator non-member functions */
+    /* tree_iterator non-member functions */
 
     template <typename NodePtr, typename T>
     bool operator==( const tree_iterator<NodePtr, T>& lhs, const tree_iterator<NodePtr, T>& rhs )
@@ -292,6 +296,145 @@ namespace ft
         return ( !( lhs == rhs ) );
     }
 
+    /* ------------------------ Tree Const Iterator -------------------------- */
+
+    /*
+    ** A bidirectional_iterator, with typenames ConstNodePtr and T
+    */
+
+    template <typename ConstNodePtr, typename T>
+    class tree_const_iterator
+    {
+    public:
+        typedef typename bidirectional_iterator_tag     iterator_category;
+        typedef typename T                              value_type;
+        typedef typename ptrdiff_t                      difference_type;
+        typedef typename const T*                       pointer;
+        typedef typename const T&                       reference;
+
+    private:
+        NodePtr _node_ptr;
+
+    public:
+        tree_const_iterator();
+        tree_const_iterator( const ConstNodePtr& ptr );
+        tree_iconst_terator( const tree_iterator& other );
+        ~tree_const_iterator();
+
+        operator tree_iterator<const T>() const;
+
+        tree_iterator& operator=( const tree_iterator& src );
+        tree_iterator& operator=( const ConstNodePtr& src_ptr );
+
+        ConstNodePtr base() const;
+        reference operator*() const;
+        pointer operator->() const;
+        tree_iterator& operator++();
+        tree_iterator  operator++(int);
+        tree_iterator& operator--();
+        tree_iterator  operator--(int);
+
+    }; // tree_const_iterator
+
+    /* tree_const_iterator member functions */
+    
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>::tree_iterator() : _node_ptr() {}
+
+    // template <typename NodePtr, typename T>
+    // tree_iterator<NodePtr, T>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>::tree_iterator( const NodePtr& ptr ) : _node_ptr( ptr ) {}
+    
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>::tree_iterator( const tree_iterator& other ) : _node_ptr( other._node_ptr ) {}
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>::~tree_iterator() {}
+
+    // template <typename NodePtr, typename T>
+    // tree_iterator<NodePtr, T>::operator tree_iterator<const T, const NodePtr>() const
+    // {
+    //     return ( this->_ptr );
+    // }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator=( const tree_iterator& src )
+    {
+        if ( this != &src )
+            this->_node_ptr = src._node_ptr;
+        return ( *this );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator=( const ConstNodePtr& src_ptr )
+    {
+        this->_node_ptr = src_ptr;
+        return ( *this );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    ConstNodePtr tree_iterator<ConstNodePtr, T>::base() const
+    {
+        return ( this->_node_ptr );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    typename tree_iterator<NodePtr, T>::reference tree_iterator<ConstNodePtr, T>::operator*() const
+    {
+        return ( this->_node_ptr->data );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    typename tree_iterator<ConstNodePtr, T>::pointer tree_iterator<ConstNodePtr, T>::operator->() const
+    {
+        return ( &( this->_node_ptr->data ) );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator++()
+    {
+        this->_node_ptr = tree_next_iter<value_type>( this->_node_ptr );
+        return ( *this );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>  tree_iterator<ConstNodePtr, T>::operator++( int )
+    {
+        tree_iterator   it = *this;
+        ++( this->_node_ptr );
+        return ( it );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>& tree_iterator<ConstNodePtr, T>::operator--()
+    {
+        this->_node_ptr = tree_prev_iter<value_type>( this->_node_ptr );
+        return ( *this );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    tree_iterator<ConstNodePtr, T>  tree_iterator<ConstNodePtr, T>::operator--( int )
+    {
+        tree_iterator   it = *this;
+        --( this->_node_ptr );
+        return ( it );
+    }
+
+    /* tree_const_iterator non-member functions */
+
+    template <typename ConstNodePtr, typename T>
+    bool operator==( const tree_iterator<ConstNodePtr, T>& lhs, const tree_iterator<ConstNodePtr, T>& rhs )
+    {
+        return ( lhs._node_ptr == rhs._node_ptr );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    bool operator!=( const tree_iterator<ConstNodePtr, T>& lhs, const tree_iterator<ConstNodePtr, T>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
 
     /* ------------------------- Binary Search Tree -------------------------- */
 
