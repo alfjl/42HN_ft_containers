@@ -104,7 +104,7 @@ namespace ft
     /*
     ** A general node template to be used in my implementation of 
     ** Binary Search Tree (BST) and Red Black Tree (RBT)
-    ** Colour is unused in BST und just set to default 'black'
+    ** Colour is unused in BST and set to default 'BLACK'
     */
 
     enum node_state
@@ -116,6 +116,7 @@ namespace ft
     template <typename T>
     class tree_node
     {
+
     private:
         node_state        colour;
         T                 data;
@@ -127,14 +128,19 @@ namespace ft
         tree_node( const tree_node &other);
         ~tree_node();
 
-        tree_node    &operator=( const tree_node &src );
-    };
+        tree_node &operator=( const tree_node &src );
+    
+        void change_colour();
+
+    }; // tree_node
+
+    /* tree_node member functions */
 
     template <typename T>
-    tree_node<T>::tree_node() : colour(BLACK), data(), parent(), left(), right() {}
+    tree_node<T>::tree_node() : colour( BLACK ), data(), parent(), left(), right() {}
 
     template <typename T>
-    tree_node<T>::tree_node( const tree_node &other) : colour(BLACK), data(), parent(), left(), right()
+    tree_node<T>::tree_node( const tree_node &other) : colour( BLACK ), data(), parent(), left(), right()
     {
         *this = other;
     }
@@ -154,7 +160,13 @@ namespace ft
             this->right = src.right;
         }
         return ( *this );
-    }; // tree_node
+    }
+
+    template <typename T>
+    void change_colour()
+    {
+        this->colour = ( this->colour == RED ) ? BLACK : RED;
+    }
 
     /* --------------------------- Tree Iterator ----------------------------- */
 
@@ -459,7 +471,7 @@ namespace ft
     ** The root node is the only node in the tree whose parent is NIL.
     */
 
-    template <typename T, typename Compare, typename Allocator>
+    template < typename T, typename Compare = std::less<T>, typename Allocator = std::allocator<T> >
     class binary_search_tree
     {
 
@@ -477,13 +489,31 @@ namespace ft
         typedef ft::tree_node<value_type>                       node_type;
 
     private:
-        node_type      *root;
-        value_compare   _compare;
-        allocator_type  _allocator;
-        size_type       _size;
+        node_type       *root; // root node of tree
+        value_compare   _compare; 
+        allocator_type  _allocator; // for associated allocator object, map.get_allocator()
+        size_type       _size; // number of elements in tree ( vor map.size() )
+
+        // queries (search, min, max, predecessor, successor, insert, delete
+
+        bool    search(node_type *root, T data);
 
 
     }; // binary_search_tree
+
+    /* binary_search_tree member functions */
+    template < typename T, typename Compare, typename Allocator>
+    bool    binary_search_tree<T, Compare, Allocator>::search(node_type *rootptr, T data)
+    {
+        if ( rootptr == nullptr || rootptr->data == data )
+            return ( rootptr );
+        if ( data < rootptr->data )
+            return ( this->search( rootptr->left, data ) );
+        return ( this->search( rootptr->right, data ) );
+    }
+
+    /* binary_search_tree non-member functions */
+
 
     /* --------------------------- Red Black Tree ---------------------------- */
 
