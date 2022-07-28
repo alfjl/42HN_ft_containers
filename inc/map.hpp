@@ -240,7 +240,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     bool map<Key,T,Compare,Alloc>::empty() const
     {
-        return ( this->tree.empty() );
+        return ( this->tree.size() == 0 );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
