@@ -292,19 +292,19 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator position ) // iterator
     {
-        // code...
+        return ( this->tree.erase( position ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::erase( const key_type& k ) // key
     {
-        // code...
+        return ( this->tree.erase( k ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator first, iterator last ) // range
     {
-        // code...
+        return ( this->tree.erase( first, last ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
