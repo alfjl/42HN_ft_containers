@@ -555,13 +555,9 @@ namespace ft
         pair<iterator,iterator> equal_range( const value_type& value);
         pair<const_iterator,const_iterator> equal_range( const value_type& value) const;
 
-    private:
-        // Queries (search, min, max, predecessor, successor, insert, delete
-        bool    search(node_type *root, T data);
-
-    public:
-        // Allocator:
+        // Allocator / Compare:
         allocator_type get_allocator() const;
+        value_compare value_comp();
 
     }; // binary_search_tree
 
@@ -630,7 +626,14 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
     {
-
+        // https://cplusplus.com/reference/map/map/insert/
+        // Insert elements
+        // Extends the container by inserting new elements, effectively increasing the container size by the number of elements inserted.
+        // Because element keys in a map are unique, the insertion operation checks whether each inserted element has a key equivalent to the one of an element already in the container, and if so, the element is not inserted, returning an iterator to this existing element (if the function returns a value).
+        // For a similar container allowing for duplicate elements, see multimap.
+        // An alternative way to insert elements in a map is by using member function map::operator[].
+        // Internally, map containers keep all their elements sorted by their key following the criterion specified by its comparison object. The elements are always inserted in its respective position following this ordering.
+        // The parameters determine how many elements are inserted and to which values they are initialized:
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -762,17 +765,11 @@ namespace ft
         return ( this->_allocator );
     }
 
-
-    // template < typename T, typename Compare, typename Allocator>
-    // bool    binary_search_tree<T, Compare, Allocator>::search(node_type *rootptr, T data)
-    // {
-        // if ( rootptr == nullptr || rootptr->data == data )
-        //     return ( rootptr );
-        // if ( data < rootptr->data )
-        //     return ( this->search( rootptr->left, data ) );
-        // return ( this->search( rootptr->right, data ) );
-    // }
-
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp()
+    {
+        return ( this->_compare );
+    }
 
     /* binary_search_tree non-member functions */
 
@@ -810,7 +807,7 @@ same number of black nodes
 
         // updates (insert, delete/erase) <- recolour and reorder (via rotation = right_rotate(node) left_rotate(node))
         // RB_insert(x) -> tree_insert(x)
-            // -> might violate rule that red node need sblack parent
+            // -> might violate rule that red node needs black parent
             // solution: move problem up the tree, until we can fix it via recolouring and/or rotation
             // steps:
             // tree_insert(x) (BST)

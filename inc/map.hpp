@@ -159,7 +159,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::map( const key_compare& comp, const allocator_type& alloc ) // default constructor (empty container)
     : tree( value_compare( comp ), alloc ) {}
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     template <typename InputIterator>
     map<Key,T,Compare,Alloc>::map( InputIterator first, InputIterator last, const key_compare& comp,
@@ -168,14 +168,14 @@ namespace ft
     {
         this->insert( first, last );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::map( const map& src ) // copy constructor
     : tree( src.tree )
     { // do I have to check against 'tree == nullptr' or something?
         insert( src.begin(), src.end() ); // do i have to? isn't 'tree(src.tree)' already doing this?
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::~map() {} // destructor
 
@@ -194,43 +194,43 @@ namespace ft
     {
             return ( this->tree.begin() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::begin() const
     {
         return ( this->tree.begin() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::end()
     {
         return ( this->tree.end() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::end() const
     {
         return ( this->tree.end() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::reverse_iterator map<Key,T,Compare,Alloc>::rbegin()
     {
         return ( this->tree.rbegin() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_reverse_iterator map<Key,T,Compare,Alloc>::rbegin() const
     {
         return ( this->tree.rbegin() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::reverse_iterator map<Key,T,Compare,Alloc>::rend()
     {
         return ( this->tree.rend() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_reverse_iterator map<Key,T,Compare,Alloc>::rend() const
     {
@@ -242,13 +242,13 @@ namespace ft
     {
         return ( this->tree.size() == 0 );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::size() const
     {
         return ( this->tree.size() );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::max_size() const
     {
@@ -275,44 +275,44 @@ namespace ft
     {
         return ( this->tree.insert( val ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::insert( iterator position, const value_type& val ) // with hint
     {
         return ( this->tree.insert( position, val ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     template <typename InputIterator>
     void map<Key,T,Compare,Alloc>::insert( InputIterator first, InputIterator last ) // range
     {
         this->tree.insert( first, last );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator position ) // iterator
     {
         return ( this->tree.erase( position ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::erase( const key_type& k ) // key
     {
         return ( this->tree.erase( k ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator first, iterator last ) // range
     {
         return ( this->tree.erase( first, last ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::swap( map& x )
     {
         this->tree.swap( x.tree );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::clear()
     {
@@ -322,13 +322,13 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::key_compare map<Key,T,Compare,Alloc>::key_comp() const
     {
-        // code...
+        return ( key_compare() )
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::value_compare map<Key,T,Compare,Alloc>::value_comp() const
     {
-        // code...
+        return ( this->tree.value_compare() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -336,13 +336,13 @@ namespace ft
     {
         return ( this->tree.find( k ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::find( const key_type& k ) const
     {
         return ( this->tree.find( k ) );
     }
-    
+
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::count( const key_type& k ) const
     {
