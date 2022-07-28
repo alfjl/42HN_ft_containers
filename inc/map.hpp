@@ -374,13 +374,17 @@ namespace ft
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
-    ft::pair<map<Key,T,Compare,Alloc>::const_iterator,map<Key,T,Compare,Alloc>::const_iterator> map<Key,T,Compare,Alloc>::equal_range( const key_type& k ) const
+    ft::pair<typename map<Key,T,Compare,Alloc>::const_iterator,
+            typename map<Key,T,Compare,Alloc>::const_iterator> 
+            map<Key,T,Compare,Alloc>::equal_range( const key_type& k ) const
     {
         return ( this->tree.equal_range( k ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
-    ft::pair<map<Key,T,Compare,Alloc>::iterator,map<Key,T,Compare,Alloc>::iterator> map<Key,T,Compare,Alloc>::equal_range( const key_type& k )
+    ft::pair<typename map<Key,T,Compare,Alloc>::iterator,
+            typename map<Key,T,Compare,Alloc>::iterator> 
+            map<Key,T,Compare,Alloc>::equal_range( const key_type& k )
     {
         return ( this->tree.equal_range( k ) );
     }
