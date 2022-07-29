@@ -688,7 +688,8 @@ namespace ft
     template <typename InputIterator>
     void binary_search_tree<T, Compare, Allocator>::insert( InputIterator first, InputIterator last )
     {
-        
+        for ( ; first != last; ++first )
+            this->_insert( position, value );
     }
 
     template < typename T, typename Compare, typename Allocator>
