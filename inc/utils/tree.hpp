@@ -138,6 +138,7 @@ namespace ft
 
     public:
         tree_node();
+        tree_node( const value_type &value );
         tree_node( const tree_node &other);
         ~tree_node();
 
@@ -151,6 +152,9 @@ namespace ft
 
     template <typename T>
     tree_node<T>::tree_node() : colour( BLACK ), data(), parent(), left(), right() {}
+
+    template <typename T>
+    tree_node<T>::tree_node( const value_type &value ) : colour( BLACK ), data( value ), parent(), left(), right() {}
 
     template <typename T>
     tree_node<T>::tree_node( const tree_node &other) : colour( BLACK ), data(), parent(), left(), right()
@@ -626,17 +630,43 @@ namespace ft
         return ( this->_allocator.max_size() );
     }
 
+    // https://cplusplus.com/reference/map/map/insert/
+    // Insert elements
+    // Extends the container by inserting new elements, effectively increasing the container size by the number of elements inserted.
+    // Because element keys in a map are unique, the insertion operation checks whether each inserted element has a key equivalent to the one of an element already in the container, and if so, the element is not inserted, returning an iterator to this existing element (if the function returns a value).
+    // For a similar container allowing for duplicate elements, see multimap.
+    // An alternative way to insert elements in a map is by using member function map::operator[].
+    // Internally, map containers keep all their elements sorted by their key following the criterion specified by its comparison object. The elements are always inserted in its respective position following this ordering.
+    // The parameters determine how many elements are inserted and to which values they are initialized:
     template < typename T, typename Compare, typename Allocator>
     pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
     {
-        // https://cplusplus.com/reference/map/map/insert/
-        // Insert elements
-        // Extends the container by inserting new elements, effectively increasing the container size by the number of elements inserted.
-        // Because element keys in a map are unique, the insertion operation checks whether each inserted element has a key equivalent to the one of an element already in the container, and if so, the element is not inserted, returning an iterator to this existing element (if the function returns a value).
-        // For a similar container allowing for duplicate elements, see multimap.
-        // An alternative way to insert elements in a map is by using member function map::operator[].
-        // Internally, map containers keep all their elements sorted by their key following the criterion specified by its comparison object. The elements are always inserted in its respective position following this ordering.
-        // The parameters determine how many elements are inserted and to which values they are initialized:
+        node_type_ptr       rootptr = this->_root;
+        iterator            position = this->_base;
+        node_type_ptr       new_node( value );
+        bool                insert_flag = true;
+
+        while ( rootptr != nullptr )
+        {
+            position = rootptr;
+            if ( this->_compare( new_node->data, this->_root->data ) )
+                rootptr = rootptr->left;
+            else if ( this->_compare( this->_root->data, new_node->data ) )
+                rootptr = rootptr->right;
+            else
+            {
+                insert_flag = false;
+                break ;
+            }
+        }
+        new_node->parent = position;
+        if ( position == this->_base )
+            this->_root = new_node; // empty tree
+        else if ( this->_compare( new_node->data, position->data ) )
+            position->left = new_node;
+        else if ( this->_compare( position->data, new_node->data ) )
+            position->right = new_node;
+        return ( ft::make_pair( position, insert_flag ); );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -675,11 +705,11 @@ namespace ft
     {
         if ( x != nullptr ) // do I need protection here?
         {
-            swap( this->_base, x._base);
-            swap( this->_root, x._root); // do I run in any issues here? Protect against x or this having no tree?
-            swap( this->_compare, x._compare);
-            swap( this->_allocator, x._allocator);
-            swap( this->_size, x._size);
+            swap( this->_base, x._base );
+            swap( this->_root, x._root ); // do I run in any issues here? Protect against x or this having no tree?
+            swap( this->_compare, x._compare );
+            swap( this->_allocator, x._allocator );
+            swap( this->_size, x._size );
         }
     }
 
