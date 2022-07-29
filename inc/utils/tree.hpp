@@ -800,7 +800,35 @@ namespace ft
         typename binary_search_tree<T, Compare, Allocator>::const_iterator> 
         binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k ) const
     {
+        const_iterator                              first = this->_base;
+        const_iterator                              second = this->_base;
+        ft::pair<const_iterator, const_iterator>    return_pair = ft::make_pair( first, second );
 
+        return_pair.first = lower_bound( k );
+        return_pair.second = upper_bound( k );
+
+        return ( *( return_pair ) );
+
+
+        // test against:
+
+        // typedef pair<const_iterator, const_iterator>    return_pair;
+        // const_node_type_ptr                       rootptr = this->root;
+        // const_iterator                            position = this->_base;
+
+        // while ( this->_root != nullptr )
+        // {
+        //     if ( this->_compare( k, this->_root->data ) )
+        //     {
+        //         position = this->_root;
+        //         this->_root = this->_root->left;
+        //     }
+        //     else if ( this->_compare( this->_root->data, k ) )
+        //         this->_root = this->_root->right;
+        //     else
+        //         return ( return_pair( const_iterator( this->_root ), const_iterator( this->_root->right != nullptr ? tree_min<value_type>( this->_root->right : position ) ) ) );
+        // }
+        // return ( return_pair( const_iterator( position ), const_iterator( position ) ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -808,7 +836,35 @@ namespace ft
         typename binary_search_tree<T, Compare, Allocator>::iterator> 
         binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k )
     {
+        iterator                        first = this->_base;
+        iterator                        second = this->_base;
+        ft::pair<iterator, iterator>    return_pair = ft::make_pair( first, second );
 
+        return_pair.first = lower_bound( k );
+        return_pair.second = upper_bound( k );
+
+        return ( *( return_pair ) );
+
+
+        // test against:
+
+        // typedef pair<iterator, iterator>    return_pair;
+        // node_type_ptr                       rootptr = this->root;
+        // iterator                            position = this->_base;
+
+        // while ( this->_root != nullptr )
+        // {
+        //     if ( this->_compare( k, this->_root->data ) )
+        //     {
+        //         position = this->_root;
+        //         this->_root = this->_root->left;
+        //     }
+        //     else if ( this->_compare( this->_root->data, k ) )
+        //         this->_root = this->_root->right;
+        //     else
+        //         return ( return_pair( iterator( this->_root ), iterator( this->_root->right != nullptr ? tree_min<value_type>( this->_root->right : position ) ) ) );
+        // }
+        // return ( return_pair( iterator( position ), iterator( position ) ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
