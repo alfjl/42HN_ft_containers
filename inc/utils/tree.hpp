@@ -513,8 +513,8 @@ namespace ft
         typedef ft::reverse_iterator<const_iterator>            const_reverse_iterator;
 
     private:
-        node_type       *_base; // first node in tree. base->left is: root 
-        node_type       *_root; // first node of tree with value
+        node_type_ptr   _base; // first node in tree. base->left is: root 
+        node_type_ptr   _root; // first node of tree with value
         value_compare   _compare; 
         allocator_type  _allocator; // for associated allocator object, map.get_allocator()
         size_type       _size; // number of elements in tree ( for use in map.size() )
@@ -557,7 +557,10 @@ namespace ft
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
+        void destroy_node( node_type_ptr node );
         value_compare value_comp();
+
+
 
     }; // binary_search_tree
 
@@ -670,13 +673,28 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::swap( binary_search_tree& x )
     {
-        
+        if ( x != nullptr ) // do I need protection here?
+        {
+            swap( this->_base, x._base);
+            swap( this->_root, x._root); // do I run in any issues here? Protect against x or this having no tree?
+            swap( this->_compare, x._compare);
+            swap( this->_allocator, x._allocator);
+            swap( this->_size, x._size);
+        }
     }
 
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
-
+        if ( this->_root != nullptr )
+        {
+            if ( this->_root->left != nullptr )
+                clear( this->_root->left );
+            if  ( this->_root->right != nullptr )
+                clear( this->_root->right );
+            destroy_node( this->_root );
+            this->_root = nullptr;
+        }
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -874,12 +892,29 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
+    void binary_search_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
+    {
+        if ( node != nullptr )
+        {
+            this->_allocator.destroy( &node->data );
+            this->_allocator.deallocate( node, 1 );
+            --( this->_size );
+        }
+    }
+
+    template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp()
     {
         return ( this->_compare );
     }
 
     /* binary_search_tree non-member functions */
+
+    template < typename T, typename Compare, typename Allocator>
+    void swap( const ft::binary_search_tree<T, Compare, Allocator>& lhs, const ft::binary_search_tree<T, Compare, Allocator>& rhs )
+    {
+        lhs.swap( rhs );
+    }
 
 
     /* --------------------------- Red Black Tree ---------------------------- */
