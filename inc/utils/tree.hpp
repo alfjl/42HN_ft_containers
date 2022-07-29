@@ -549,22 +549,23 @@ namespace ft
         void clear();
 
         // Operations:
-        iterator find( const value_type& value);
-        const_iterator find( const value_type& value) const;
-        size_type count( const value_type& value) const;
-        iterator lower_bound( const value_type& value);
-        const_iterator lower_bound( const value_type& value) const;
-        iterator upper_bound( const value_type& value);
-        const_iterator upper_bound( const value_type& value) const;
-        pair<iterator,iterator> equal_range( const value_type& value);
-        pair<const_iterator,const_iterator> equal_range( const value_type& value) const;
+        iterator find( const value_type& value );
+        const_iterator find( const value_type& value ) const;
+        size_type count( const value_type& value ) const;
+        iterator lower_bound( const value_type& value );
+        const_iterator lower_bound( const value_type& value ) const;
+        iterator upper_bound( const value_type& value );
+        const_iterator upper_bound( const value_type& value ) const;
+        pair<iterator,iterator> equal_range( const value_type& value );
+        pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
         void destroy_node( node_type_ptr node );
         value_compare value_comp();
 
-
+    private:
+        pair<iterator,bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
 
     }; // binary_search_tree
 
@@ -641,7 +642,13 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
     {
-        node_type_ptr       rootptr = this->_root;
+        return ( this->_insert( this->_root, value ) );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
+    {
+        // node_type_ptr       rootptr = this->_root;
         iterator            position = this->_base;
         node_type_ptr       new_node( value );
         bool                insert_flag = true;
@@ -672,7 +679,9 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( iterator position, const value_type& value)
     {
-
+        if ( !( this->_compare( position->data, value ) && this->_compare( value, position->data ) ) )
+            return ( this->_insert( position, value ).first );
+        return ( this->_insert( this->_root, value ).first );
     }
 
     template < typename T, typename Compare, typename Allocator>
