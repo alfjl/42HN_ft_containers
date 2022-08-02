@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 14:19:06 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/19 17:00:13 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/02 12:23:24 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ namespace ft
     public:
         typedef Container                                   container_type;
         typedef typename container_type::value_type         value_type;
+        typedef typename container_type::reference          reference;
+        typedef typename container_type::const_reference    const_reference;
         typedef typename container_type::size_type          size_type;
 
     protected:
