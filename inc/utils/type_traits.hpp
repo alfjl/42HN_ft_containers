@@ -6,13 +6,13 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/06/24 14:04:54 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/02 10:11:03 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-namespace ft
+namespace   ft
 {
 
     /* ------------------------- enable_if / SFINAE ------------------------- */
@@ -95,4 +95,4 @@ namespace ft
     template <>
     struct is_integral<unsigned long long>  : public true_type {};
 
-} // namespace ft
+} // namespace  ft

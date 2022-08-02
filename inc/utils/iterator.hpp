@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/25 16:03:45 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/02 11:32:29 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // #include <iterator> // still needed after changing the iterator_tags?
 
-#include "type_traits.hpp"
+#include "./type_traits.hpp"
 
 namespace ft
 {
@@ -27,7 +27,9 @@ namespace ft
     struct bidirectional_iterator_tag : public forward_iterator_tag       {};
     struct random_access_iterator_tag : public bidirectional_iterator_tag {};
     
-    // typedef std::output_iterator_tag         output_iterator_tag;
+    // // if user wants to use 'input_iterator' std::... needs to be used
+    // // instead of selfdefined iterator_tags
+    // typedef std::output_iterator_tag			output_iterator_tag;
     // typedef std::input_iterator_tag			input_iterator_tag;
     // typedef std::forward_iterator_tag		forward_iterator_tag;
     // typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;

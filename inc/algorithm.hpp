@@ -6,13 +6,13 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:45 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/04 11:51:33 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/02 11:12:27 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-namespace ft
+namespace   ft
 {
 
     /* -------------------------------- equal -------------------------------- */
@@ -91,4 +91,27 @@ namespace ft
         return ( false );
     }
 
-} // namespace ft
+
+    /* --------------------------------- copy -------------------------------- */
+
+    /*
+    ** (https://cplusplus.com/reference/algorithm/copy/)
+    ** Copies the elements in the range [first,last) into the range beginning at result.
+    ** The function returns an iterator to the end of the destination range
+    ** (which points to the element following the last element copied).
+    ** The ranges shall not overlap in such a way that result points to an element in the range [first,last).
+    ** For such cases, see [std::]copy_backward.
+    */
+
+    template<class InputIterator, class OutputIterator>
+    OutputIterator copy( InputIterator first, InputIterator last, OutputIterator result )
+    {
+        while ( first != last )
+        {
+            *result = *first;
+            ++result; ++first;
+        }
+        return result;
+    }
+
+} // namespace  ft

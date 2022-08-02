@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2022/07/27 15:08:01 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/01 10:03:08 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ namespace   ft
     }
 
     template <typename T1, typename T2>
-    bool operator<( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs  )
+    bool operator<=( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs  )
     {
         return ( !( rhs < lhs ) );
     }
