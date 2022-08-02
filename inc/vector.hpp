@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/02 11:23:49 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/02 12:43:20 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream> // TPO: delete after tests!!!!!!
 #include <memory>
 #include <stdexcept>
+#include <limits>
 
 #include "utils/type_traits.hpp"
 #include "utils/iterator.hpp"
@@ -272,7 +273,9 @@ namespace ft
     template < typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
     {
-            return ( this->_allocator.max_size() );
+            size_type alloc_max = this->_allocator.max_size();
+            size_type numeric_max = std::numeric_limits<size_type>::max() / 2;
+            return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
     }
 
 
