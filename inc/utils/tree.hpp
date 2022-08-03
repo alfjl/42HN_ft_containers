@@ -19,29 +19,29 @@ namespace ft
     */
 
     // Returns true if node_ptr is a left child of its parent, else false
-    template <typename NodePtr>
-    bool tree_is_left_child( NodePtr node_ptr )
-    {
-        return ( node_ptr == node_ptr->_parent->_left );
-    }
+    // template <typename NodePtr>
+    // bool tree_is_left_child( NodePtr node_ptr )
+    // {
+    //     return ( node_ptr == node_ptr->_parent->_left );
+    // }
 
-    // Returns a pointer to the left-most node under node_ptr.
-    template <typename NodePtr>
-    NodePtr tree_min( NodePtr node_ptr )
-    {
-        while (node_ptr->_left != nullptr)
-            node_ptr = node_ptr->_left;
-        return node_ptr;
-    }
+    // // Returns a pointer to the left-most node under node_ptr.
+    // template <typename NodePtr>
+    // NodePtr tree_min( NodePtr node_ptr )
+    // {
+    //     while (node_ptr->_left != nullptr)
+    //         node_ptr = node_ptr->_left;
+    //     return node_ptr;
+    // }
 
-    // Returns a pointer to the right-most node under node_ptr.
-    template <typename NodePtr>
-    NodePtr tree_max( NodePtr node_ptr )
-    {
-        while (node_ptr->_right != nullptr)
-            node_ptr = node_ptr->_right;
-        return node_ptr;
-    }
+    // // Returns a pointer to the right-most node under node_ptr.
+    // template <typename NodePtr>
+    // NodePtr tree_max( NodePtr node_ptr )
+    // {
+    //     while (node_ptr->_right != nullptr)
+    //         node_ptr = node_ptr->_right;
+    //     return node_ptr;
+    // }
 
 // // Returns:  pointer to the next in-order node after __x.
 // // Precondition:  __x != nullptr.
@@ -67,15 +67,15 @@ namespace ft
     //         __x = __x->__parent_unsafe();
     //     return static_cast<_EndNodePtr>(__x->__parent_);
     // }
-    template <typename NodePtr>
-    NodePtr tree_next_iter( NodePtr node_ptr )
-    {
-        if ( node_ptr->_right != nullptr )
-            return ( tree_min( node_ptr->_right ) );
-        while ( !( tree_is_left_child( node_ptr ) ) )
-            node_ptr = node_ptr->_parent;
-        return ( node_ptr->_parent );
-    }
+    // template <typename NodePtr>
+    // NodePtr tree_next_iter( NodePtr node_ptr )
+    // {
+    //     if ( node_ptr->_right != nullptr )
+    //         return ( tree_min( node_ptr->_right ) );
+    //     while ( !( tree_is_left_child( node_ptr ) ) )
+    //         node_ptr = node_ptr->_parent;
+    //     return ( node_ptr->_parent );
+    // }
 
     // // Returns:  pointer to the previous in-order node before __x.
     // // Precondition:  __x != nullptr.
@@ -92,15 +92,15 @@ namespace ft
     //         __xx = __xx->__parent_unsafe();
     //     return __xx->__parent_unsafe();
     // }
-    template <typename NodePtr>
-    NodePtr tree_prev_iter( NodePtr node_ptr )
-    {
-        if ( node_ptr->_left != nullptr )
-            return ( tree_max( node_ptr->_left ) );
-        while ( tree_is_left_child( node_ptr ) )
-            node_ptr = node_ptr->_parent;
-        return ( node_ptr->_parent );
-    }
+    // template <typename NodePtr>
+    // NodePtr tree_prev_iter( NodePtr node_ptr )
+    // {
+    //     if ( node_ptr->_left != nullptr )
+    //         return ( tree_max( node_ptr->_left ) );
+    //     while ( tree_is_left_child( node_ptr ) )
+    //         node_ptr = node_ptr->_parent;
+    //     return ( node_ptr->_parent );
+    // }
 
 
 
@@ -532,6 +532,7 @@ namespace ft
         allocator_type  _allocator; // for associated allocator object, map.get_allocator()
         size_type       _size; // number of elements in tree ( for use in map.size() )
 
+    public:
         // Constructors / Destructor / Assignment
         explicit binary_search_tree( const value_compare &comp, const allocator_type *alloc );
 	    binary_search_tree( const binary_search_tree& other );
@@ -574,6 +575,16 @@ namespace ft
         const_iterator upper_bound( const value_type& value ) const;
         pair<iterator,iterator> equal_range( const value_type& value );
         pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
+        node_type_ptr tree_min( node_type_ptr nodeptr );
+        const_node_type_ptr tree_min( const_node_type_ptr nodeptr ) const;
+        node_type_ptr tree_max( node_type_ptr nodeptr );
+        const_node_type_ptr tree_max( const_node_type_ptr nodeptr ) const;
+        node_type_ptr tree_next_iter( node_type_ptr nodeptr );
+        const_node_type_ptr tree_next_iter( const_node_type_ptr nodeptr ) const;
+        node_type_ptr tree_prev_iter( node_type_ptr nodeptr );
+        const_node_type_ptr tree_prev_iter( const_node_type_ptr nodeptr ) const;
+        node_type_ptr tree_is_left_child( node_type_ptr nodeptr );
+        const_node_type_ptr tree_is_left_child( const_node_type_ptr nodeptr ) const;
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
@@ -623,12 +634,9 @@ namespace ft
             this->_compare = other._compare;
             this->_size = other._size;
             if ( other._root() != nullptr )
-            {
                 this->_root = this->_clone_tree( other._root );
-                this->_base = other._base;
-            }
         }
-        // this->_null doesn't need to be copied
+        // this->_null and this->_base don't need to be copied
         return ( *( this ) );
     }
 
@@ -736,7 +744,7 @@ namespace ft
             this->_transplant( node, node->_left );
         else
         {
-            node_type_ptr replacement = tree_min( node->_right );
+            node_type_ptr replacement = this->tree_min( node->_right );
             if ( replacement->_parent != node )
             {
                 this->_transplant( replacement, replacement->_right );
@@ -982,6 +990,91 @@ namespace ft
         // }
         // return ( return_pair( iterator( position ), iterator( position ) ) );
     }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_min( node_type_ptr nodeptr )
+    {
+        while (nodeptr->_left != this->_null)
+            nodeptr = nodeptr->_left;
+        return ( nodeptr );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::const_node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_min( const_node_type_ptr nodeptr ) const
+    {
+        while (nodeptr->_left != this->_null)
+            nodeptr = nodeptr->_left;
+        return ( nodeptr );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_max( node_type_ptr nodeptr )
+    {
+        while (nodeptr->_right != this->_null)
+            nodeptr = nodeptr->_right;
+        return ( nodeptr );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::const_node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_max( const_node_type_ptr nodeptr ) const
+    {
+        while (nodeptr->_right != this->_null)
+            nodeptr = nodeptr->_right;
+        return ( nodeptr );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_next_iter( node_type_ptr nodeptr )
+    {
+        if ( nodeptr->_right != this->_null )
+            return ( this->tree_min( nodeptr->_right ) );
+        while ( !( this->tree_is_left_child( nodeptr ) ) )
+            nodeptr = nodeptr->_parent;
+        return ( nodeptr->_parent );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::const_node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_next_iter( const_node_type_ptr nodeptr ) const
+    {
+        if ( nodeptr->_right != this->_null )
+            return ( this->tree_min( nodeptr->_right ) );
+        while ( !( this->tree_is_left_child( nodeptr ) ) )
+            nodeptr = nodeptr->_parent;
+        return ( nodeptr->_parent );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_prev_iter( node_type_ptr nodeptr )
+    {
+        if ( nodeptr->_left != this->_null )
+            return ( tree_max( nodeptr->_left ) );
+        while ( tree_is_left_child( nodeptr ) )
+            nodeptr = nodeptr->_parent;
+        return ( nodeptr->_parent );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::const_node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_prev_iter( const_node_type_ptr nodeptr ) const
+    {
+        if ( nodeptr->_left != this->_null )
+            return ( tree_max( nodeptr->_left ) );
+        while ( tree_is_left_child( nodeptr ) )
+            nodeptr = nodeptr->_parent;
+        return ( nodeptr->_parent );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_is_left_child( node_type_ptr nodeptr )
+    {
+        return ( nodeptr == nodeptr->_parent->_left );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    typename binary_search_tree<T, Compare, Allocator>::const_node_type_ptr binary_search_tree<T, Compare, Allocator>::tree_is_left_child( const_node_type_ptr nodeptr ) const
+    {
+        return ( nodeptr == nodeptr->_parent->_left );
+    }
+
 
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::allocator_type binary_search_tree<T, Compare, Allocator>::get_allocator() const
