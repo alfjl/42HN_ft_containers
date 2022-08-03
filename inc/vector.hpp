@@ -6,13 +6,12 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/02 12:43:20 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/03 15:34:17 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream> // TPO: delete after tests!!!!!!
 #include <memory>
 #include <stdexcept>
 #include <limits>
@@ -61,6 +60,7 @@ namespace ft
         // typedef iterator_traits<iterator>::difference_type	difference_type; // or:
         typedef std::ptrdiff_t									difference_type;
         typedef std::size_t										size_type;
+
     private:
         allocator_type  _allocator;
         pointer         _begin;
