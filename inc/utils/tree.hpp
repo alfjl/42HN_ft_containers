@@ -239,9 +239,6 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>::tree_iterator() : _node_ptr() {}
 
-    // template <typename NodePtr, typename T>
-    // tree_iterator<NodePtr, T>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
-
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>::tree_iterator( const NodePtr& ptr ) : _node_ptr( ptr ) {}
     
@@ -351,8 +348,8 @@ namespace ft
         typedef const T*                                    pointer;
         typedef const T&                                    reference;
 
-    // private:
-        // typedef tree_iterator<value_type, __node_pointer>   non_const_iterator;
+    private:
+        typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
 
     private:
         ConstNodePtr _node_ptr;
@@ -361,8 +358,7 @@ namespace ft
         tree_const_iterator();
         tree_const_iterator( const ConstNodePtr& ptr );
         tree_const_iterator( const tree_const_iterator& other );
-        // tree_const_iterator( non_const_iterator non_const_other ); // maybe try this way first:
-        tree_const_iterator( tree_iterator non_const_other );
+        tree_const_iterator( const non_const_iterator& other );
         ~tree_const_iterator();
 
         // operator tree_const_iterator<const T>() const;
@@ -385,21 +381,14 @@ namespace ft
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>::tree_const_iterator() : _node_ptr() {}
 
-    // template <typename NodePtr, typename T>
-    // tree_iterator<NodePtr, T>::tree_iterator( pointer ptr ) : _ptr( ptr ) {}
-
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const ConstNodePtr& ptr ) : _node_ptr( ptr ) {}    
 
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const tree_const_iterator& other ) : _node_ptr( other._node_ptr ) {}
 
-    // template <typename ConstNodePtr, typename T>
-    // tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( non_const_iterator non_const_other ) : _node_ptr( non_const_other._node_ptr ) {} //  maybe try this way first:
-
     template <typename ConstNodePtr, typename T>
-    template <typename NodePtr, typename T>
-    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( tree_iterator<NodePtr, T> non_const_other ) : _node_ptr( non_const_other._node_ptr ) {}
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const non_const_iterator& other ) : _node_ptr( other._node_ptr ) {}
 
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>::~tree_const_iterator() {}
@@ -596,6 +585,8 @@ namespace ft
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr &node);
         node_type_ptr _clone_tree( node_type_ptr &other_root );
+        void debug_print( node_type_ptr root );
+        void debug_print_recursive_inverted( node_type_ptr root, int level, bool is_right );
 
     }; // binary_search_tree
 
@@ -633,7 +624,7 @@ namespace ft
             this->_allocator = other._allocator;
             this->_compare = other._compare;
             this->_size = other._size;
-            if ( other._root() != nullptr )
+            if ( other._root() != other._null ) // or nullptr?
                 this->_root = this->_clone_tree( other._root );
         }
         // this->_null and this->_base don't need to be copied
@@ -755,7 +746,7 @@ namespace ft
             replacement->_left = node->_left;
             replacement->_left->_parents = replacement;
         }
-        this->destroy_node( node );
+        this->destroy_node( node ); // should catch the this->_null in the first if statement
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -792,14 +783,14 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
-        if ( this->_root != nullptr )
+        if ( this->_root != this->_null )
         {
-            if ( this->_root->_left != nullptr )
+            if ( this->_root->_left != this->_null )
                 clear( this->_root->_left );
-            if  ( this->_root->_right != nullptr )
+            if  ( this->_root->_right != this->_null )
                 clear( this->_root->_right );
             destroy_node( this->_root );
-            this->_root = nullptr;
+            this->_root = this->_null;
         }
     }
 
@@ -808,7 +799,7 @@ namespace ft
     {
         node_type_ptr rootptr = this->_root;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( value, rootptr->_data ) )
                 rootptr = rootptr->_left;
@@ -825,7 +816,7 @@ namespace ft
     {
         const_node_type_ptr rootptr = this->_root;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( value, rootptr->_data ) )
                 rootptr = rootptr->_left;
@@ -849,7 +840,7 @@ namespace ft
         node_type_ptr       rootptr = this->_root;
         iterator            position = this->_base;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( rootptr->_data, value ) )
             {
@@ -868,7 +859,7 @@ namespace ft
         const_node_type_ptr rootptr = this->_root;
         const_iterator      position = this->_base;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( rootptr->_data, value ) )
             {
@@ -887,7 +878,7 @@ namespace ft
         node_type_ptr       rootptr = this->_root;
         iterator            position = this->_base;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( value, rootptr->_data ) )
             {
@@ -906,7 +897,7 @@ namespace ft
         const_node_type_ptr rootptr = this->_root;
         const_iterator      position = this->_base;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             if ( this->_compare( value, rootptr->_data ) )
             {
@@ -940,7 +931,7 @@ namespace ft
         // const_node_type_ptr                       rootptr = this->root;
         // const_iterator                            position = this->_base;
 
-        // while ( this->_root != nullptr )
+        // while ( this->_root != this->_null )
         // {
         //     if ( this->_compare( k, this->_root->_data ) )
         //     {
@@ -950,7 +941,7 @@ namespace ft
         //     else if ( this->_compare( this->_root->_data, k ) )
         //         this->_root = this->_root->_right;
         //     else
-        //         return ( return_pair( const_iterator( this->_root ), const_iterator( this->_root->_right != nullptr ? tree_min<value_type>( this->_root->_right : position ) ) ) );
+        //         return ( return_pair( const_iterator( this->_root ), const_iterator( this->_root->_right != this->_null ? tree_min<value_type>( this->_root->_right : position ) ) ) );
         // }
         // return ( return_pair( const_iterator( position ), const_iterator( position ) ) );
     }
@@ -976,7 +967,7 @@ namespace ft
         // node_type_ptr                       rootptr = this->root;
         // iterator                            position = this->_base;
 
-        // while ( this->_root != nullptr )
+        // while ( this->_root != this->_null )
         // {
         //     if ( this->_compare( k, this->_root->_data ) )
         //     {
@@ -986,7 +977,7 @@ namespace ft
         //     else if ( this->_compare( this->_root->_data, k ) )
         //         this->_root = this->_root->_right;
         //     else
-        //         return ( return_pair( iterator( this->_root ), iterator( this->_root->_right != nullptr ? tree_min<value_type>( this->_root->_right : position ) ) ) );
+        //         return ( return_pair( iterator( this->_root ), iterator( this->_root->_right != this->_null ? tree_min<value_type>( this->_root->_right : position ) ) ) );
         // }
         // return ( return_pair( iterator( position ), iterator( position ) ) );
     }
@@ -1085,7 +1076,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
     {
-        if ( node != nullptr )
+        if ( node != nullptr ) // or this->_null? No, because this is caught in the clear() function before!
         {
             this->_allocator.destroy( &node->_data );
             this->_allocator.deallocate( node, 1 );
@@ -1108,7 +1099,7 @@ namespace ft
         node_type_ptr       new_node( value );
         bool                insert_flag = true;
 
-        while ( rootptr != nullptr )
+        while ( rootptr != this->_null )
         {
             position = rootptr;
             if ( this->_compare( new_node->_data, this->_root->_data ) )
@@ -1156,12 +1147,12 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::node_type_ptr 
     binary_search_tree<T, Compare, Allocator>::_clone_tree( node_type_ptr &other_root )
     {
-        if ( other_root == nullptr ) // does it need to be other->_null?
-            return ( nullptr ); // or: this->_null?
+        if ( other_root == other->_null ) // or nullptr?
+            return ( this->_null ); // or nullptr?
         node_type_ptr copy_node = this->_allocator.allocate( 1 );
         this->allocator.construct( copy_node->_data, other_root->_data );
         copy_node->_left = this->_clone_tree( other_root->left );
-        copy_node->_left = this->_clone_tree( other_root->left );
+        copy_node->_right = this->_clone_tree( other_root->right );
         return ( copy_node );
     }
 
