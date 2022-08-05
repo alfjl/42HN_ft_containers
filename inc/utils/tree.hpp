@@ -640,7 +640,7 @@ namespace ft
 
     public:
         // Constructors / Destructor / Assignment
-        explicit binary_search_tree( const value_compare &comp, const allocator_type *alloc );
+        explicit binary_search_tree( const value_compare &comp, const allocator_type &alloc );
 	    binary_search_tree( const binary_search_tree& other );
         ~binary_search_tree();
 
@@ -722,7 +722,7 @@ namespace ft
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
-    : _base( 0, BLACK ), _root( nullptr ), _null( 0, BLACK ), _compare(), _allocator(), _node_allocator(), _size( 0 )
+    : _base( 0 ), _root( nullptr ), _null( 0 ), _compare(), _allocator(), _node_allocator(), _size( 0 )
     {
         this->_base._left = &this->_null;
         *this = src;
