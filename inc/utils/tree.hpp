@@ -142,7 +142,7 @@ namespace ft
     public:
         tree_node();
         tree_node( const value_type &value );
-        tree_node( const value_type &value, node_state &colour = BLACK, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr );
+        // tree_node( const value_type &value, node_state &colour = BLACK, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr );
         tree_node( const tree_node &other);
         ~tree_node();
 
@@ -162,9 +162,9 @@ namespace ft
     template <typename T>
     tree_node<T>::tree_node( const value_type &value ) : _data( value ), _colour( BLACK ), _parent( nullptr ), _left( nullptr ), _right( nullptr ) {}
 
-    template <typename T>
-    tree_node<T>::tree_node( const value_type &value, node_state &colour, node_ptr parent, node_ptr left, node_ptr right )
-    : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
+    // template <typename T>
+    // tree_node<T>::tree_node( const value_type &value, node_state &colour, node_ptr parent, node_ptr left, node_ptr right )
+    // : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
 
     template <typename T>
     tree_node<T>::tree_node( const tree_node &other) : _data(), _colour( BLACK ), _parent(), _left(), _right()
@@ -702,14 +702,29 @@ namespace ft
     /* binary_search_tree member functions */
     /* public */
 
+    // template < typename T, typename Compare, typename Allocator>
+    // binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare &comp, const allocator_type *alloc ) 
+    // : _base( nullptr ), _root( nullptr ), _null( 0, BLACK ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 ) {}
+
+    // template < typename T, typename Compare, typename Allocator>
+    // binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
+    // : _base( nullptr ), _root( nullptr ), _null( 0, BLACK ), _compare(), _allocator(), _allocator() _size( 0 )
+    // {
+    //     *this = src;
+    // }
+
     template < typename T, typename Compare, typename Allocator>
-    binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare &comp, const allocator_type *alloc ) 
-    : _base( nullptr ), _root( nullptr ), _null( 0, BLACK ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 ) {}
+    binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare &comp, const allocator_type &alloc ) 
+    : _base( 0 ), _root( nullptr ), _null( 0 ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
+    {
+        this->_base._left = &this->_null;
+    }
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
-    : _base( nullptr ), _root( nullptr ), _null( 0, BLACK ), _compare(), _allocator(), _allocator() _size( 0 )
+    : _base( 0, BLACK ), _root( nullptr ), _null( 0, BLACK ), _compare(), _allocator(), _node_allocator(), _size( 0 )
     {
+        this->_base._left = &this->_null;
         *this = src;
     }
 
