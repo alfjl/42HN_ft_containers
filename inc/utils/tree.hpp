@@ -1215,7 +1215,6 @@ namespace ft
 
         debug_print_recursive_inverted( root->_right,  level + 1, true );
 
-        // print indent
         for ( int i = 0; i < level; i++ )
         std::cout << "\t";
 
@@ -1231,8 +1230,7 @@ namespace ft
         if (rootptr == &this->_null)
             std::cout << " null\033[37m\n";
         else
-            std::cout << rootptr->_data << "\033[37m\n";
-            // std::cout << rootptr->_data << "\033[37m" << "───┤\n";
+            std::cout << " " << rootptr->_data << "\033[37m\n";
 
         debug_print_recursive_inverted( root->_left, level + 1, false );
     }
