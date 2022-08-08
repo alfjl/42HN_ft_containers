@@ -1134,16 +1134,16 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
-        iterator            position = &this->_base;
-        node_type_ptr       new_node( value );
+        node_type_ptr       position = &this->_base;
+        node_type_ptr       new_node = _vcreate_node( value );
         bool                insert_flag = true;
 
-        while ( rootptr != this->_null )
+        while ( rootptr != &this->_null )
         {
             position = rootptr;
-            if ( this->_compare( new_node->_data, this->_root->_data ) )
+            if ( this->_compare( new_node->_data, rootptr->_data ) )
                 rootptr = rootptr->_left;
-            else if ( this->_compare( this->_root->_data, new_node->_data ) )
+            else if ( this->_compare( rootptr->_data, new_node->_data ) )
                 rootptr = rootptr->_right;
             else
             {
@@ -1152,13 +1152,24 @@ namespace ft
             }
         }
         new_node->_parent = position;
-        if ( position == &this->_base )
-            this->_root = new_node; // empty tree
+        if ( position == &this->_base ) // empty tree   // TASK: write own "instanciate_root()"-function!
+        {
+
+            this->_root = new_node;
+            this->_root->_parent = &this->_base;
+            this->_root->_left = &this->_null;
+            this->_root->_right = &this->_null;
+            this->_base._left = this->_root;
+        }
         else if ( this->_compare( new_node->_data, position->_data ) )
             position->_left = new_node;
         else if ( this->_compare( position->_data, new_node->_data ) )
             position->_right = new_node;
-        return ( ft::make_pair( position, insert_flag ) );
+        else
+            destroy_node( new_node);
+        if ( insert_flag == true )
+            ++( this->_size );
+        return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1225,9 +1236,9 @@ namespace ft
         node_type_ptr new_node = this->_node_allocator.allocate( 1 );
         this->_allocator.construct( &new_node->_data, value );
         new_node->_colour = BLACK; // RED for Binary Search Tree
-        new_node->_parent = nullptr;
-        new_node->_left = nullptr;
-        new_node->_right = nullptr;
+        new_node->_parent = &this->_null;
+        new_node->_left = &this->_null;
+        new_node->_right = &this->_null;
         return ( new_node );
     }
 
