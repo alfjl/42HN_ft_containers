@@ -319,11 +319,11 @@ namespace ft
     class tree_iterator
     {
     public:
-        typedef bidirectional_iterator_tag     iterator_category;
-        typedef T                              value_type;
-        typedef ptrdiff_t                      difference_type;
-        typedef T*                             pointer;
-        typedef T&                             reference;
+        typedef bidirectional_iterator_tag      iterator_category;
+        typedef T                               value_type;
+        typedef ptrdiff_t                       difference_type;
+        typedef T*                              pointer;
+        typedef T&                              reference;
 
     private:
         NodePtr _node_ptr;
@@ -457,11 +457,11 @@ namespace ft
     class tree_const_iterator
     {
     public:
-        typedef bidirectional_iterator_tag         iterator_category;
-        typedef T                                  value_type;
-        typedef ptrdiff_t                          difference_type;
-        typedef const T*                                    pointer;
-        typedef const T&                                    reference;
+        typedef bidirectional_iterator_tag      iterator_category;
+        typedef T                               value_type;
+        typedef ptrdiff_t                       difference_type;
+        typedef const T*                        pointer;
+        typedef const T&                        reference;
 
     private:
         typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
@@ -1219,13 +1219,20 @@ namespace ft
         for ( int i = 0; i < level; i++ )
         std::cout << "\t";
 
-        if ( root->_parent != nullptr )
+        if ( rootptr->_parent != &this->_base )
             std::cout << ( is_right ? "┌──" : "└──" );
-        if ( root->_colour == RED )
+        else
+            std::cout << "├──";
+        
+        if ( rootptr->_colour == RED )
             std::cout << "\033[31m";
         else
-        std::cout << "\033[30m";
-        std::cout << root->_data << "\033[37m\n";
+            std::cout << "\033[30m";
+        if (rootptr == &this->_null)
+            std::cout << " null\033[37m\n";
+        else
+            std::cout << rootptr->_data << "\033[37m\n";
+            // std::cout << rootptr->_data << "\033[37m" << "───┤\n";
 
         debug_print_recursive_inverted( root->_left, level + 1, false );
     }
