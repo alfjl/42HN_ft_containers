@@ -910,13 +910,24 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::swap( binary_search_tree& x )
     {
-        if ( x != nullptr ) // do I need protection here?
+        if ( this != &x )
         {
-            swap( this->_base, x._base );
-            swap( this->_root, x._root ); // do I run in any issues here and need to protect against x or this having no tree?
-            swap( this->_compare, x._compare );
-            swap( this->_allocator, x._allocator );
-            swap( this->_size, x._size );
+            ft::swap( this->_base, x._base );
+            ft::swap( this->_null, x._null );
+            ft::swap( this->_root, x._root );
+            if ( this->_root != nullptr )
+            {
+                this->_root->_parent = &this->_base;
+                this->_base._left = this->_root;
+            }
+            if ( x._root != nullptr )
+            {
+                x._root->_parent = &x._base;
+                x._base._left = x._root;
+            }
+            ft::swap( this->_compare, x._compare );
+            ft::swap( this->_allocator, x._allocator );
+            ft::swap( this->_size, x._size );
         }
     }
 
