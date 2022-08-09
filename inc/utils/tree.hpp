@@ -909,7 +909,11 @@ namespace ft
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
         if ( this->_root != &this->_null )
+        {
             _clear( this->_root );
+            this->_root = &this->_null;
+            this->_base._left = &this->_null;
+        }
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1154,7 +1158,6 @@ namespace ft
         new_node->_parent = position;
         if ( position == &this->_base ) // empty tree   // TASK: write own "instanciate_root()"-function!
         {
-
             this->_root = new_node;
             this->_root->_parent = &this->_base;
             this->_root->_left = &this->_null;
