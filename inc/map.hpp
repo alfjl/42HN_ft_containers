@@ -8,18 +8,221 @@
 #include "utils/functional.hpp"
 #include "utils/tree.hpp"
 
-// #include "./type_traits.hpp"
-// #include "./iterator.hpp"
-// #include "./utility.hpp"
-// #include "./functional.hpp"
-// #include "./tree.hpp"
-
 #ifndef nullptr
 #define nullptr NULL
 #endif
 
 namespace ft
 {
+
+    /* --------------------------- Map Iterator ----------------------------- */
+
+    /*
+    ** A bidirectional_iterator, utilizing the iterator of the underlying tree
+    */
+
+    template<typename TreeIterator>
+    class map_iterator
+    {
+    
+    private:
+        TreeIterator    _tree_iterator;
+
+    public:
+        typedef bidirectional_iterator_tag                  iterator_category;
+        typedef typename TreeIterator::value_type           value_type;
+        typedef typename TreeIterator::difference_type      difference_type;
+        typedef typename TreeIterator::reference            reference;
+        typedef typename TreeIterator::pointer              pointer;
+
+        map_iterator();
+        map_iterator( TreeIterator ite );
+
+        reference operator*();
+        pointer operator->();
+        map_iterator &operator++();
+        map_iterator operator++(int);
+        map_iterator &operator--();
+        map_iterator operator--(int);
+    }; // map_iterator
+
+    /* map_iterator member functions */
+
+    template <typename TreeIterator>
+    map_iterator<TreeIterator>::map_iterator() : _tree_iterator() {}
+
+    template<typename TreeIterator>
+    map_iterator<TreeIterator>::map_iterator( TreeIterator ite ) : _tree_iterator( ite ) {}
+
+
+    template <typename TreeIterator>
+    typename map_iterator<TreeIterator>::reference map_iterator<TreeIterator>::operator*()
+    {
+        // return ( ite.get_value????? ); // TASK: write function
+        return ( *( _tree_iterator ) );
+    }
+
+    template <typename TreeIterator>
+    typename map_iterator<TreeIterator>::pointer map_iterator<TreeIterator>::operator->()
+    {
+        return ( &( *( _tree_iterator ) ) );
+    }
+
+    template <typename TreeIterator>
+    map_iterator<TreeIterator> &map_iterator<TreeIterator>::operator++()
+    {
+        ++( _tree_iterator );
+        return ( *( this ) );
+    }
+
+    template <typename TreeIterator>
+    map_iterator<TreeIterator> map_iterator<TreeIterator>::operator++(int)
+    {
+        map_iterator    temp( *( this ) );
+
+        ++( *( this ) );
+        return ( temp );
+    }
+
+    template <typename TreeIterator>
+    map_iterator<TreeIterator> &map_iterator<TreeIterator>::operator--()
+    {
+        --( _tree_iterator );
+        return ( *( this ) );
+    }
+
+    template <typename TreeIterator>
+    map_iterator<TreeIterator> map_iterator<TreeIterator>::operator--(int)
+    {
+        map_iterator    temp( *( this ) );
+
+        --( *( this ) );
+        return ( temp );
+    }
+
+    /* map_iterator non-member functions */
+
+    template <typename TreeIterator>
+    bool operator==( const map_iterator<TreeIterator>& lhs, const map_iterator<TreeIterator>& rhs )
+    {
+        return ( lhs._tree_iterator == rhs._tree_iterator );
+    }
+
+    template <typename TreeIterator>
+    bool operator!=( const map_iterator<TreeIterator>& lhs, const map_iterator<TreeIterator>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
+
+    /* ------------------------ Map Const Iterator -------------------------- */
+
+    /*
+    ** A bidirectional_iterator, utilizing the const iterator of the
+    ** underlying tree
+    */
+
+    template<typename TreeConstIterator>
+    class map_const_iterator
+    {
+    
+    private:
+        TreeConstIterator    _tree_const_iterator;
+
+    public:
+        typedef bidirectional_iterator_tag                  iterator_category;
+        typedef typename TreeConstIterator::value_type           value_type;
+        typedef typename TreeConstIterator::difference_type      difference_type;
+        typedef typename TreeConstIterator::reference            reference;
+        typedef typename TreeConstIterator::pointer              pointer;
+    
+    private:
+        typedef map_iterator<typename map_iterator<>::value_type   non_const_iterator; // TASK: correct this!
+        // typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
+
+        map_const_iterator();
+        map_const_iterator( TreeConstIterator ite );
+        map_const_iterator( const non_const_iterator& other );
+
+        reference operator*();
+        pointer operator->();
+        map_const_iterator &operator++();
+        map_const_iterator operator++(int);
+        map_const_iterator &operator--();
+        map_const_iterator operator--(int);
+
+    }; // map_const_iterator
+
+    /* map_const_iterator member functions */
+
+    template <typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator>::map_const_iterator() : _tree_const_iterator() {}
+
+    template<typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator>::map_const_iterator( TreeConstIterator ite ) : _tree_const_iterator( ite ) {}
+
+    template<typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator>::map_const_iterator( const non_const_iterator& other ) : _tree_const_iterator( other._tree_const_iterator ) {}
+
+    template <typename TreeConstIterator>
+    typename map_const_iterator<TreeConstIterator>::reference map_const_iterator<TreeConstIterator>::operator*()
+    {
+        // return ( ite.get_value????? ); // TASK: write function
+        return ( *( _tree_const_iterator ) );
+    }
+
+    template <typename TreeConstIterator>
+    typename map_const_iterator<TreeConstIterator>::pointer map_const_iterator<TreeConstIterator>::operator->()
+    {
+        return ( &( *( _tree_const_iterator ) ) );
+    }
+
+    template <typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator> &map_const_iterator<TreeConstIterator>::operator++()
+    {
+        ++( _tree_const_iterator );
+        return ( *( this ) );
+    }
+
+    template <typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator> map_const_iterator<TreeConstIterator>::operator++(int)
+    {
+        map_const_iterator    temp( *( this ) );
+
+        ++( *( this ) );
+        return ( temp );
+    }
+
+    template <typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator> &map_const_iterator<TreeConstIterator>::operator--()
+    {
+        --( _tree_const_iterator );
+        return ( *( this ) );
+    }
+
+    template <typename TreeConstIterator>
+    map_const_iterator<TreeConstIterator> map_const_iterator<TreeConstIterator>::operator--(int)
+    {
+        map_const_iterator    temp( *( this ) );
+
+        --( *( this ) );
+        return ( temp );
+    }
+
+    /* map_const_iterator non-member functions */
+
+    template <typename TreeConstIterator>
+    bool operator==( const map_const_iterator<TreeConstIterator>& lhs, const map_const_iterator<TreeConstIterator>& rhs )
+    {
+        return ( lhs._tree_iterator == rhs._tree_iterator );
+    }
+
+    template <typename TreeConstIterator>
+    bool operator!=( const map_const_iterator<TreeConstIterator>& lhs, const map_const_iterator<TreeConstIterator>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
 
     /* --------------------------------- map --------------------------------- */
 
@@ -37,10 +240,10 @@ namespace ft
     ** Maps are typically implemented as binary search trees.
     */
 
-    template < typename Key,                                                // map::key_type
-               typename T,                                                  // map::mapped_type
-               typename Compare = ft::less<Key>,                            // map::key_compare
-               typename Alloc = std::allocator<ft::pair<const Key,T> > >    // map::allocator_type
+    template < typename Key,                                                        // map::key_type
+               typename T,                                                          // map::mapped_type
+               typename Compare = ft::less<Key>,                                    // map::key_compare
+               typename Alloc = std::allocator<ft::pair<const Key,T> > >            // map::allocator_type
     class map
     {
     public:
@@ -72,6 +275,7 @@ namespace ft
 
         class value_compare : public ft::binary_function<value_type, value_type, bool>
         {
+
             friend class map;
         
         protected:
@@ -84,21 +288,23 @@ namespace ft
             {
                 return comp( x.first, y.first );
             }
+
         }; // value_compare
 
+
     private:
-        typedef ft::red_black_tree<value_type, value_compare, allocator_type>   base;
+        // typedef ft::red_black_tree<value_type, value_compare, allocator_type>   base;
+        typedef ft::binary_search_tree<value_type, value_compare, allocator_type>   base; // needs to be adapted to RB Tree, after initial testing phase!
 
         base    tree;
 
     public:
-        typedef map_iterator<typename base::iterator>                               iterator;
-        typedef map_const_iterator<typename base::const_iterator>                   const_iterator;
-        typedef ft::reverse_iterator<iterator>                                      reverse_iterator;
-        typedef ft::reverse_iterator<const_iterator>                                const_reverse_iterator;
-
-        typedef typename iterator_traits<iterator>::difference_type                 difference_type;
-        typedef typename std::size_t                                                size_type;
+        typedef map_iterator<typename base::iterator>                           iterator;
+        typedef map_const_iterator<typename base::const_iterator>               const_iterator;
+        typedef ft::reverse_iterator<iterator>                                  reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>                            const_reverse_iterator;
+        typedef typename iterator_traits<iterator>::difference_type             difference_type;
+        typedef typename std::size_t                                            size_type;
 
         // Constructors / Destructor / Assignment
         explicit map( const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type() ); // default constructor (empty container)
@@ -198,7 +404,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::begin()
     {
-            return ( this->tree.begin() );
+        return ( this->tree.begin() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -298,7 +504,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator position ) // iterator
     {
-        return ( this->tree.erase( position ) );
+        this->tree.erase( position );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -310,7 +516,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator first, iterator last ) // range
     {
-        return ( this->tree.erase( first, last ) );
+        this->tree.erase( first, last );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -398,7 +604,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::allocator_type map<Key,T,Compare,Alloc>::get_allocator() const
     {
-        // return ( allocator_type( this->tree.get_allocator() ) ); // Version from STL, or better:
+        // return ( allocator_type( this->tree.get_allocator() ) ); // Version from STL, or:
         return ( this->tree.get_allocator() );
     }
 
