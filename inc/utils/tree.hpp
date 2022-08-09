@@ -620,6 +620,7 @@ namespace ft
         typedef Allocator                                                   allocator_type;
         typedef typename allocator_type::template rebind<node_type>::other  node_allocator_type;
         typedef typename allocator_type::size_type                          size_type;
+        typedef typename allocator_type::difference_type                    difference_type;
         typedef typename allocator_type::reference                          reference;
         typedef typename allocator_type::const_reference                    const_reference;
         typedef typename allocator_type::pointer                            pointer;
@@ -850,7 +851,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::erase( iterator position )
     {
-        node_type_ptr node = position.base();
+    node_type_ptr node = position.base();
 
         if ( node == &this->_base || node == &this->_null ) // do I need that? Do I need this->_base in general?
             return ;
@@ -860,7 +861,7 @@ namespace ft
             this->_transplant( node, node->_left );
         else
         {
-            node_type_ptr replacement = this->tree_min( node->_right );
+            node_type_ptr replacement = tree_min<T>( node->_right );
             if ( replacement->_parent != node )
             {
                 this->_transplant( replacement, replacement->_right );
@@ -869,7 +870,7 @@ namespace ft
             }
             this->_transplant( node, replacement );
             replacement->_left = node->_left;
-            replacement->_left->_parents = replacement;
+            replacement->_left->_parent = replacement;
         }
         this->destroy_node( node ); // should catch the this->_null in the first if statement
     }
@@ -879,7 +880,7 @@ namespace ft
     {
         iterator find_return = this->find( value );
 
-        if ( find_return == &this->_base )
+        if ( find_return == this->end() )
             return ( 0 );
         this->erase( find_return );
         return ( 1 );
