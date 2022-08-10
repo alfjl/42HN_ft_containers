@@ -347,6 +347,8 @@ namespace ft
         tree_iterator& operator--();
         tree_iterator  operator--(int);
 
+        NodePtr base() const;
+
     }; // tree_iterator
 
     /* tree_iterator member functions */
@@ -434,6 +436,12 @@ namespace ft
         return ( it );
     }
 
+    template <typename NodePtr, typename T>
+    NodePtr tree_iterator<NodePtr, T>::base() const
+    {
+        return ( this->_node_ptr );
+    }
+
     /* tree_iterator non-member functions */
 
     template <typename NodePtr, typename T>
@@ -490,6 +498,8 @@ namespace ft
         tree_const_iterator  operator++(int);
         tree_const_iterator& operator--();
         tree_const_iterator  operator--(int);
+
+        ConstNodePtr base() const;
 
     }; // tree_const_iterator
 
@@ -577,6 +587,12 @@ namespace ft
         tree_const_iterator   it = *this;
         --( this->_node_ptr ); // or --( *( this ) )?
         return ( it );
+    }
+
+    template <typename ConstNodePtr, typename T>
+    ConstNodePtr tree_const_iterator<ConstNodePtr, T>::base() const
+    {
+        return ( this->_node_ptr );
     }
 
     /* tree_const_iterator non-member functions */
