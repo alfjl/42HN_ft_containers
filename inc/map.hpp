@@ -107,7 +107,7 @@ namespace ft
     template <typename TreeIterator>
     TreeIterator map_iterator<TreeIterator>::base() const
     {
-        return ( _tree_iterator );
+        return ( this->_tree_iterator );
     }
 
     /* map_iterator non-member functions */
@@ -115,7 +115,7 @@ namespace ft
     template <typename TreeIterator>
     bool operator==( const map_iterator<TreeIterator>& lhs, const map_iterator<TreeIterator>& rhs )
     {
-        return ( lhs._tree_iterator == rhs._tree_iterator );
+        return ( lhs.base() == rhs.base() );
     }
 
     template <typename TreeIterator>
@@ -225,7 +225,7 @@ namespace ft
     template <typename TreeConstIterator>
     TreeConstIterator map_const_iterator<TreeConstIterator>::base() const
     {
-        return ( _tree_const_iterator );
+        return ( this->_tree_const_iterator );
     }
 
     /* map_const_iterator non-member functions */
@@ -583,25 +583,25 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::lower_bound( const key_type& k )
     {
-        return ( this->tree.lower_bound( k ) );
+        return ( this->tree.lower_bound( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::lower_bound( const key_type& k ) const
     {
-        return ( this->tree.lower_bound( k ) );
+        return ( this->tree.lower_bound( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::upper_bound( const key_type& k )
     {
-        return ( this->tree.upper_bound( k ) );
+        return ( this->tree.upper_bound( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::upper_bound( const key_type& k ) const
     {
-        return ( this->tree.upper_bound( k ) );
+        return ( this->tree.upper_bound( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -609,7 +609,7 @@ namespace ft
             typename map<Key,T,Compare,Alloc>::const_iterator> 
             map<Key,T,Compare,Alloc>::equal_range( const key_type& k ) const
     {
-        return ( this->tree.equal_range( k ) );
+        return ( this->tree.equal_range( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -617,7 +617,7 @@ namespace ft
             typename map<Key,T,Compare,Alloc>::iterator> 
             map<Key,T,Compare,Alloc>::equal_range( const key_type& k )
     {
-        return ( this->tree.equal_range( k ) );
+        return ( this->tree.equal_range( ft::make_pair( k, mapped_type() ) ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
