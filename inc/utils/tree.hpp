@@ -254,8 +254,8 @@ namespace ft
         // return ( nodeptr->_parent );
 
         if ( nodeptr->_right->_right != nullptr ) // equals this->_null
-            return ( tree_min( nodeptr->_right ) );
-        while ( !( tree_is_left_child( nodeptr ) ) )
+            return ( tree_min<T>( nodeptr->_right ) );
+        while ( !( tree_is_left_child<T>( nodeptr ) ) )
             nodeptr = nodeptr->_parent;
         return ( nodeptr->_parent );
     }
@@ -264,8 +264,8 @@ namespace ft
     typename tree_node<T>::const_node_ptr tree_next_iter( typename tree_node<T>::const_node_ptr nodeptr )
     {
         if ( nodeptr->_right->_right != nullptr ) // equals this->_null
-            return ( tree_min( nodeptr->_right ) );
-        while ( !( tree_is_left_child( nodeptr ) ) )
+            return ( tree_min<T>( nodeptr->_right ) );
+        while ( !( tree_is_left_child<T>( nodeptr ) ) )
             nodeptr = nodeptr->_parent;
         return ( nodeptr->_parent );
     }
@@ -280,8 +280,8 @@ namespace ft
         // return ( nodeptr->_parent );
 
         if ( nodeptr->_left->_left != nullptr ) // equals this->_null
-            return ( tree_max( nodeptr->_left ) );
-        while ( tree_is_left_child( nodeptr ) )
+            return ( tree_max<T>( nodeptr->_left ) );
+        while ( tree_is_left_child<T>( nodeptr ) )
             nodeptr = nodeptr->_parent;
         return ( nodeptr->_parent );
     }
@@ -290,8 +290,8 @@ namespace ft
     typename tree_node<T>::const_node_ptr tree_prev_iter( typename tree_node<T>::const_node_ptr nodeptr )
     {
         if ( nodeptr->_left->_left != nullptr ) // equals this->_null
-            return ( tree_max( nodeptr->_left ) );
-        while ( tree_is_left_child( nodeptr ) )
+            return ( tree_max<T>( nodeptr->_left ) );
+        while ( tree_is_left_child<T>( nodeptr ) )
             nodeptr = nodeptr->_parent;
         return ( nodeptr->_parent );
     }
