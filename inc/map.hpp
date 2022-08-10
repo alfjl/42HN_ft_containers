@@ -7,6 +7,7 @@
 #include "utils/utility.hpp"
 #include "utils/functional.hpp"
 #include "utils/tree.hpp"
+#include "./algorithm.hpp"
 
 #ifndef nullptr
 #define nullptr NULL
@@ -44,6 +45,9 @@ namespace ft
         map_iterator operator++(int);
         map_iterator &operator--();
         map_iterator operator--(int);
+
+        TreeIterator base() const;
+
     }; // map_iterator
 
     /* map_iterator member functions */
@@ -100,6 +104,12 @@ namespace ft
         return ( temp );
     }
 
+    template <typename TreeIterator>
+    TreeIterator map_iterator<TreeIterator>::base() const
+    {
+        return ( _tree_iterator );
+    }
+
     /* map_iterator non-member functions */
 
     template <typename TreeIterator>
@@ -137,12 +147,13 @@ namespace ft
         typedef typename TreeConstIterator::pointer              pointer;
     
     private:
-        typedef map_iterator<typename map_iterator<>::value_type   non_const_iterator; // TASK: correct this!
+        // typedef map_iterator<typename map_iterator<>::value_type   non_const_iterator; // TASK: correct this!
         // typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
 
+    public:
         map_const_iterator();
         map_const_iterator( TreeConstIterator ite );
-        map_const_iterator( const non_const_iterator& other );
+        // map_const_iterator( const non_const_iterator& other );
 
         reference operator*();
         pointer operator->();
@@ -150,6 +161,8 @@ namespace ft
         map_const_iterator operator++(int);
         map_const_iterator &operator--();
         map_const_iterator operator--(int);
+
+        TreeConstIterator base() const;
 
     }; // map_const_iterator
 
@@ -161,8 +174,8 @@ namespace ft
     template<typename TreeConstIterator>
     map_const_iterator<TreeConstIterator>::map_const_iterator( TreeConstIterator ite ) : _tree_const_iterator( ite ) {}
 
-    template<typename TreeConstIterator>
-    map_const_iterator<TreeConstIterator>::map_const_iterator( const non_const_iterator& other ) : _tree_const_iterator( other._tree_const_iterator ) {}
+    // template<typename TreeConstIterator> // TASK: still understand how to implement non_const_iterator here. maybe 'typedef typename tree_iterator::non_const_iterator'
+    // map_const_iterator<TreeConstIterator>::map_const_iterator( const non_const_iterator& other ) : _tree_const_iterator( other._tree_const_iterator ) {}
 
     template <typename TreeConstIterator>
     typename map_const_iterator<TreeConstIterator>::reference map_const_iterator<TreeConstIterator>::operator*()
@@ -209,12 +222,18 @@ namespace ft
         return ( temp );
     }
 
+    template <typename TreeConstIterator>
+    TreeConstIterator map_const_iterator<TreeConstIterator>::base() const
+    {
+        return ( _tree_const_iterator );
+    }
+
     /* map_const_iterator non-member functions */
 
     template <typename TreeConstIterator>
     bool operator==( const map_const_iterator<TreeConstIterator>& lhs, const map_const_iterator<TreeConstIterator>& rhs )
     {
-        return ( lhs._tree_iterator == rhs._tree_iterator );
+        return ( lhs.base() == rhs.base() );
     }
 
     template <typename TreeConstIterator>
@@ -534,7 +553,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::key_compare map<Key,T,Compare,Alloc>::key_comp() const
     {
-        return ( key_compare() )
+        return ( key_compare() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
