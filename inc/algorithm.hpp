@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:45 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/02 11:12:27 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/10 10:51:22 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace   ft
     */
 
     template <class InputIterator1, class InputIterator2>
-    bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) // equality
+    bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2) // equality
     {
         while ( first1 != last1 )
         {
@@ -37,7 +37,7 @@ namespace   ft
     }
 
     template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-    bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred) // predicate
+    bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred) // predicate
     {
         while ( first1 != last1 )
         {
