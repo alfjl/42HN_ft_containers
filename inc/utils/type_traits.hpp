@@ -6,11 +6,13 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/02 10:11:03 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/04 11:05:58 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+
+#include <memory>
 
 namespace   ft
 {
