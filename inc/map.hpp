@@ -269,14 +269,15 @@ namespace ft
     public:
         typedef Key                                                                 key_type;
         typedef T                                                                   mapped_type;
-        typedef ft::pair<const key_type, mapped_type>                               value_type;
         typedef Compare                                                             key_compare;
-        // ????                                                                     value_compare;
         typedef Alloc                                                               allocator_type;
+        typedef ft::pair<const key_type, mapped_type>                               value_type;
         typedef typename allocator_type::reference                                  reference;
         typedef typename allocator_type::const_reference                            const_reference;
         typedef typename allocator_type::pointer                                    pointer;
         typedef typename allocator_type::const_pointer                              const_pointer;
+        typedef typename allocator_type::size_type                                  size_type;
+        typedef typename allocator_type::difference_type                            difference_type;
 
 
         /* -------------------------- value_compare -------------------------- */
@@ -323,8 +324,15 @@ namespace ft
         typedef map_const_iterator<typename base::const_iterator>               const_iterator;
         typedef ft::reverse_iterator<iterator>                                  reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>                            const_reverse_iterator;
-        typedef typename iterator_traits<iterator>::difference_type             difference_type;
-        typedef typename std::size_t                                            size_type;
+        // typedef typename iterator_traits<iterator>::difference_type             difference_type;
+        // typedef typename std::size_t                                            size_type;
+
+        // Steffens version (without added map_iterator)
+        // public: // iterator types
+        //     typedef typename tree_type::iterator				iterator;
+        //     typedef typename tree_type::const_iterator			const_iterator;
+        //     typedef typename tree_type::reverse_iterator		reverse_iterator;
+        //     typedef typename tree_type::const_reverse_iterator	const_reverse_iterator;
 
         // Constructors / Destructor / Assignment
         explicit map( const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type() ); // default constructor (empty container)
@@ -355,7 +363,7 @@ namespace ft
         mapped_type& operator[]( const key_type& k );
 
         // Modifiers:
-        pair<iterator,bool> insert( const value_type& val ); // single element
+        ft::pair<iterator,bool> insert( const value_type& val ); // single element
         iterator insert( iterator position, const value_type& val ); // with hint
         template <typename InputIterator>
             void insert( InputIterator first, InputIterator last ); // range
@@ -377,8 +385,8 @@ namespace ft
         const_iterator lower_bound( const key_type& k ) const;
         iterator upper_bound( const key_type& k );
         const_iterator upper_bound( const key_type& k ) const;
-        pair<const_iterator,const_iterator> equal_range( const key_type& k ) const;
-        pair<iterator,iterator> equal_range( const key_type& k );
+        ft::pair<const_iterator,const_iterator> equal_range( const key_type& k ) const;
+        ft::pair<iterator,iterator> equal_range( const key_type& k );
 
         // Allocator:
         allocator_type get_allocator() const;
@@ -499,8 +507,8 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::mapped_type& map<Key,T,Compare,Alloc>::operator[]( const key_type& k )
     {
-        iterator position = this->insert( ft::make_pair( k, mapped_type() ).first );
-        return ( *( position )->second );
+        iterator position = this->insert( ft::make_pair( k, mapped_type() ) ).first;
+        return ( ( *( position ) ).second );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
