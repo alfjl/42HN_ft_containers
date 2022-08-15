@@ -142,7 +142,7 @@ namespace ft
     public:
         tree_node();
         tree_node( const value_type& value );
-        // tree_node( const value_type &value, node_state &colour = BLACK, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr );
+        tree_node( const value_type* value, node_state &colour, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr );
         tree_node( const tree_node& other);
         ~tree_node();
 
@@ -162,9 +162,9 @@ namespace ft
     template <typename T>
     tree_node<T>::tree_node( const value_type& value ) : _data( value ), _colour( BLACK ), _parent( nullptr ), _left( nullptr ), _right( nullptr ) {}
 
-    // template <typename T>
-    // tree_node<T>::tree_node( const value_type& value, node_state& colour, node_ptr parent, node_ptr left, node_ptr right )
-    // : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
+    template <typename T>
+    tree_node<T>::tree_node( const value_type* value, node_state& colour, node_ptr parent, node_ptr left, node_ptr right )
+    : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
 
     template <typename T>
     tree_node<T>::tree_node( const tree_node& other) : _data(), _colour( BLACK ), _parent(), _left(), _right()
@@ -405,11 +405,22 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>& tree_iterator<NodePtr, T>::operator++()
     {
+        // if ( this->_node_ptr->_right->_right != nullptr ) // equals 'this->_node_ptr->_right == this->_null'
+        //     this->_node_ptr = tree_min<value_type>( this->_node_ptr->_right );
+        // else
+        // {
+        //     while ( !( tree_is_left_child<value_type>( this->_node_ptr ) ) )
+        //         this->_node_ptr = this->_node_ptr->_parent;
+        //     this->_node_ptr = this->_node_ptr->_parent;
+        // }
+        // return ( *( this ) );
+
         if ( this->_node_ptr->_right->_right != nullptr ) // equals 'this->_node_ptr->_right == this->_null'
             this->_node_ptr = tree_min<value_type>( this->_node_ptr->_right );
         else
         {
-            while ( !( tree_is_left_child<value_type>( this->_node_ptr ) ) )
+            while ( !( tree_is_left_child<value_type>( this->_node_ptr ) )
+            && ( this->_node_ptr->_parent->_parent != nullptr ) )
                 this->_node_ptr = this->_node_ptr->_parent;
             this->_node_ptr = this->_node_ptr->_parent;
         }
@@ -726,10 +737,11 @@ namespace ft
         value_compare value_comp();
 
     private:
+        void _create_null();
         pair<iterator, bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
-        node_type_ptr _clone_tree( const binary_search_tree& other, node_type_ptr& other_root );
+        node_type_ptr _clone_tree( const binary_search_tree& other, const node_type_ptr& other_root );
         void debug_print_recursive_inverted( node_type_ptr& rootptr, int level, bool is_right );
         node_type_ptr _vcreate_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
@@ -754,28 +766,34 @@ namespace ft
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare& comp, const allocator_type& alloc ) 
-    : _base( ft::make_pair(0,0) ), _root( nullptr ), _null( nullptr ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
+    : _base(), _root( nullptr ), _null( nullptr ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
     {
-        this->_null = this->_node_allocator.allocate( 1 );
-        this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
-        this->_null->_colour = BLACK; // RED for Red Black Tree
-        this->_null->_parent = nullptr;
-        this->_null->_left = nullptr;
-        this->_null->_right = nullptr;
+        // this->_null = this->_node_allocator.allocate( 1 );
+        // // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
+        // this->_allocator.construct( &this->_null->_data, value_type(typename value_type::first_type(), typename value_type::second_type() ) );
+        // this->_null->_colour = BLACK; // RED for Red Black Tree
+        // this->_null->_parent = nullptr;
+        // this->_null->_left = nullptr;
+        // this->_null->_right = nullptr;
+        _create_null();
+        this->_root = this->_null;
         this->_base._left = this->_null;
         // std::cout << "this->_null->_data.first = " << this->_null->_data.first << " this->_null->_data.second = " << this->_null->_data.second << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
-    : _base( 0 ), _root( nullptr ), _null( nullptr ), _compare(), _allocator(), _node_allocator(), _size( 0 )
+    : _base(), _root( nullptr ), _null( nullptr ), _compare(), _allocator(), _node_allocator(), _size( 0 )
     {
-        this->_null = this->_node_allocator.allocate( 1 );
-        this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
-        this->_null->_colour = BLACK; // RED for Red Black Tree
-        this->_null->_parent = nullptr;
-        this->_null->_left = nullptr;
-        this->_null->_right = nullptr;
+        // this->_null = this->_node_allocator.allocate( 1 );
+        // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
+        // this->_allocator.construct( &this->_null->_data, value_type(typename value_type::first_type(), typename value_type::second_type() ) );
+        // this->_null->_colour = BLACK; // RED for Red Black Tree
+        // this->_null->_parent = nullptr;
+        // this->_null->_left = nullptr;
+        // this->_null->_right = nullptr;
+        _create_null();
+        this->_root = this->_null;
         this->_base._left = this->_null;
         *( this ) = src;
     }
@@ -798,12 +816,14 @@ namespace ft
     {
         if ( this != &other )
         {
+            // std::cout << "----------in operator= in tree ----------" << std::endl; // TPO
             this->clear();
+            // std::cout << "---------- 2 operator= in tree ----------" << std::endl; // TPO
             this->_allocator = other._allocator;
             this->_node_allocator = other._node_allocator;
             this->_compare = other._compare;
             this->_size = other._size;
-            if ( other._root() != other._null ) // or nullptr?
+            if ( other._root != other._null ) // or nullptr?
                 this->_root = this->_clone_tree( other, other._root );
         }
         // this->_null and this->_base don't need to be copied
@@ -815,12 +835,14 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::begin()
     {
         return ( iterator( this->_root ) );
+        // return ( iterator( this->_base._left ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::begin() const
     {
         return ( const_iterator( this->_root ) );
+        // return ( const_iterator( this->_base._left ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -868,7 +890,10 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::max_size() const
     {
-        return ( this->_allocator.max_size() );
+        // return ( this->_allocator.max_size() );
+            size_type alloc_max = this->_node_allocator.max_size();
+            size_type numeric_max = std::numeric_limits<difference_type>::max() / 2;
+            return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
     }
 
     // https://cplusplus.com/reference/map/map/insert/
@@ -880,7 +905,7 @@ namespace ft
     // Internally, map containers keep all their elements sorted by their key following the criterion specified by its comparison object. The elements are always inserted in its respective position following this ordering.
     // The parameters determine how many elements are inserted and to which values they are initialized:
     template < typename T, typename Compare, typename Allocator>
-    pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
+    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
     {
         // std::cout << "----------in val insert of tree ----------" << std::endl; // TPO
         return ( this->_insert( this->_base._left, value ) );
@@ -890,7 +915,8 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( iterator position, const value_type& value)
     {
         // std::cout << "----------in iterator + val insert of tree ----------" << std::endl; // TPO
-        if ( !( this->_compare( position->_data, value ) && this->_compare( value, position->_data ) ) )
+        // falls dieses Element kleiner ist als 'value' und der successor grosser, fuege hier ein.
+        if ( !( this->_compare( position->_data, value ) && this->_compare( value, position->_data ) ) ) // TASK: umschreiben, sodass er auf oben passt!
             return ( this->_insert( position, value ).first );
         return ( this->_insert( _base._left, value ).first );
     }
@@ -976,12 +1002,15 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
-        if ( this->_root != this->_null )
+        // std::cout << "----------in clear in tree ----------" << std::endl; // TPO
+        if ( this->_base._left != this->_null )
         {
             _clear( this->_root );
+            // std::cout << "----------in clear after _clear in tree ----------" << std::endl; // TPO
             this->_root = this->_null;
             this->_base._left = this->_null;
         }
+            // std::cout << "---------- LEAVING in clear in tree ----------" << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1176,13 +1205,13 @@ namespace ft
         debug_print_recursive_inverted( this->_root, 0, false );
     }
 
-    template < typename T, typename Compare, typename Allocator>
+    template <typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::allocator_type binary_search_tree<T, Compare, Allocator>::get_allocator() const
     {
         return ( this->_allocator );
     }
 
-    template < typename T, typename Compare, typename Allocator>
+    template <typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
     {
         if ( node != nullptr ) // or this->_null? No, because this is caught in the clear() function before!
@@ -1193,7 +1222,7 @@ namespace ft
         }
     }
 
-    template < typename T, typename Compare, typename Allocator>
+    template <typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp()
     {
         return ( this->_compare );
@@ -1201,7 +1230,32 @@ namespace ft
 
     /* private */
 
-    template < typename T, typename Compare, typename Allocator>
+    template <typename T, typename Compare, typename Allocator>
+    void binary_search_tree<T, Compare, Allocator>::_create_null()
+    {
+        // std::cout << "_create_null()" << std::endl; // TPO
+        // pointer null_data = this->_allocator.allocate( 1 );
+        // this->_allocator.construct( null_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+        this->_null = this->_node_allocator.allocate( 1 );
+        this->_node_allocator.construct( this->_null );
+        // this->_node_allocator.construct( this->_null, node_type( value_type( typename value_type::first_type(), typename value_type::second_type() ) ) );
+        // this->_allocator.construct( this->_null->_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+        // this->_null->_data = null_data;
+        // this->_null->_parent = nullptr;
+        // this->_null->_left = nullptr;
+        // this->_null->_right = nullptr;
+        // this->_null = this->_node_allocator.allocate( 1 );
+        // this->_node_allocator.construct( this->_null, node_type( node_state, BLACK, nullptr, nullptr, nullptr ) );
+        // this->_node_allocator.construct( this->_null, node_type( *( null_data ) ) );
+
+        // pointer null_data = this->_allocator.allocate( 1 );
+        // this->_null = this->_node_allocator.allocate( 1 );
+        // this->_node_allocator.construct( this->_null, node_type( value_type( typename value_type::first_type(), typename value_type::second_type() ) ) );
+        // this->_allocator.construct( this->_null->_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+        // this->_node_allocator.construct( this->_null, node_type( *( null_data ) ) );
+    }
+
+    template <typename T, typename Compare, typename Allocator>
     pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
         // std::cout << "----------in _insert of tree ----------" << std::endl; // TPO
@@ -1210,6 +1264,7 @@ namespace ft
         bool                insert_flag = true;
 
         // std::cout << "value.first = " << value.first << " value.second = " << value.second << std::endl; // TPO
+        // std::cout << "new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
         // std::cout << "---------- 1 ----------" << std::endl; // TPO
         while ( rootptr != this->_null )
         {
@@ -1219,15 +1274,15 @@ namespace ft
             // std::cout << "new_node->_data = " << new_node->_data.first << std::endl; // TPO
             // std::cout << "rootptr->_data = " << rootptr->_data.first << std::endl; // TPO
             if ( this->_compare( new_node->_data, rootptr->_data ) )
-            { // TPO
+            // { // TPO
                 // std::cout << "---------- 2.3 ----------" << std::endl; // TPO
                 rootptr = rootptr->_left;
-            } // TPO
+            // } // TPO
             else if ( this->_compare( rootptr->_data, new_node->_data ) )
-            { // TPO
+            // { // TPO
                 // std::cout << "---------- 2.4 ----------" << std::endl; // TPO
                 rootptr = rootptr->_right;
-            } // TPO
+            // } // TPO
             else
             {
                 // std::cout << "---------- 2.5 ----------" << std::endl; // TPO
@@ -1252,26 +1307,33 @@ namespace ft
             // std::cout << "---------- 5.5 ----------" << std::endl; // TPO
             this->_base._left = this->_root;
             // std::cout << "---------- 5.6 ----------" << std::endl; // TPO
+            position = this->_base._left;
         }
         else if ( this->_compare( new_node->_data, position->_data ) )
-        { // TPO
+        {
             // std::cout << "---------- 6 ----------" << std::endl; // TPO
             position->_left = new_node;
-        } // TPO
+            new_node->_parent = position;
+            position = position->_left;
+        }
         else if ( this->_compare( position->_data, new_node->_data ) )
-        { // TPO
+        {
             // std::cout << "---------- 7 ----------" << std::endl; // TPO
             position->_right = new_node;
-        } // TPO
+            new_node->_parent = position;
+            position = position->_right;
+        }
         else
-        { // TPO
+        // { // TPO
             // std::cout << "---------- 8 ----------" << std::endl; // TPO
             destroy_node( new_node);
-        } // TPO
+        // } // TPO
         // std::cout << "---------- 9 ----------" << std::endl; // TPO
         if ( insert_flag == true )
             ++( this->_size );
         // std::cout << "---------- 10 ----------" << std::endl; // TPO
+        // std::cout << "new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
+        // std::cout << "position->_data.first = " << position->_data.first << " position->_data.second = " << position->_data.second << std::endl; // TPO
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
@@ -1298,14 +1360,16 @@ namespace ft
     
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::node_type_ptr 
-    binary_search_tree<T, Compare, Allocator>::_clone_tree( const binary_search_tree& other, node_type_ptr& other_root )
+    binary_search_tree<T, Compare, Allocator>::_clone_tree( const binary_search_tree& other, const node_type_ptr& other_root )
     {
-        if ( other_root == other->_null ) // or nullptr?
+        std::cout << "----------in _clone_tree in tree ----------" << std::endl; // TPO
+        if ( other._base._left == other._null ) // or nullptr?
             return ( this->_null ); // or nullptr?
         node_type_ptr copy_node = this->_node_allocator.allocate( 1 );
-        this->allocator.construct( copy_node->_data, other_root->_data );
-        copy_node->_left = this->_clone_tree( other_root->_left );
-        copy_node->_right = this->_clone_tree( other_root->_right );
+        this->_allocator.construct( &( copy_node )->_data, other_root->_data );
+        copy_node->_left = this->_clone_tree( other, other_root->_left );
+        copy_node->_right = this->_clone_tree( other, other_root->_right );
+        std::cout << "----------END _clone_tree in tree ----------" << std::endl; // TPO
         return ( copy_node );
     }
 
@@ -1335,7 +1399,7 @@ namespace ft
         if (rootptr == this->_null)
             std::cout << " null\033[37m\n";
         else
-            std::cout << " " << rootptr->_data << "\033[37m\n";
+            std::cout << " " << rootptr->_data.first << "\033[37m\n";
             // std::cout << " " << rootptr->_data << "\033[37m" << "───┤\n";
 
         debug_print_recursive_inverted( rootptr->_left, level + 1, false );
@@ -1358,6 +1422,9 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
     {
+        std::cout << "----------in _clear ----------" << std::endl; // TPO
+        std::cout << "rootptr = " << rootptr << std::endl; // TPO
+        std::cout << "rootptr->_data->first = " << rootptr->_data.first << "  second: " << rootptr->_data.second << std::endl; // TPO
         if ( rootptr != this->_null )
         {
             if ( rootptr->_left != this->_null )
