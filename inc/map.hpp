@@ -391,6 +391,9 @@ namespace ft
         // Allocator:
         allocator_type get_allocator() const;
 
+        // Debugging:
+            void debug_print(); // only for debugging purposes
+
     }; // map
 
     /* map member functions */
@@ -638,6 +641,11 @@ namespace ft
         return ( this->tree.get_allocator() );
     }
 
+    template <typename Key, typename T, typename Compare, typename Alloc>
+    void map<Key,T,Compare,Alloc>::debug_print()
+    {
+        tree.debug_print();
+    }
 
     /* map non-member functions */
 
