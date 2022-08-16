@@ -577,7 +577,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::value_compare map<Key,T,Compare,Alloc>::value_comp() const
     {
-        return ( this->tree.value_compare() );
+        return ( this->tree.value_comp() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
