@@ -409,7 +409,7 @@ namespace ft
     const allocator_type& alloc ) // range constructor
     : tree( value_compare( comp ), alloc )
     {
-        std::cout << "----------in range constr of map ----------" << std::endl; // TPO
+        // std::cout << "----------in range constr of map ----------" << std::endl; // TPO
         this->insert( first, last );
     }
 
@@ -417,7 +417,7 @@ namespace ft
     map<Key,T,Compare,Alloc>::map( const map& src ) // copy constructor
     : tree( src.tree )
     { // do I have to check against 'tree == nullptr' or something?
-        insert( src.begin(), src.end() ); // do i have to? isn't 'tree(src.tree)' already doing this?
+        this->insert( src.begin(), src.end() ); // do i have to? isn't 'tree(src.tree)' already doing this?
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -523,7 +523,11 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::insert( iterator position, const value_type& val ) // with hint
     {
-        return ( this->tree.insert( position, val ) );
+        // return ( this->tree.insert( position, val ) );
+
+        typename base::iterator x = position.base();
+
+        return ( this->tree.insert( x, val ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
