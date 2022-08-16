@@ -650,12 +650,12 @@ namespace ft
     ** The root node is the only node in the tree whose parent is NIL.
     */
 
-    template < typename T, typename Compare = ft::less<T>, typename Allocator = std::allocator<T> >
+    template < typename T, typename Compare, typename Allocator >
     class binary_search_tree
     {
 
     private:
-         typedef ft::tree_node<T>                                           node_type;
+        typedef ft::tree_node<T>                                            node_type;
         typedef typename node_type::node_ptr                                node_type_ptr;
         typedef typename node_type::const_node_ptr                          const_node_type_ptr;
         typedef typename node_type::node_ref                                node_type_ref;
@@ -681,6 +681,7 @@ namespace ft
         node_type           _base; // first node in tree. _base->_left is: root 
         node_type_ptr       _root; // first node of tree with value. left child of _base
         node_type_ptr       _null; // every node_direction without attached child points onto this node, instead of nullptr
+        node_type_ptr       _begin_node; // left-most node 
         value_compare       _compare; 
         allocator_type      _allocator; // for associated allocator object, map.get_allocator()
         node_allocator_type _node_allocator; // for associated allocator object, map.get_allocator()
@@ -709,7 +710,7 @@ namespace ft
         size_type max_size() const;
 
         // Modifiers:
-        pair<iterator,bool> insert( const value_type& value); // single element
+        ft::pair<iterator,bool> insert( const value_type& value); // single element
         iterator insert( iterator position, const value_type& value); // with hint
         template <typename InputIterator>
             void insert( InputIterator first, InputIterator last ); // range
@@ -727,8 +728,8 @@ namespace ft
         const_iterator lower_bound( const value_type& value ) const;
         iterator upper_bound( const value_type& value );
         const_iterator upper_bound( const value_type& value ) const;
-        pair<iterator,iterator> equal_range( const value_type& value );
-        pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
+        ft::pair<iterator,iterator> equal_range( const value_type& value );
+        ft::pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
         void debug_print(); // only for debugging purposes
 
         // Allocator / Compare:
@@ -738,7 +739,7 @@ namespace ft
 
     private:
         void _create_null();
-        pair<iterator, bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
+        ft::pair<iterator, bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
         node_type_ptr _clone_tree( const binary_search_tree& other, const node_type_ptr& other_root );
@@ -766,7 +767,7 @@ namespace ft
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare& comp, const allocator_type& alloc ) 
-    : _base(), _root( nullptr ), _null( nullptr ), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
+    : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
     {
         // this->_null = this->_node_allocator.allocate( 1 );
         // // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
@@ -778,12 +779,13 @@ namespace ft
         _create_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
+        this->_begin_node = this->_base._left;
         // std::cout << "this->_null->_data.first = " << this->_null->_data.first << " this->_null->_data.second = " << this->_null->_data.second << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
-    : _base(), _root( nullptr ), _null( nullptr ), _compare(), _allocator(), _node_allocator(), _size( 0 )
+    : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare(), _allocator(), _node_allocator(), _size( 0 )
     {
         // this->_null = this->_node_allocator.allocate( 1 );
         // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
@@ -795,6 +797,7 @@ namespace ft
         _create_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
+        this->_begin_node = this->_base._left;
         *( this ) = src;
     }
 
@@ -805,6 +808,7 @@ namespace ft
         {
             this->clear();
             this->_base._left = this->_null;
+            this->_begin_node = this->_base._left;
         }
         if (this->_null != nullptr)
             destroy_node( this->_null );
@@ -825,6 +829,7 @@ namespace ft
             this->_size = other._size;
             if ( other._root != other._null ) // or nullptr?
                 this->_root = this->_clone_tree( other, other._root );
+            this->_begin_node = other._begin_node;
         }
         // this->_null and this->_base don't need to be copied
         return ( *( this ) );
@@ -834,14 +839,14 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::begin()
     {
-        return ( iterator( this->_root ) );
+        return ( iterator( this->_begin_node ) );
         // return ( iterator( this->_base._left ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::begin() const
     {
-        return ( const_iterator( this->_root ) );
+        return ( const_iterator( this->_begin_node ) );
         // return ( const_iterator( this->_base._left ) );
     }
 
@@ -872,13 +877,13 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::reverse_iterator binary_search_tree<T, Compare, Allocator>::rend()
     {
-        return ( reverse_iterator( this->_root ) );
+        return ( reverse_iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::const_reverse_iterator binary_search_tree<T, Compare, Allocator>::rend() const
     {
-        return ( const_reverse_iterator( this->_root ) );
+        return ( const_reverse_iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -916,8 +921,11 @@ namespace ft
     {
         // std::cout << "----------in iterator + val insert of tree ----------" << std::endl; // TPO
         // falls dieses Element kleiner ist als 'value' und der successor grosser, fuege hier ein.
-        if ( !( this->_compare( position->_data, value ) && this->_compare( value, position->_data ) ) ) // TASK: umschreiben, sodass er auf oben passt!
-            return ( this->_insert( position, value ).first );
+
+        // std::cout << position.base()->_data.first << std::endl; // TPO
+
+        if ( !( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
+            return ( this->_insert( position.base(), value ).first );
         return ( this->_insert( _base._left, value ).first );
     }
 
@@ -933,9 +941,9 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::erase( iterator position )
     {
-    node_type_ptr node = position.base();
+        node_type_ptr node = position.base();
 
-        if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general?
+        if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
             return ;
         if ( node->_left == this->_null )
             this->_transplant( node, node->_right );
@@ -954,7 +962,15 @@ namespace ft
             replacement->_left = node->_left;
             replacement->_left->_parent = replacement;
         }
+        if ( this->_begin_node == node ) // correct '_begin_node'
+        {
+            if ( node->_right->_right != nullptr )
+                this->_begin_node = tree_min<T>( node->_right );
+            else
+                this->_begin_node = node->_parent;
+        }
         this->destroy_node( node ); // should catch the this->_null in the first if statement
+        --( this->_size );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -993,6 +1009,7 @@ namespace ft
                 x._root->_parent = &x._base;
                 x._base._left = x._root;
             }
+            ft::swap( this->_begin_node, x._begin_node );
             ft::swap( this->_compare, x._compare );
             ft::swap( this->_allocator, x._allocator );
             ft::swap( this->_size, x._size );
@@ -1009,6 +1026,7 @@ namespace ft
             // std::cout << "----------in clear after _clear in tree ----------" << std::endl; // TPO
             this->_root = this->_null;
             this->_base._left = this->_null;
+            this->_begin_node = this->_base._left;
         }
             // std::cout << "---------- LEAVING in clear in tree ----------" << std::endl; // TPO
     }
@@ -1130,7 +1148,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    pair<typename binary_search_tree<T, Compare, Allocator>::const_iterator,
+    ft::pair<typename binary_search_tree<T, Compare, Allocator>::const_iterator,
         typename binary_search_tree<T, Compare, Allocator>::const_iterator> 
         binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k ) const
     {
@@ -1165,7 +1183,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    pair<typename binary_search_tree<T, Compare, Allocator>::iterator,
+    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator,
         typename binary_search_tree<T, Compare, Allocator>::iterator> 
         binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k )
     {
@@ -1218,7 +1236,7 @@ namespace ft
         {
             this->_allocator.destroy( &node->_data );
             this->_node_allocator.deallocate( node, 1 );
-            --( this->_size );
+            // --( this->_size );
         }
     }
 
@@ -1256,14 +1274,13 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
+    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
         // std::cout << "----------in _insert of tree ----------" << std::endl; // TPO
         node_type_ptr       position = &this->_base;
         node_type_ptr       new_node = _vcreate_node( value );
         bool                insert_flag = true;
 
-        // std::cout << "value.first = " << value.first << " value.second = " << value.second << std::endl; // TPO
         // std::cout << "new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
         // std::cout << "---------- 1 ----------" << std::endl; // TPO
         while ( rootptr != this->_null )
@@ -1291,6 +1308,9 @@ namespace ft
             }
             // std::cout << "---------- 2.6 ----------" << std::endl; // TPO
         }
+        // std::cout << "******************************************* value.first = " << value.first << " value.second = " << value.second << std::endl; // TPO
+        // std::cout << "******************************************* rootptr->_data.first = " << rootptr->_data.first << " value.second = " << rootptr->_data.second << std::endl; // TPO
+        // std::cout << "******************************************* new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
         // std::cout << "---------- 3 ----------" << std::endl; // TPO
         new_node->_parent = position;
         // std::cout << "---------- 4 ----------" << std::endl; // TPO
@@ -1308,6 +1328,7 @@ namespace ft
             this->_base._left = this->_root;
             // std::cout << "---------- 5.6 ----------" << std::endl; // TPO
             position = this->_base._left;
+            this->_begin_node = this->_base._left;
         }
         else if ( this->_compare( new_node->_data, position->_data ) )
         {
@@ -1334,6 +1355,10 @@ namespace ft
         // std::cout << "---------- 10 ----------" << std::endl; // TPO
         // std::cout << "new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
         // std::cout << "position->_data.first = " << position->_data.first << " position->_data.second = " << position->_data.second << std::endl; // TPO
+        // std::cout << "******************************************* this->_size: " << this->_size << std::endl; // TPO
+        this->_root->_parent = &this->_base;
+        if ( ( position->_parent == this->_begin_node ) && ( position == position->_parent->_left ) )
+            this->_begin_node = position;
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
@@ -1362,14 +1387,14 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::node_type_ptr 
     binary_search_tree<T, Compare, Allocator>::_clone_tree( const binary_search_tree& other, const node_type_ptr& other_root )
     {
-        std::cout << "----------in _clone_tree in tree ----------" << std::endl; // TPO
+        // std::cout << "----------in _clone_tree in tree ----------" << std::endl; // TPO
         if ( other._base._left == other._null ) // or nullptr?
             return ( this->_null ); // or nullptr?
         node_type_ptr copy_node = this->_node_allocator.allocate( 1 );
         this->_allocator.construct( &( copy_node )->_data, other_root->_data );
         copy_node->_left = this->_clone_tree( other, other_root->_left );
         copy_node->_right = this->_clone_tree( other, other_root->_right );
-        std::cout << "----------END _clone_tree in tree ----------" << std::endl; // TPO
+        // std::cout << "----------END _clone_tree in tree ----------" << std::endl; // TPO
         return ( copy_node );
     }
 
@@ -1422,9 +1447,9 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
     {
-        std::cout << "----------in _clear ----------" << std::endl; // TPO
-        std::cout << "rootptr = " << rootptr << std::endl; // TPO
-        std::cout << "rootptr->_data->first = " << rootptr->_data.first << "  second: " << rootptr->_data.second << std::endl; // TPO
+        // std::cout << "----------in _clear ----------" << std::endl; // TPO
+        // std::cout << "rootptr = " << rootptr << std::endl; // TPO
+        // std::cout << "rootptr->_data->first = " << rootptr->_data.first << "  second: " << rootptr->_data.second << std::endl; // TPO
         if ( rootptr != this->_null )
         {
             if ( rootptr->_left != this->_null )
@@ -1432,6 +1457,7 @@ namespace ft
             if  ( rootptr->_right != this->_null )
                 _clear( rootptr->_right );
             destroy_node( rootptr );
+            --( this->_size );
             rootptr = this->_null;
         }
     }
