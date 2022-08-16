@@ -735,7 +735,7 @@ namespace ft
         // Allocator / Compare:
         allocator_type get_allocator() const;
         void destroy_node( node_type_ptr node );
-        value_compare value_comp();
+        value_compare value_comp() const;
 
     private:
         void _create_null();
@@ -895,10 +895,10 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::max_size() const
     {
-        // return ( this->_allocator.max_size() );
-            size_type alloc_max = this->_node_allocator.max_size();
-            size_type numeric_max = std::numeric_limits<difference_type>::max() / 2;
-            return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
+        size_type alloc_max = this->_node_allocator.max_size();
+        size_type numeric_max = std::numeric_limits<difference_type>::max() / 2;
+
+        return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
     }
 
     // https://cplusplus.com/reference/map/map/insert/
@@ -919,12 +919,16 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( iterator position, const value_type& value)
     {
-        // std::cout << "----------in iterator + val insert of tree ----------" << std::endl; // TPO
-        // falls dieses Element kleiner ist als 'value' und der successor grosser, fuege hier ein.
+        // TASK: rewrite the hint part:
+        // if the element is smaller than 'value', and the successor bigger, insert here.
 
-        // std::cout << position.base()->_data.first << std::endl; // TPO
+        // old/wrong version
+        // if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
+        //     return ( this->_insert( position.base(), value ).first );
+        // return ( this->_insert( _base._left, value ).first );
 
-        if ( !( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
+
+        if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
             return ( this->_insert( position.base(), value ).first );
         return ( this->_insert( _base._left, value ).first );
     }
@@ -1241,7 +1245,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp()
+    typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp() const
     {
         return ( this->_compare );
     }
