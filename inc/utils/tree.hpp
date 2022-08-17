@@ -896,7 +896,8 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::max_size() const
     {
         size_type alloc_max = this->_node_allocator.max_size();
-        size_type numeric_max = std::numeric_limits<difference_type>::max() / 2;
+        size_type numeric_max = std::numeric_limits<difference_type>::max();
+        // size_type numeric_max = std::numeric_limits<difference_type>::max() / 2;
 
         return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
     }
@@ -1066,7 +1067,7 @@ namespace ft
             else
                 return ( const_iterator( rootptr ) );
         }
-        return ( &this->_base );
+        return ( &this->_base ); //is this correct? Not const_iterator( this->_base)???
     }
 
     template < typename T, typename Compare, typename Allocator>
