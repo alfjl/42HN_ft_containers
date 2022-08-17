@@ -1072,7 +1072,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::count( const value_type& value) const
     {
-        return ( this->find( value ) == &this->_base ? 0 : 1 );
+        return ( ( this->find( value ).base() == &this->_base ) ? 0 : 1 );
     }
 
     template < typename T, typename Compare, typename Allocator>
