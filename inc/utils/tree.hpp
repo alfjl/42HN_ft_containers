@@ -319,11 +319,11 @@ namespace ft
     class tree_iterator
     {
     public:
-        typedef bidirectional_iterator_tag      iterator_category;
-        typedef T                               value_type;
-        typedef ptrdiff_t                       difference_type;
-        typedef T*                              pointer;
-        typedef T&                              reference;
+        typedef bidirectional_iterator_tag          iterator_category;
+        typedef T                                   value_type;
+        typedef ptrdiff_t                           difference_type;
+        typedef T*                                  pointer;
+        typedef T&                                  reference;
 
     private:
         NodePtr _node_ptr;
@@ -492,8 +492,10 @@ namespace ft
         typedef const T*                        pointer;
         typedef const T&                        reference;
 
-    private:
-        typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
+    // private:
+        // typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
+    public:
+        typedef tree_iterator<ConstNodePtr, value_type>  non_const_iterator;
 
     private:
         ConstNodePtr _node_ptr;
@@ -502,7 +504,7 @@ namespace ft
         tree_const_iterator();
         tree_const_iterator( const ConstNodePtr& ptr );
         tree_const_iterator( const tree_const_iterator& other );
-        tree_const_iterator( const non_const_iterator& other );
+        tree_const_iterator( non_const_iterator other );
         ~tree_const_iterator();
 
         // operator tree_const_iterator<const T>() const;
@@ -532,7 +534,7 @@ namespace ft
     tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const tree_const_iterator& other ) : _node_ptr( other._node_ptr ) {}
 
     template <typename ConstNodePtr, typename T>
-    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( const non_const_iterator& other ) : _node_ptr( other._node_ptr ) {}
+    tree_const_iterator<ConstNodePtr, T>::tree_const_iterator( non_const_iterator other ) : _node_ptr( other.base() ) {}
 
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>::~tree_const_iterator() {}
@@ -650,7 +652,7 @@ namespace ft
     ** The root node is the only node in the tree whose parent is NIL.
     */
 
-    template < typename T, typename Compare, typename Allocator >
+    template <typename T, typename Compare, typename Allocator>
     class binary_search_tree
     {
 
@@ -779,7 +781,7 @@ namespace ft
         _create_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
-        this->_begin_node = this->_base._left;
+        this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
         // std::cout << "this->_null->_data.first = " << this->_null->_data.first << " this->_null->_data.second = " << this->_null->_data.second << std::endl; // TPO
     }
 
@@ -797,7 +799,7 @@ namespace ft
         _create_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
-        this->_begin_node = this->_base._left;
+        this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
         *( this ) = src;
     }
 
@@ -808,7 +810,7 @@ namespace ft
         {
             this->clear();
             this->_base._left = this->_null;
-            this->_begin_node = this->_base._left;
+            this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
         }
         if (this->_null != nullptr)
             destroy_node( this->_null );
@@ -820,9 +822,7 @@ namespace ft
     {
         if ( this != &other )
         {
-            // std::cout << "----------in operator= in tree ----------" << std::endl; // TPO
             this->clear();
-            // std::cout << "---------- 2 operator= in tree ----------" << std::endl; // TPO
             this->_allocator = other._allocator;
             this->_node_allocator = other._node_allocator;
             this->_compare = other._compare;
@@ -1031,7 +1031,7 @@ namespace ft
             // std::cout << "----------in clear after _clear in tree ----------" << std::endl; // TPO
             this->_root = this->_null;
             this->_base._left = this->_null;
-            this->_begin_node = this->_base._left;
+            this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
         }
             // std::cout << "---------- LEAVING in clear in tree ----------" << std::endl; // TPO
     }
