@@ -1092,7 +1092,29 @@ namespace ft
             else
                 rootptr = rootptr->_left;
         }
-        return ( this->_make_iter( position ) );
+        // return ( this->_make_iter( position ) );
+        return ( iterator( position ) );
+
+        // test version: results do not look promising
+        // node_type_ptr       rootptr = this->_root;
+        // node_type_ptr       position = const_cast<node_type_ptr>( &this->_base );
+
+        // while ( rootptr != this->_null )
+        // {
+        //     if ( this->_compare( rootptr->_data, value ) )
+        //     {
+        //         position = rootptr;
+        //         rootptr = rootptr->_right;
+        //     }
+        //     else if ( this->_compare( value, rootptr->_data ))
+        //     {
+        //         position = rootptr;
+        //         rootptr = rootptr->_left;
+        //     }
+        //     else
+        //         break ;
+        // }
+        // return ( this->_make_iter( position ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1111,7 +1133,8 @@ namespace ft
             else
                 rootptr = rootptr->_left;
         }
-        return ( this->_make_iter( position ) );
+        // return ( this->_make_iter( position ) );
+        return ( const_iterator( position ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1217,7 +1240,7 @@ namespace ft
             else if ( this->_compare( rootptr->_data, k ) )
                 rootptr = rootptr->_right;
             else
-                return ( ft::make_pair( iterator( rootptr ), iterator( rootptr->_right != this->_null ? tree_min<value_type>( this->_root->_right) : position ) ) );
+                return ( ft::make_pair( iterator( rootptr ), iterator( rootptr->_right != this->_null ? tree_min<value_type>( rootptr->_right) : position ) ) );
         }
         return ( ft::make_pair( iterator( position ), iterator( position ) ) );
     }
