@@ -547,7 +547,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::erase( const key_type& k ) // key
     {
-        return ( this->tree.erase( k ) );
+        return ( this->tree.erase( ft::make_pair( k, mapped_type() ) ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -583,19 +583,19 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::find( const key_type& k )
     {
-        return ( this->tree.find( k ) );
+        return ( this->tree.find( ft::make_pair( k, mapped_type() ) ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_iterator map<Key,T,Compare,Alloc>::find( const key_type& k ) const
     {
-        return ( this->tree.find( k ) );
+        return ( this->tree.find( ft::make_pair( k, mapped_type() ) ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::size_type map<Key,T,Compare,Alloc>::count( const key_type& k ) const
     {
-        return ( this->tree.count( k ) );
+        return ( this->tree.count( ft::make_pair( k, mapped_type() ) ) );
     }
     
     template <typename Key, typename T, typename Compare, typename Alloc>
