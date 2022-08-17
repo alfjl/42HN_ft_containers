@@ -138,19 +138,15 @@ namespace ft
     {
     
     private:
-        TreeIterator    _tree_const_iterator;
+        TreeIterator    _tree_iterator;
 
     public:
-        typedef bidirectional_iterator_tag                      iterator_category;
-        typedef typename TreeIterator::value_type          value_type;
-        typedef typename TreeIterator::difference_type     difference_type;
-        typedef typename TreeIterator::reference           reference;
-        typedef typename TreeIterator::pointer             pointer;
+        typedef bidirectional_iterator_tag                  iterator_category;
+        typedef typename TreeIterator::value_type           value_type;
+        typedef typename TreeIterator::difference_type      difference_type;
+        typedef typename TreeIterator::reference            reference;
+        typedef typename TreeIterator::pointer              pointer;
     
-    // private:
-        // typedef map_iterator<typename TreeIterator::non_const_iterator >   non_const_iterator; // TASK: correct this!
-        // typedef tree_iterator<typename tree_node<T>::node_ptr, T>   non_const_iterator;
-
     public:
         map_const_iterator();
         map_const_iterator( TreeIterator ite );
@@ -170,31 +166,31 @@ namespace ft
     /* map_const_iterator member functions */
 
     template <typename TreeIterator>
-    map_const_iterator<TreeIterator>::map_const_iterator() : _tree_const_iterator() {}
+    map_const_iterator<TreeIterator>::map_const_iterator() : _tree_iterator() {}
 
     template<typename TreeIterator>
-    map_const_iterator<TreeIterator>::map_const_iterator( TreeIterator ite ) : _tree_const_iterator( ite ) {}
+    map_const_iterator<TreeIterator>::map_const_iterator( TreeIterator ite ) : _tree_iterator( ite ) {}
 
     template<typename TreeIterator> // TASK: still understand how to implement non_const_iterator here. maybe 'typedef typename tree_iterator::non_const_iterator'
-    map_const_iterator<TreeIterator>::map_const_iterator( map_iterator<typename TreeIterator::non_const_iterator> other ) : _tree_const_iterator( other._tree_const_iterator ) {}
+    map_const_iterator<TreeIterator>::map_const_iterator( map_iterator<typename TreeIterator::non_const_iterator> other ) : _tree_iterator( other.base() ) {}
 
     template <typename TreeIterator>
     typename map_const_iterator<TreeIterator>::reference map_const_iterator<TreeIterator>::operator*() const
     {
         // return ( ite.get_value????? ); // TASK: write function
-        return ( *( _tree_const_iterator ) );
+        return ( *( _tree_iterator ) );
     }
 
     template <typename TreeIterator>
     typename map_const_iterator<TreeIterator>::pointer map_const_iterator<TreeIterator>::operator->() const
     {
-        return ( &( *( _tree_const_iterator ) ) );
+        return ( &( *( _tree_iterator ) ) );
     }
 
     template <typename TreeIterator>
     map_const_iterator<TreeIterator>& map_const_iterator<TreeIterator>::operator++()
     {
-        ++( _tree_const_iterator );
+        ++( _tree_iterator );
         return ( *( this ) );
     }
 
@@ -210,7 +206,7 @@ namespace ft
     template <typename TreeIterator>
     map_const_iterator<TreeIterator>& map_const_iterator<TreeIterator>::operator--()
     {
-        --( _tree_const_iterator );
+        --( _tree_iterator );
         return ( *( this ) );
     }
 
@@ -226,7 +222,7 @@ namespace ft
     template <typename TreeIterator>
     TreeIterator map_const_iterator<TreeIterator>::base() const
     {
-        return ( this->_tree_const_iterator );
+        return ( this->_tree_iterator );
     }
 
     /* map_const_iterator non-member functions */
@@ -460,25 +456,25 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::reverse_iterator map<Key,T,Compare,Alloc>::rbegin()
     {
-        return ( this->tree.rbegin() );
+        return ( reverse_iterator( this->end() ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_reverse_iterator map<Key,T,Compare,Alloc>::rbegin() const
     {
-        return ( this->tree.rbegin() );
+        return ( const_reverse_iterator( this->end() ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::reverse_iterator map<Key,T,Compare,Alloc>::rend()
     {
-        return ( this->tree.rend() );
+        return ( reverse_iterator( this->begin() ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::const_reverse_iterator map<Key,T,Compare,Alloc>::rend() const
     {
-        return ( this->tree.rend() );
+        return ( const_reverse_iterator( this->begin() ) );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
