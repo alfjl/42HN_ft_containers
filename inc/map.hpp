@@ -259,7 +259,7 @@ namespace ft
     template < typename Key,                                                        // map::key_type
                typename T,                                                          // map::mapped_type
                typename Compare = ft::less<Key>,                                    // map::key_compare
-               typename Alloc = std::allocator<ft::pair<const Key,T> > >            // map::allocator_type
+               typename Alloc = std::allocator<ft::pair<const Key, T> > >            // map::allocator_type
     class map
     {
     public:
@@ -411,10 +411,7 @@ namespace ft
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::map( const map& src ) // copy constructor
-    : tree( src.tree )
-    { // do I have to check against 'tree == nullptr' or something?
-        this->insert( src.begin(), src.end() ); // do i have to? isn't 'tree(src.tree)' already doing this?
-    }
+    : tree( src.tree ) {}
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::~map() {} // destructor
@@ -537,7 +534,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator position ) // iterator
     {
-        this->tree.erase( position );
+        this->tree.erase( position.base() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -549,7 +546,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::erase( iterator first, iterator last ) // range
     {
-        this->tree.erase( first, last );
+        this->tree.erase( first.base(), last.base() );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>

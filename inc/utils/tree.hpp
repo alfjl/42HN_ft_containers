@@ -781,7 +781,6 @@ namespace ft
         this->_root = this->_null;
         this->_base._left = this->_null;
         this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
-        // std::cout << "this->_null->_data.first = " << this->_null->_data.first << " this->_null->_data.second = " << this->_null->_data.second << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -822,15 +821,19 @@ namespace ft
         if ( this != &other )
         {
             this->clear();
-            std::cout << "this->_size = " << this->_size << std::endl; // TPO
-            std::cout << "this->size() = " << this->size() << std::endl; // TPO
             this->_allocator = other._allocator;
             this->_node_allocator = other._node_allocator;
             this->_compare = other._compare;
             if ( other._root != other._null ) // or nullptr?
                 this->_root = this->_clone_tree( other, other._root );
-            // this->_size = other._size;
-            this->_begin_node = other._begin_node;
+            this->_size = other._size;
+            this->_base._left = this->_root;
+            this->_root->_parent = &this->_base;
+            // this->_begin_node = other._begin_node; // or:
+            // this->debug_print();
+            // std::cout << " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! IN HERE !!!!!!!!!!!!!!!!!!!!!!!)" << std::endl; // TPO
+            this->_begin_node = tree_min<T>( this->_root );
+            // std::cout << " ((((((((((((((((((((((((())))))))))))))))))))))))) IN HERE ))))))))))))))))))))))))))))))))))))))))" << std::endl; // TPO
         }
         // this->_null and this->_base don't need to be copied
         return ( *( this ) );
@@ -1032,7 +1035,7 @@ namespace ft
             // std::cout << "----------in clear after _clear in tree ----------" << std::endl; // TPO
             this->_root = this->_null;
             this->_base._left = this->_null;
-            this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+            this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '&_base', if tree is empty
         }
             // std::cout << "---------- LEAVING in clear in tree ----------" << std::endl; // TPO
     }
@@ -1380,7 +1383,9 @@ namespace ft
         // } // TPO
         // std::cout << "---------- 9 ----------" << std::endl; // TPO
         if ( insert_flag == true )
+        { // TPO
             ++( this->_size );
+        } // TPO
         // std::cout << "---------- 10 ----------" << std::endl; // TPO
         // std::cout << "new_node->_data.first = " << new_node->_data.first << " new_node->_data.second = " << new_node->_data.second << std::endl; // TPO
         // std::cout << "position->_data.first = " << position->_data.first << " position->_data.second = " << position->_data.second << std::endl; // TPO
@@ -1416,32 +1421,35 @@ namespace ft
     typename binary_search_tree<T, Compare, Allocator>::node_type_ptr 
     binary_search_tree<T, Compare, Allocator>::_clone_tree( const binary_search_tree& other, const node_type_ptr& other_root )
     {
-        if ( other_root == other._null ) // or nullptr?
-            return ( this->_null ); // or nullptr?
-        node_type_ptr copy_node = this->_create_node( other_root->_data );
-        ++( this->_size );
-        copy_node->_left = this->_clone_tree( other, other_root->_left );
-        copy_node->_right = this->_clone_tree( other, other_root->_right );
-        return ( copy_node );
-
-        // std::cout << "HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" << std::endl;
-        // // if ( other._base._left == other._null ) // or nullptr?
         // if ( other_root == other._null ) // or nullptr?
         //     return ( this->_null ); // or nullptr?
-        // std::cout << "1" << std::endl;
         // node_type_ptr copy_node = this->_create_node( other_root->_data );
-        // std::cout << "2" << std::endl;
+        // // std::cout << " in clone tree " << std::endl; // TPO
+        // ++( this->_size );
         // copy_node->_left = this->_clone_tree( other, other_root->_left );
-        // std::cout << "3" << std::endl;
-        // if ( copy_node->_left->_left != nullptr )
-        //     copy_node->_left->_parent = copy_node;        
-        // std::cout << "4" << std::endl;
         // copy_node->_right = this->_clone_tree( other, other_root->_right );
-        // std::cout << "5" << std::endl;
-        // if ( copy_node->_right->_right != nullptr )
-        //     copy_node->_right->_parent = copy_node;
-        // std::cout << "WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT" << std::endl;
+        //     // std::cout << "this->_size _clone_tree = " << this->_size << std::endl; // TPO
+        //     // std::cout << "other.size() _clone_tree = " << other._size << std::endl; // TPO
         // return ( copy_node );
+
+        // std::cout << "HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" << std::endl;
+        // if ( other._base._left == other._null ) // or nullptr?
+        if ( other_root == other._null ) // or nullptr?
+            return ( this->_null ); // or nullptr?
+        // std::cout << "1" << std::endl;
+        node_type_ptr copy_node = this->_create_node( other_root->_data );
+        // std::cout << "2" << std::endl;
+        copy_node->_left = this->_clone_tree( other, other_root->_left );
+        // std::cout << "3" << std::endl;
+        if ( copy_node->_left->_left != nullptr )
+            copy_node->_left->_parent = copy_node;        
+        // std::cout << "4" << std::endl;
+        copy_node->_right = this->_clone_tree( other, other_root->_right );
+        // std::cout << "5" << std::endl;
+        if ( copy_node->_right->_right != nullptr )
+            copy_node->_right->_parent = copy_node;
+        // std::cout << "WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAT" << std::endl;
+        return ( copy_node );
     }
 
     template <typename T, typename Compare, typename Allocator>
@@ -1470,7 +1478,7 @@ namespace ft
         if (rootptr == this->_null)
             std::cout << " null\033[37m\n";
         else
-            std::cout << " " << rootptr->_data.first << "\033[37m\n";
+            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
             // std::cout << " " << rootptr->_data << "\033[37m" << "───┤\n";
 
         _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
