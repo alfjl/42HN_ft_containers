@@ -952,8 +952,16 @@ namespace ft
     {
         node_type_ptr node = position.base();
 
+        std::cout << "TEEEEEEEEEEEEESSSSSSSSSSSSST" << std::endl;
         if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
             return ;
+        if ( node == this->_begin_node ) // correct '_begin_node'
+        {
+            if ( node->_right->_right != nullptr )
+                this->_begin_node = tree_min<T>( node->_right );
+            else
+                this->_begin_node = this->_begin_node->_parent;
+        }
         if ( node->_left == this->_null )
             this->_transplant( node, node->_right );
         else if ( node->_right == this->_null )
@@ -971,13 +979,8 @@ namespace ft
             replacement->_left = node->_left;
             replacement->_left->_parent = replacement;
         }
-        if ( this->_begin_node == node ) // correct '_begin_node'
-        {
-            if ( node->_right->_right != nullptr )
-                this->_begin_node = tree_min<T>( node->_right );
-            else
-                this->_begin_node = node->_parent;
-        }
+
+        // std::cout << "this->_begin_node = " << this->_begin_node->_data.first << std::endl; // TPO
         this->destroy_node( node ); // should catch the this->_null in the first if statement
         --( this->_size );
     }
@@ -1003,25 +1006,40 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::swap( binary_search_tree& x )
     {
+        // if ( this != &x )
+        // {
+        //     ft::swap( this->_base, x._base );
+        //     ft::swap( this->_null, x._null );
+        //     ft::swap( this->_root, x._root );
+        //     if ( this->_root != nullptr ) // TASK: change to swap() between this and x.
+        //     {
+        //         this->_root->_parent = &this->_base;
+        //         this->_base._left = this->_root;
+        //     }
+        //     if ( x._root != nullptr ) // TASK: change to swap() between this and x.
+        //     {
+        //         x._root->_parent = &x._base;
+        //         x._base._left = x._root;
+        //     }
+        //     ft::swap( this->_begin_node, x._begin_node );
+        //     ft::swap( this->_compare, x._compare );
+        //     ft::swap( this->_allocator, x._allocator );
+        //     ft::swap( this->_size, x._size );
+        // }
+
         if ( this != &x )
         {
-            ft::swap( this->_base, x._base );
-            ft::swap( this->_null, x._null );
-            ft::swap( this->_root, x._root );
-            if ( this->_root != nullptr )
-            {
-                this->_root->_parent = &this->_base;
-                this->_base._left = this->_root;
-            }
-            if ( x._root != nullptr )
-            {
-                x._root->_parent = &x._base;
-                x._base._left = x._root;
-            }
             ft::swap( this->_begin_node, x._begin_node );
-            ft::swap( this->_compare, x._compare );
-            ft::swap( this->_allocator, x._allocator );
+            ft::swap( this->_base._left, x._base._left );
             ft::swap( this->_size, x._size );
+            if ( this->_size != 0 && x._size != 0)
+                ft::swap( this->_base._left->_parent, x._base._left->_parent );
+            else if ( this->_size != 0 )
+                this->_base._left->_parent = &this->_base;
+            else if ( x._size != 0 )
+                x._base._left->_parent = &x._base;
+            ft::swap( this->_compare, x._compare );
+            // ft::swap( this->_allocator, x._allocator );
         }
     }
 
@@ -1088,13 +1106,13 @@ namespace ft
 
         while ( rootptr != this->_null )
         {
-            if ( this->_compare( rootptr->_data, value ) )
+            if ( !( this->_compare( rootptr->_data, value ) ) )
             {
                 position = rootptr;
-                rootptr = rootptr->_right;
+                rootptr = rootptr->_left;
             }
             else
-                rootptr = rootptr->_left;
+                rootptr = rootptr->_right;
         }
         // return ( this->_make_iter( position ) );
         return ( iterator( position ) );
@@ -1129,13 +1147,13 @@ namespace ft
 
         while ( rootptr != this->_null )
         {
-            if ( this->_compare( rootptr->_data, value ) )
+            if ( !( this->_compare( rootptr->_data, value ) ) )
             {
                 position = rootptr;
-                rootptr = rootptr->_right;
+                rootptr = rootptr->_left;
             }
             else
-                rootptr = rootptr->_left;
+                rootptr = rootptr->_right;
         }
         // return ( this->_make_iter( position ) );
         return ( const_iterator( position ) );
