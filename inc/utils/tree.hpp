@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream> // only for debug_print()
+// #include <iostream> // only for debug_print()
 #include <memory>
 
 #include "./iterator.hpp"
@@ -475,7 +475,6 @@ namespace ft
         return ( !( lhs == rhs ) );
     }
 
-
     /* ------------------------ Tree Const Iterator -------------------------- */
 
     /*
@@ -628,13 +627,37 @@ namespace ft
     /* tree_const_iterator non-member functions */
 
     template <typename ConstNodePtr, typename T>
-    bool operator==( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
+    inline bool operator==( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
     {
         return ( lhs.base() == rhs.base() );
     }
 
     template <typename ConstNodePtr, typename T>
-    bool operator!=( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
+    inline bool operator!=( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
+    template <typename ConstNodePtr, typename NodePtr, typename T>
+    inline bool operator==( const tree_iterator<NodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
+
+    template <typename ConstNodePtr, typename NodePtr, typename T>
+    inline bool operator!=( const tree_iterator<NodePtr, T>& lhs, const tree_const_iterator<ConstNodePtr, T>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
+        template <typename ConstNodePtr, typename NodePtr, typename T>
+    inline bool operator==( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_iterator<NodePtr, T>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
+
+    template <typename ConstNodePtr, typename NodePtr, typename T>
+    inline bool operator!=( const tree_const_iterator<ConstNodePtr, T>& lhs, const tree_iterator<NodePtr, T>& rhs )
     {
         return ( !( lhs == rhs ) );
     }
@@ -1525,14 +1548,6 @@ namespace ft
     inline typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::_make_iter( const_node_type_ptr ptr ) const
     {
         return ( const_iterator( ptr ) );
-    }
-
-    /* binary_search_tree non-member functions */
-
-    template < typename T, typename Compare, typename Allocator>
-    void swap( const ft::binary_search_tree<T, Compare, Allocator>& lhs, const ft::binary_search_tree<T, Compare, Allocator>& rhs )
-    {
-        lhs.swap( rhs );
     }
 
 

@@ -239,6 +239,30 @@ namespace ft
         return ( !( lhs == rhs ) );
     }
 
+    template <typename TreeIterator, typename TreeIterator2>
+    bool operator==( const map_iterator<TreeIterator2>& lhs, const map_const_iterator<TreeIterator>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
+
+    template <typename TreeIterator, typename TreeIterator2>
+    bool operator!=( const map_iterator<TreeIterator2>& lhs, const map_const_iterator<TreeIterator>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
+    template <typename TreeIterator, typename TreeIterator2>
+    bool operator==( const map_const_iterator<TreeIterator>& lhs, const map_iterator<TreeIterator2>& rhs )
+    {
+        return ( lhs.base() == rhs.base() );
+    }
+
+    template <typename TreeIterator, typename TreeIterator2>
+    bool operator!=( const map_const_iterator<TreeIterator>& lhs, const map_iterator<TreeIterator2>& rhs )
+    {
+        return ( !( lhs == rhs ) );
+    }
+
 
     /* --------------------------------- map --------------------------------- */
 
@@ -684,7 +708,7 @@ namespace ft
 
 
     template <typename Key, typename T, typename Compare, typename Alloc>
-    void swap( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs )
+    void swap( ft::map<Key,T,Compare,Alloc>& lhs, ft::map<Key,T,Compare,Alloc>& rhs )
     {
         lhs.swap( rhs );
     }
