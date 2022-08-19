@@ -1114,29 +1114,7 @@ namespace ft
             else
                 rootptr = rootptr->_right;
         }
-        // return ( this->_make_iter( position ) );
         return ( iterator( position ) );
-
-        // test version: results do not look promising
-        // node_type_ptr       rootptr = this->_root;
-        // node_type_ptr       position = const_cast<node_type_ptr>( &this->_base );
-
-        // while ( rootptr != this->_null )
-        // {
-        //     if ( this->_compare( rootptr->_data, value ) )
-        //     {
-        //         position = rootptr;
-        //         rootptr = rootptr->_right;
-        //     }
-        //     else if ( this->_compare( value, rootptr->_data ))
-        //     {
-        //         position = rootptr;
-        //         rootptr = rootptr->_left;
-        //     }
-        //     else
-        //         break ;
-        // }
-        // return ( this->_make_iter( position ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1155,7 +1133,6 @@ namespace ft
             else
                 rootptr = rootptr->_right;
         }
-        // return ( this->_make_iter( position ) );
         return ( const_iterator( position ) );
     }
 
@@ -1175,7 +1152,7 @@ namespace ft
             else
                 rootptr = rootptr->_right;
         }
-        return ( this->_make_iter( position ) );
+        return ( iterator( position ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1194,7 +1171,7 @@ namespace ft
             else
                 rootptr = rootptr->_right;
         }
-        return ( this->_make_iter( position ) );
+        return ( const_iterator( position ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
