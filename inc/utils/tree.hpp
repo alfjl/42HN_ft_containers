@@ -731,7 +731,7 @@ namespace ft
         const_iterator upper_bound( const value_type& value ) const;
         ft::pair<iterator,iterator> equal_range( const value_type& value );
         ft::pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
-        void debug_print(); // only for debugging purposes
+        void debug_print() const; // only for debugging purposes
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
@@ -744,7 +744,7 @@ namespace ft
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
         node_type_ptr _clone_tree( const binary_search_tree& other, const node_type_ptr& other_root );
-        void _debug_print_recursive_inverted( node_type_ptr& rootptr, int level, bool is_right );
+        void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;
         node_type_ptr _create_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
@@ -952,7 +952,6 @@ namespace ft
     {
         node_type_ptr node = position.base();
 
-        std::cout << "TEEEEEEEEEEEEESSSSSSSSSSSSST" << std::endl;
         if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
             return ;
         if ( node == this->_begin_node ) // correct '_begin_node'
@@ -1000,7 +999,8 @@ namespace ft
     void binary_search_tree<T, Compare, Allocator>::erase( iterator first, iterator last )
     {
         while ( first != last )
-            first = this->erase( first );
+            this->erase( first++ );
+            // first = this->erase( first );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1245,7 +1245,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::debug_print()
+    void binary_search_tree<T, Compare, Allocator>::debug_print() const
     {
         _debug_print_recursive_inverted( this->_root, 0, false );
     }
@@ -1395,7 +1395,11 @@ namespace ft
     void binary_search_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
     {
         if ( old_subtree->_parent == &this->_base )
+        {
             this->_root = new_subtree;
+            this->_root->_parent = &this->_base; // do I need this here explicitly? Or is the last line of the code enough?
+            this->_root->_parent->_left = new_subtree;
+        }
         else if ( old_subtree == old_subtree->_parent->_left )
             old_subtree->_parent->_left = new_subtree;
         else
@@ -1448,7 +1452,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( node_type_ptr& rootptr, int level, bool is_right )
+    void binary_search_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
     {
         //INVERTED for better human readability
         // if ( rootptr == &this->_null )
