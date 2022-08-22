@@ -1304,8 +1304,11 @@ namespace ft
         // std::cout << "_tcreate_null()" << std::endl; // TPO
         // pointer null_data = this->_allocator.allocate( 1 );
         // this->_allocator.construct( null_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+
         this->_null = this->_node_allocator.allocate( 1 );
-        this->_node_allocator.construct( this->_null );
+        // this->_node_allocator.construct( this->_null );
+        this->_node_allocator.construct( this->_null, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+
         // this->_node_allocator.construct( this->_null, node_type( value_type( typename value_type::first_type(), typename value_type::second_type() ) ) );
         // this->_allocator.construct( this->_null->_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
         // this->_null->_data = null_data;
@@ -1550,6 +1553,11 @@ namespace ft
         return ( const_iterator( ptr ) );
     }
 
+    template <typename T, typename Compare, typename Allocator>
+    void swap( binary_search_tree<T, Compare, Allocator>& lhs, binary_search_tree<T, Compare, Allocator>& rhs )
+    {
+        lhs.swap( rhs );
+    }
 
     /* --------------------------- Red Black Tree ---------------------------- */
 
