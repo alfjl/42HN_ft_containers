@@ -142,7 +142,7 @@ namespace ft
     public:
         tree_node();
         tree_node( const value_type& value );
-        tree_node( const value_type* value, node_state &colour, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr );
+        tree_node( const value_type value, node_state &colour, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr ); // TASK: Find out if still needed, or can be deletet
         tree_node( const tree_node& other);
         ~tree_node();
 
@@ -163,13 +163,20 @@ namespace ft
     tree_node<T>::tree_node( const value_type& value ) : _data( value ), _colour( BLACK ), _parent( nullptr ), _left( nullptr ), _right( nullptr ) {}
 
     template <typename T>
-    tree_node<T>::tree_node( const value_type* value, node_state& colour, node_ptr parent, node_ptr left, node_ptr right )
+    tree_node<T>::tree_node( const value_type value, node_state& colour, node_ptr parent, node_ptr left, node_ptr right )
     : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
 
+    // template <typename T>
+    // tree_node<T>::tree_node( const tree_node& other) : _data(), _colour( BLACK ), _parent(), _left(), _right()
+    // {
+    //     *this = other;
+    // }
+
     template <typename T>
-    tree_node<T>::tree_node( const tree_node& other) : _data(), _colour( BLACK ), _parent(), _left(), _right()
+    tree_node<T>::tree_node( const tree_node& other) : _data( other._data ), _colour( other._colour ), _parent( other._parent ), _left( other._left ), _right( other._right )
     {
-        *this = other;
+        // std::cout << " copy constr of node " << std::endl; // TPO
+        // *this = other;
     }
 
     template <typename T>
@@ -178,6 +185,7 @@ namespace ft
     template <typename T>
     tree_node<T>& tree_node<T>::operator=( const tree_node& src )
     {
+        // std::cout << "---------- operator= of node ----------" << std::endl; // TPO
         if ( this != &src )
         {
             this->_colour = src._colour;
@@ -186,7 +194,7 @@ namespace ft
             this->_left = src._left;
             this->_right = src._right;
         }
-        return ( *this );
+        return ( *( this ) );
     }
 
     /* private */
@@ -211,16 +219,22 @@ namespace ft
         //     nodeptr = nodeptr->_left;
         // return ( nodeptr );
 
-        while ( nodeptr->_left->_left != nullptr ) // equals this->_null
+        // while ( nodeptr->_left->_left != nullptr ) // equals this->_null
+        while ( nodeptr != nullptr && nodeptr->_left->_left != nullptr ) // equals this->_null
+        { // TPO
             nodeptr = nodeptr->_left;
+        } // TPO
         return ( nodeptr );
     }
 
     template <typename T>
     typename tree_node<T>::const_node_ptr tree_min( typename tree_node<T>::const_node_ptr nodeptr )
     {
-        while ( nodeptr->_left->_left != nullptr ) // equals this->_null
+        // while ( nodeptr->_left->_left != nullptr ) // equals this->_null
+        while ( nodeptr != nullptr || nodeptr->_left->_left != nullptr ) // equals this->_null
+        { // TPO
             nodeptr = nodeptr->_left;
+        } // TPO
         return ( nodeptr );
     }
 
@@ -789,9 +803,26 @@ namespace ft
     //     *this = src;
     // }
 
-    template < typename T, typename Compare, typename Allocator>
+    // template < typename T, typename Compare, typename Allocator>
+    // binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare& comp, const allocator_type& alloc ) 
+    // : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
+    // {
+    //     // this->_null = this->_node_allocator.allocate( 1 );
+    //     // // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
+    //     // this->_allocator.construct( &this->_null->_data, value_type(typename value_type::first_type(), typename value_type::second_type() ) );
+    //     // this->_null->_colour = BLACK; // RED for Red Black Tree
+    //     // this->_null->_parent = nullptr;
+    //     // this->_null->_left = nullptr;
+    //     // this->_null->_right = nullptr;
+    //     _tcreate_null();
+    //     this->_root = this->_null;
+    //     this->_base._left = this->_null;
+    //     this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+    // }
+
+   template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare& comp, const allocator_type& alloc ) 
-    : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
+    : _base(), _begin_node(&this->_base), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
     {
         // this->_null = this->_node_allocator.allocate( 1 );
         // // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
@@ -800,15 +831,35 @@ namespace ft
         // this->_null->_parent = nullptr;
         // this->_null->_left = nullptr;
         // this->_null->_right = nullptr;
+        // std::cout << " default constr in tree " << std::endl; // TPO
         _tcreate_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
-        this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+        this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
     }
+
+    // template < typename T, typename Compare, typename Allocator>
+    // binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
+    // : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare( src._compare ), _allocator( src._allocator ), _node_allocator( src._node_allocator ), _size( 0 )
+    // {
+    //     // this->_null = this->_node_allocator.allocate( 1 );
+    //     // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
+    //     // this->_allocator.construct( &this->_null->_data, value_type(typename value_type::first_type(), typename value_type::second_type() ) );
+    //     // this->_null->_colour = BLACK; // RED for Red Black Tree
+    //     // this->_null->_parent = nullptr;
+    //     // this->_null->_left = nullptr;
+    //     // this->_null->_right = nullptr;
+    //     // std::cout << "---------- copy constr of tree ----------" << std::endl; // TPO
+    //     _tcreate_null();
+    //     this->_root = this->_null;
+    //     this->_base._left = this->_null;
+    //     this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+    //     *( this ) = src;
+    // }
 
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
-    : _base(), _root( nullptr ), _null( nullptr ), _begin_node(nullptr), _compare( src._compare ), _allocator( src._allocator ), _node_allocator( src._node_allocator ), _size( 0 )
+    : _base(), _begin_node(&this->_base), _compare( src._compare ), _allocator( src._allocator ), _node_allocator( src._node_allocator ), _size( src._size )
     {
         // this->_null = this->_node_allocator.allocate( 1 );
         // this->_allocator.construct( &this->_null->_data, ft::make_pair(0, 0) );
@@ -817,11 +868,19 @@ namespace ft
         // this->_null->_parent = nullptr;
         // this->_null->_left = nullptr;
         // this->_null->_right = nullptr;
+        // std::cout << "---------- copy constr of tree ----------" << std::endl; // TPO
         _tcreate_null();
         this->_root = this->_null;
         this->_base._left = this->_null;
-        this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
-        *( this ) = src;
+        this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+        if ( src._base._left != nullptr )
+        {
+            this->_root = this->_clone_tree( src, src._root );
+            this->_base._left = this->_root;
+            this->_root->_parent = &this->_base;
+            this->_begin_node = tree_min<T>( this->_root );
+        }
+        // *( this ) = src;
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -841,6 +900,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>& binary_search_tree<T, Compare, Allocator>::operator=( const binary_search_tree& other )
     {
+        // std::cout << "---------- operator= of tree ----------" << std::endl; // TPO
         if ( this != &other )
         {
             this->clear();
@@ -848,15 +908,16 @@ namespace ft
             this->_node_allocator = other._node_allocator;
             this->_compare = other._compare;
             if ( other._root != other._null ) // or nullptr?
+            {
                 this->_root = this->_clone_tree( other, other._root );
+                this->_begin_node = tree_min<T>( this->_root );
+            }
+            // this->debug_print();
             this->_size = other._size;
             this->_base._left = this->_root;
             this->_root->_parent = &this->_base;
             // this->_begin_node = other._begin_node; // or:
             // this->debug_print();
-            // std::cout << " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! IN HERE !!!!!!!!!!!!!!!!!!!!!!!)" << std::endl; // TPO
-            this->_begin_node = tree_min<T>( this->_root );
-            // std::cout << " ((((((((((((((((((((((((())))))))))))))))))))))))) IN HERE ))))))))))))))))))))))))))))))))))))))))" << std::endl; // TPO
         }
         // this->_null and this->_base don't need to be copied
         return ( *( this ) );
@@ -1069,16 +1130,14 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
-        // std::cout << "----------in clear in tree ----------" << std::endl; // TPO
+            // std::cout << "IN H((((((((((((((((((((((((((((((((ERE!" << std::endl; // TPO
         if ( this->_base._left != this->_null )
         {
             _clear( this->_root );
-            // std::cout << "----------in clear after _clear in tree ----------" << std::endl; // TPO
             this->_root = this->_null;
             this->_base._left = this->_null;
-            this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '&_base', if tree is empty
         }
-            // std::cout << "---------- LEAVING in clear in tree ----------" << std::endl; // TPO
+        this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '&_base', if tree is empty
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1305,9 +1364,12 @@ namespace ft
         // pointer null_data = this->_allocator.allocate( 1 );
         // this->_allocator.construct( null_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
 
+        // this verison WORKED so far in other tester!!!!!!
         this->_null = this->_node_allocator.allocate( 1 );
         // this->_node_allocator.construct( this->_null );
-        this->_node_allocator.construct( this->_null, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
+        this->_node_allocator.construct( this->_null, value_type() );
+        // this->_node_allocator.construct( this->_null, ft::make_pair( typename value_type::first_type(), typename value_type::second_type() ) );
+        // this->_node_allocator.construct( this->_null, tree_node<value_type>( ft::make_pair( typename value_type::first_type(), typename value_type::second_type() ) ) );
 
         // this->_node_allocator.construct( this->_null, node_type( value_type( typename value_type::first_type(), typename value_type::second_type() ) ) );
         // this->_allocator.construct( this->_null->_data, value_type( typename value_type::first_type(), typename value_type::second_type() ) );
