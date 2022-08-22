@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <stdexcept>
 
 #include "utils/type_traits.hpp"
 #include "utils/iterator.hpp"
@@ -381,6 +382,8 @@ namespace ft
 
         // Element access:
         mapped_type& operator[]( const key_type& k );
+        mapped_type& at (const key_type& k);
+        const mapped_type& at (const key_type& k) const;
 
         // Modifiers:
         ft::pair<iterator,bool> insert( const value_type& val ); // single element
@@ -435,7 +438,9 @@ namespace ft
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::map( const map& src ) // copy constructor
-    : tree( src.tree ) {}
+    : tree( src.tree ) {
+        // std::cout << "---------- copy constr of map ----------" << std::endl; // TPO
+    }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::~map() {} // destructor
@@ -443,6 +448,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>& map<Key,T,Compare,Alloc>::operator=( const map& other ) // assignment operator
     {
+        // std::cout << "---------- operator= of map ----------" << std::endl; // TPO
         if ( this != &other )
         {
             this->tree = other.tree;
@@ -530,6 +536,27 @@ namespace ft
         iterator position = this->insert( ft::make_pair( k, mapped_type() ) ).first;
         return ( ( *( position ) ).second );
     }
+
+    template <typename Key, typename T, typename Compare, typename Alloc>
+    typename map<Key,T,Compare,Alloc>::mapped_type& map<Key,T,Compare,Alloc>::at (const key_type& k)
+    {
+        iterator position = this->find( k );
+
+        if ( position.base() == this->tree.end() )
+            throw std::out_of_range( "ft::map" );
+        return ( ( *( position ) ).second );
+    }
+
+    template <typename Key, typename T, typename Compare, typename Alloc>
+    const typename map<Key,T,Compare,Alloc>::mapped_type& map<Key,T,Compare,Alloc>::at (const key_type& k) const
+    {
+        const_iterator position = this->find( k );
+
+        if ( position.base() == this->tree.end() )
+            throw std::out_of_range( "ft::map" );
+        return ( ( *( position ) ).second );
+    }
+
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     ft::pair<typename map<Key,T,Compare,Alloc>::iterator,bool> map<Key,T,Compare,Alloc>::insert( const value_type& val ) // single element
