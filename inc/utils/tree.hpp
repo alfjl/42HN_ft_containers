@@ -49,7 +49,6 @@ namespace ft
     public:
         tree_node();
         tree_node( const value_type& value );
-        tree_node( const value_type value, node_state &colour, node_ptr parent = nullptr, node_ptr left = nullptr, node_ptr right = nullptr ); // TASK: Find out if still needed, or can be deletet
         tree_node( const tree_node& other);
         ~tree_node();
 
@@ -68,10 +67,6 @@ namespace ft
 
     template <typename T>
     tree_node<T>::tree_node( const value_type& value ) : _data( value ), _colour( BLACK ), _parent( nullptr ), _left( nullptr ), _right( nullptr ) {}
-
-    template <typename T>
-    tree_node<T>::tree_node( const value_type value, node_state& colour, node_ptr parent, node_ptr left, node_ptr right )
-    : _data( value ), _colour( colour ), _parent( parent ), _left( left ), _right( right ) {}
 
     template <typename T>
     tree_node<T>::tree_node( const tree_node& other) : _data( other._data ), _colour( other._colour ), _parent( other._parent ), _left( other._left ), _right( other._right ) {}
@@ -743,12 +738,12 @@ namespace ft
         // if the element is smaller than 'value', and the successor bigger, insert here.
 
         // old/wrong version
-        // if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
+        // if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) )
         //     return ( this->_insert( position.base(), value ).first );
         // return ( this->_insert( _base._left, value ).first );
 
 
-        if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) ) // TASK: umschreiben, sodass er auf die Erklaerung eine Zeile drueber passt!
+        if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) )
             return ( this->_insert( position.base(), value ).first );
         return ( this->_insert( _base._left, value ).first );
     }
