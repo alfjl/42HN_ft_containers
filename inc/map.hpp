@@ -443,7 +443,9 @@ namespace ft
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
-    map<Key,T,Compare,Alloc>::~map() {} // destructor
+    map<Key,T,Compare,Alloc>::~map() {
+                // std::cout << " ---------- DESTR MAP ---------- " << std::endl; // TPO
+    } // destructor
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>& map<Key,T,Compare,Alloc>::operator=( const map& other ) // assignment operator
@@ -603,7 +605,9 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::swap( map& x )
     {
+                // std::cout << " ---------- xxxx ---------- " << std::endl; // TPO
         this->tree.swap( x.tree );
+                // std::cout << " ---------- xxxxb ---------- " << std::endl; // TPO
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>

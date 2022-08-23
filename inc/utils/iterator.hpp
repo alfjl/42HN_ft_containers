@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/16 16:17:55 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/22 15:23:06 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,19 @@ namespace ft
 
     /* ---------------------------- iterator_tags --------------------------- */
 
-    struct input_iterator_tag  {};
-    struct output_iterator_tag {};
-    struct forward_iterator_tag       : public input_iterator_tag         {};
-    struct bidirectional_iterator_tag : public forward_iterator_tag       {};
-    struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+    // struct input_iterator_tag  {};
+    // struct output_iterator_tag {};
+    // struct forward_iterator_tag       : public input_iterator_tag         {};
+    // struct bidirectional_iterator_tag : public forward_iterator_tag       {};
+    // struct random_access_iterator_tag : public bidirectional_iterator_tag {};
     
-    // // if user wants to use 'input_iterator', std::typedefs need to be used
-    // // instead of self defined iterator_tags
-    // typedef std::output_iterator_tag			output_iterator_tag;
-    // typedef std::input_iterator_tag			input_iterator_tag;
-    // typedef std::forward_iterator_tag		forward_iterator_tag;
-    // typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
-    // typedef std::random_access_iterator_tag	random_access_iterator_tag;
+    // if user wants to use 'input_iterator', std::typedefs need to be used
+    // instead of self defined iterator_tags
+    typedef std::output_iterator_tag			output_iterator_tag;
+    typedef std::input_iterator_tag			input_iterator_tag;
+    typedef std::forward_iterator_tag		forward_iterator_tag;
+    typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
+    typedef std::random_access_iterator_tag	random_access_iterator_tag;
 
     /* ------------------------------ iterator ------------------------------ */
 

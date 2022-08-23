@@ -1,6 +1,5 @@
 #pragma once
 
-// #include <iostream> // only for debug_print()
 #include <memory>
 
 #include "./iterator.hpp"
@@ -180,7 +179,9 @@ namespace ft
     }
 
     template <typename T>
-    tree_node<T>::~tree_node() {}
+    tree_node<T>::~tree_node() {
+                // std::cout << " ---------- DESTR NODE ---------- " << std::endl; // TPO
+    }
 
     template <typename T>
     tree_node<T>& tree_node<T>::operator=( const tree_node& src )
@@ -833,6 +834,7 @@ namespace ft
         // this->_null->_right = nullptr;
         // std::cout << " default constr in tree " << std::endl; // TPO
         _tcreate_null();
+        // this->_root = this->_null;
         this->_base._left = this->_null;
         this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
     }
@@ -869,6 +871,7 @@ namespace ft
         // this->_null->_right = nullptr;
         // std::cout << "---------- copy constr of tree ----------" << std::endl; // TPO
         _tcreate_null();
+        // this->_root = this->_null;
         this->_base._left = this->_null;
         this->_begin_node = &this->_base; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
         if ( src._base._left != nullptr )
@@ -883,14 +886,21 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     binary_search_tree<T, Compare, Allocator>::~binary_search_tree()
     {
+                // std::cout << " ---------- DESTR TREE ---------- " << std::endl; // TPO
         if (this->_base._left != nullptr) // or: '...!= this->_null'?
         {
+        // this->debug_print(); // TPO
+                // std::cout << " ---------- DESTR TREE 1 ---------- " << std::endl; // TPO
             this->clear();
+                // std::cout << " ---------- DESTR TREE 2 ---------- " << std::endl; // TPO
             this->_base._left = this->_null;
+                // std::cout << " ---------- DESTR TREE 3 ---------- " << std::endl; // TPO
             this->_begin_node = this->_base._left; // TASK: find out, if it has to be '_base->_left', or '_base', if tree is empty
+                // std::cout << " ---------- DESTR TREE 4 ---------- " << std::endl; // TPO
         }
         if (this->_null != nullptr)
             destroy_node( this->_null );
+                // std::cout << " ---------- DESTR TREE 5 ---------- " << std::endl; // TPO
     }
 
 
@@ -1087,9 +1097,66 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::swap( binary_search_tree& x )
     {
+
+        // source code implementation (__tree line 1861):
+        // swap(__begin_node_, __t.__begin_node_);
+        // swap(__pair1_.first(), __t.__pair1_.first());
+        // __swap_allocator(__node_alloc(), __t.__node_alloc());
+        // __pair3_.swap(__t.__pair3_);
+        // if (size() == 0)
+            // __begin_node() = __end_node();
+        // else
+            // __end_node()->__left_->__parent_ = static_cast<__parent_pointer>(__end_node());
+        // if (__t.size() == 0)
+        //     __t.__begin_node() = __t.__end_node();
+        // else
+        //     __t.__end_node()->__left_->__parent_ = static_cast<__parent_pointer>(__t.__end_node());
+        // own implementation:
+        if ( this != &x )
+        {
+            ft::swap( this->_null, x._null );
+            ft::swap( this->_base._left, x._base._left );
+            // ft::swap( this->_root, x._root );
+            ft::swap( this->_begin_node, x._begin_node );
+            ft::swap( this->_node_allocator, x._node_allocator );
+            ft::swap( this->_allocator, x._allocator );
+            ft::swap( this->_compare, x._compare );
+            ft::swap( this->_size, x._size );
+            if ( this->_size == 0 )
+            { // TPO
+                // std::cout << " ---------- 1.1 ---------- " << std::endl; // TPO
+                this->_begin_node = &this->_base;
+                this->_base._left = this->_null;
+                // this->_root = this->_base._left;
+                // std::cout << " ---------- 1.1b ---------- " << std::endl; // TPO
+                // x._root = this->_root;
+            } // TPO
+            else
+            { // TPO
+                // std::cout << " ---------- 1.2 ---------- " << std::endl; // TPO
+                this->_base._left->_parent = &this->_base;
+                // std::cout << " ---------- 1.2b ---------- " << std::endl; // TPO
+            } // TPO
+            if ( x._size == 0 )
+            { // TPO
+                // std::cout << " ---------- 2.1 ---------- " << std::endl; // TPO
+                x._begin_node = &x._base;
+                x._base._left = x._null; // necessary here? isn't that handed over above already?
+                // x._root = x._base._left;
+                // std::cout << " ---------- 2.1b ---------- " << std::endl; // TPO
+            } // TPO
+            else
+            { // TPO
+                // std::cout << " ---------- 2.2 ---------- " << std::endl; // TPO
+                x._base._left->_parent = &x._base;
+                // std::cout << " ---------- 2.2b ---------- " << std::endl; // TPO
+            } // TPO
+        }
+
+
         // if ( this != &x )
         // {
-        //     ft::swap( this->_base, x._base );
+        //     // ft::swap( this->_base, x._base );
         //     ft::swap( this->_null, x._null );
         //     ft::swap( this->_root, x._root );
         //     if ( this->_root != nullptr ) // TASK: change to swap() between this and x.
@@ -1108,26 +1175,79 @@ namespace ft
         //     ft::swap( this->_size, x._size );
         // }
 
-        if ( this != &x )
-        {
-            ft::swap( this->_begin_node, x._begin_node );
-            ft::swap( this->_base._left, x._base._left );
-            ft::swap( this->_size, x._size );
-            if ( this->_size != 0 && x._size != 0)
-                ft::swap( this->_base._left->_parent, x._base._left->_parent );
-            else if ( this->_size != 0 )
-                this->_base._left->_parent = &this->_base;
-            else if ( x._size != 0 )
-                x._base._left->_parent = &x._base;
-            ft::swap( this->_compare, x._compare );
-            // ft::swap( this->_allocator, x._allocator );
-        }
+        // if ( this != &x )
+        // {
+        //     std::cout << "IN H((((((((((((((((((((((((((((((((ERE!" << std::endl; // TPO
+        //     ft::swap( this->_size, x._size );
+        //     if ( this->_size != 0 && x._size != 0)
+        //     { // TPO
+        //     std::cout << " ---------- 1.1 ---------- " << std::endl; // TPO
+        //         ft::swap( this->_base._left, x._base._left );
+        //         ft::swap( this->_base._left->_parent, x._base._left->_parent );
+        //         ft::swap( this->_begin_node, x._begin_node );
+        //     std::cout << " ---------- 1.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     else if ( this->_size != 0 )
+        //     { // TPO
+        //     std::cout << " ---------- 2.1 ---------- " << std::endl; // TPO
+        //         ft::swap( this->_base._left, x._base._left );
+        //         this->_base._left->_parent = &this->_base;
+        //         x._base._left = x._null;
+        //         ft::swap( this->_begin_node, x._begin_node );
+        //         x._begin_node = &x._base;
+        //     std::cout << " ---------- 2.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     else if ( x._size != 0 )
+        //     { // TPO
+        //     std::cout << " ---------- 3.1 ---------- " << std::endl; // TPO
+        //         x._base._left->_parent = &x._base;
+        //         this->_begin_node = &this->_base;
+        //     std::cout << " ---------- 3.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     ft::swap( this->_compare, x._compare );
+        //     // ft::swap( this->_allocator, x._allocator );
+        //     std::cout << " ---------- 4 ---------- " << std::endl; // TPO
+        // }
+    
+        // if ( this != &x )
+        // {
+        //     std::cout << "IN H((((((((((((((((((((((((((((((((ERE!" << std::endl; // TPO
+        //     ft::swap( this->_begin_node, x._begin_node );
+        //     ft::swap( this->_base._left, x._base._left );
+        //     // ft::swap( this->_root, x._root );
+        //     ft::swap( this->_size, x._size );
+        //     if ( this->_size != 0 && x._size != 0)
+        //     { // TPO
+        //     std::cout << " ---------- 1.1 ---------- " << std::endl; // TPO
+        //         // ft::swap( this->_base._left, x._base._left );
+        //         ft::swap( this->_base._left->_parent, x._base._left->_parent );
+        //         ft::swap( this->_begin_node, x._begin_node );
+        //         ft::swap( this->_size, x._size );
+        //     std::cout << " ---------- 1.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     else if ( this->_size != 0 )
+        //     { // TPO
+        //     std::cout << " ---------- 2.1 ---------- " << std::endl; // TPO
+        //         this->_base._left->_parent = &this->_base;
+        //         x._base._left = x._null;
+        //     std::cout << " ---------- 2.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     else if ( x._size != 0 )
+        //     { // TPO
+        //     std::cout << " ---------- 3.1 ---------- " << std::endl; // TPO
+        //         x._base._left->_parent = &x._base;
+        //         this->_begin_node = &this->_base;
+        //     std::cout << " ---------- 3.2 ---------- " << std::endl; // TPO
+        //     } // TPO
+        //     ft::swap( this->_compare, x._compare );
+        //     // ft::swap( this->_allocator, x._allocator );
+        //     std::cout << " ---------- 4 ---------- " << std::endl; // TPO
+        // }
     }
 
     template < typename T, typename Compare, typename Allocator>
     void binary_search_tree<T, Compare, Allocator>::clear()
     {
-            // std::cout << "IN H((((((((((((((((((((((((((((((((ERE!" << std::endl; // TPO
         if ( this->_base._left != this->_null )
         {
             _clear( this->_base._left );
@@ -1589,14 +1709,20 @@ namespace ft
         // std::cout << "rootptr->_data->first = " << rootptr->_data.first << "  second: " << rootptr->_data.second << std::endl; // TPO
         if ( rootptr != this->_null )
         {
+                // std::cout << " ---------- _CLEAR 1 ---------- " << std::endl; // TPO
             if ( rootptr->_left != this->_null )
                 _clear( rootptr->_left );
+                // std::cout << " ---------- _CLEAR 2 ---------- " << std::endl; // TPO
             if  ( rootptr->_right != this->_null )
                 _clear( rootptr->_right );
+                // std::cout << " ---------- _CLEAR 3 ---------- " << std::endl; // TPO
             destroy_node( rootptr );
-            --( this->_size );
+                // std::cout << " ---------- _CLEAR 4 ---------- " << std::endl; // TPO
+            // --( this->_size );
+                // std::cout << " ---------- _CLEAR 5 ---------- " << std::endl; // TPO
             rootptr = this->_null;
         }
+        this->_size = 0;
     }
 
     template <typename T, typename Compare, typename Allocator>
