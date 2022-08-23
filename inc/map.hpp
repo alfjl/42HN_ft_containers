@@ -63,14 +63,12 @@ namespace ft
     template <typename TreeIterator>
     typename map_iterator<TreeIterator>::reference map_iterator<TreeIterator>::operator*() const
     {
-        // return ( ite.get_value????? ); // TASK: write function
         return ( *( _tree_iterator ) );
     }
 
     template <typename TreeIterator>
     typename map_iterator<TreeIterator>::pointer map_iterator<TreeIterator>::operator->() const
     {
-        // return ( &( *( _tree_iterator ) ) );
         return ( &( *( _tree_iterator ) ) );
     }
 
@@ -142,11 +140,11 @@ namespace ft
         TreeIterator    _tree_iterator;
 
     public:
-        typedef bidirectional_iterator_tag                  iterator_category;
-        typedef typename TreeIterator::value_type           value_type;
-        typedef typename TreeIterator::difference_type      difference_type;
-        typedef typename TreeIterator::reference            reference;
-        typedef typename TreeIterator::pointer              pointer;
+        typedef bidirectional_iterator_tag                                      iterator_category;
+        typedef typename TreeIterator::value_type                               value_type;
+        typedef typename TreeIterator::difference_type                          difference_type;
+        typedef typename TreeIterator::reference                                reference;
+        typedef typename TreeIterator::pointer                                  pointer;
     
     public:
         map_const_iterator();
@@ -172,13 +170,12 @@ namespace ft
     template<typename TreeIterator>
     map_const_iterator<TreeIterator>::map_const_iterator( TreeIterator ite ) : _tree_iterator( ite ) {}
 
-    template<typename TreeIterator> // TASK: still understand how to implement non_const_iterator here. maybe 'typedef typename tree_iterator::non_const_iterator'
+    template<typename TreeIterator>
     map_const_iterator<TreeIterator>::map_const_iterator( map_iterator<typename TreeIterator::non_const_iterator> other ) : _tree_iterator( other.base() ) {}
 
     template <typename TreeIterator>
     typename map_const_iterator<TreeIterator>::reference map_const_iterator<TreeIterator>::operator*() const
     {
-        // return ( ite.get_value????? ); // TASK: write function
         return ( *( _tree_iterator ) );
     }
 
@@ -281,24 +278,24 @@ namespace ft
     ** Maps are typically implemented as binary search trees.
     */
 
-    template < typename Key,                                                        // map::key_type
-               typename T,                                                          // map::mapped_type
-               typename Compare = ft::less<Key>,                                    // map::key_compare
-               typename Alloc = std::allocator<ft::pair<const Key, T> > >            // map::allocator_type
+    template < typename Key,                                                    // map::key_type
+               typename T,                                                      // map::mapped_type
+               typename Compare = ft::less<Key>,                                // map::key_compare
+               typename Alloc = std::allocator<ft::pair<const Key, T> > >       // map::allocator_type
     class map
     {
     public:
-        typedef Key                                                                 key_type;
-        typedef T                                                                   mapped_type;
-        typedef Compare                                                             key_compare;
-        typedef Alloc                                                               allocator_type;
-        typedef ft::pair<const key_type, mapped_type>                               value_type;
-        typedef typename allocator_type::reference                                  reference;
-        typedef typename allocator_type::const_reference                            const_reference;
-        typedef typename allocator_type::pointer                                    pointer;
-        typedef typename allocator_type::const_pointer                              const_pointer;
-        typedef typename allocator_type::size_type                                  size_type;
-        typedef typename allocator_type::difference_type                            difference_type;
+        typedef Key                                                             key_type;
+        typedef T                                                               mapped_type;
+        typedef Compare                                                         key_compare;
+        typedef Alloc                                                           allocator_type;
+        typedef ft::pair<const key_type, mapped_type>                           value_type;
+        typedef typename allocator_type::reference                              reference;
+        typedef typename allocator_type::const_reference                        const_reference;
+        typedef typename allocator_type::pointer                                pointer;
+        typedef typename allocator_type::const_pointer                          const_pointer;
+        typedef typename allocator_type::size_type                              size_type;
+        typedef typename allocator_type::difference_type                        difference_type;
 
 
         /* -------------------------- value_compare -------------------------- */
@@ -347,13 +344,6 @@ namespace ft
         typedef ft::reverse_iterator<const_iterator>                            const_reverse_iterator;
         // typedef typename iterator_traits<iterator>::difference_type             difference_type;
         // typedef typename std::size_t                                            size_type;
-
-        // Steffens version (without added map_iterator)
-        // public: // iterator types
-        //     typedef typename tree_type::iterator				iterator;
-        //     typedef typename tree_type::const_iterator			const_iterator;
-        //     typedef typename tree_type::reverse_iterator		reverse_iterator;
-        //     typedef typename tree_type::const_reverse_iterator	const_reverse_iterator;
 
         // Constructors / Destructor / Assignment
         explicit map( const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type() ); // default constructor (empty container)
@@ -415,7 +405,7 @@ namespace ft
         allocator_type get_allocator() const;
 
         // Debugging:
-            void debug_print() const; // only for debugging purposes
+        void debug_print() const; // for debugging purposes only! // comment out before hand-in
 
     }; // map
 
@@ -432,25 +422,19 @@ namespace ft
     const allocator_type& alloc ) // range constructor
     : tree( value_compare( comp ), alloc )
     {
-        // std::cout << "----------in range constr of map ----------" << std::endl; // TPO
         this->insert( first, last );
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>::map( const map& src ) // copy constructor
-    : tree( src.tree ) {
-        // std::cout << "---------- copy constr of map ----------" << std::endl; // TPO
-    }
+    : tree( src.tree ) {}
 
     template <typename Key, typename T, typename Compare, typename Alloc>
-    map<Key,T,Compare,Alloc>::~map() {
-                // std::cout << " ---------- DESTR MAP ---------- " << std::endl; // TPO
-    } // destructor
+    map<Key,T,Compare,Alloc>::~map() {} // destructor
 
     template <typename Key, typename T, typename Compare, typename Alloc>
     map<Key,T,Compare,Alloc>& map<Key,T,Compare,Alloc>::operator=( const map& other ) // assignment operator
     {
-        // std::cout << "---------- operator= of map ----------" << std::endl; // TPO
         if ( this != &other )
         {
             this->tree = other.tree;
@@ -569,8 +553,6 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::iterator map<Key,T,Compare,Alloc>::insert( iterator position, const value_type& val ) // with hint
     {
-        // return ( this->tree.insert( position, val ) );
-
         typename base::iterator x = position.base();
 
         return ( this->tree.insert( x, val ) );
@@ -580,7 +562,6 @@ namespace ft
     template <typename InputIterator>
     void map<Key,T,Compare,Alloc>::insert( InputIterator first, InputIterator last ) // range
     {
-        // std::cout << "----------in range insert of map ----------" << std::endl; // TPO
         this->tree.insert( first, last );
     }
 
@@ -605,9 +586,7 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     void map<Key,T,Compare,Alloc>::swap( map& x )
     {
-                // std::cout << " ---------- xxxx ---------- " << std::endl; // TPO
         this->tree.swap( x.tree );
-                // std::cout << " ---------- xxxxb ---------- " << std::endl; // TPO
     }
 
     template <typename Key, typename T, typename Compare, typename Alloc>
@@ -689,7 +668,6 @@ namespace ft
     template <typename Key, typename T, typename Compare, typename Alloc>
     typename map<Key,T,Compare,Alloc>::allocator_type map<Key,T,Compare,Alloc>::get_allocator() const
     {
-        // return ( allocator_type( this->tree.get_allocator() ) ); // Version from STL, or:
         return ( this->tree.get_allocator() );
     }
 
