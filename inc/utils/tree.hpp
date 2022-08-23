@@ -584,6 +584,7 @@ namespace ft
 
     private:
         void _create_null();
+        void _init_root( node_type_ptr &new_node, node_type_ptr &position );
         ft::pair<iterator, bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
@@ -1056,6 +1057,17 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
+    void binary_search_tree<T, Compare, Allocator>::_init_root( node_type_ptr &new_node, node_type_ptr &position )
+    {
+        this->_base._left = new_node;
+        this->_base._left->_parent = &this->_base;
+        this->_base._left->_left = this->_null;
+        this->_base._left->_right = this->_null;
+        position = this->_base._left;
+        this->_begin_node = this->_base._left;
+    }
+
+    template <typename T, typename Compare, typename Allocator>
     ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
         node_type_ptr       position = &this->_base;
@@ -1076,15 +1088,8 @@ namespace ft
             }
         }
         new_node->_parent = position;
-        if ( position == &this->_base ) // empty tree   // TASK: write own "init_root()"-function!
-        {
-            this->_base._left = new_node;
-            this->_base._left->_parent = &this->_base;
-            this->_base._left->_left = this->_null;
-            this->_base._left->_right = this->_null;
-            position = this->_base._left;
-            this->_begin_node = this->_base._left;
-        }
+        if ( position == &this->_base ) // empty tree
+            this->_init_root( new_node, position );
         else if ( this->_compare( new_node->_data, position->_data ) )
         {
             position->_left = new_node;
