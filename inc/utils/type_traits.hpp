@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/04 11:05:58 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 10:00:41 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace   ft
     };
 
 
-    /* ------------------- is_integral / integral_constant ------------------ */
+    /* ------------------- integral_constant / is_integral ------------------ */
 
     template <typename T, T v>
     struct integral_constant

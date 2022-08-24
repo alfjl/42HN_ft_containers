@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:45 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/10 10:51:22 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 10:02:28 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace   ft
 {
 
-    /* -------------------------------- equal -------------------------------- */
+    /* -------------------------------- equal ------------------------------- */
 
     /*
     ** (https://cplusplus.com/reference/algorithm/equal/?kw=equal)
@@ -50,7 +50,7 @@ namespace   ft
     }
 
 
-    /* ------------------------ lexicographical_compare ---------------------- */
+    /* ------------------------ lexicographical_compare --------------------- */
 
     /*
     ** (https://cplusplus.com/reference/algorithm/lexicographical_compare/?kw=lexicographical_compare)
@@ -92,7 +92,7 @@ namespace   ft
     }
 
 
-    /* --------------------------------- copy -------------------------------- */
+    /* --------------------------------- copy ------------------------------- */
 
     /*
     ** (https://cplusplus.com/reference/algorithm/copy/)
