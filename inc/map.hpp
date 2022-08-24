@@ -262,7 +262,7 @@ namespace ft
     }
 
 
-    /* --------------------------------- map --------------------------------- */
+    /* --------------------------------- map -------------------------------- */
 
     /*
     ** (https://cplusplus.com/reference/map/map/)
@@ -298,7 +298,7 @@ namespace ft
         typedef typename allocator_type::difference_type                        difference_type;
 
 
-        /* -------------------------- value_compare -------------------------- */
+        /* -------------------------- value_compare ------------------------- */
 
         /*
         ** (https://en.cppreference.com/w/cpp/container/map/value_compare)
@@ -338,12 +338,12 @@ namespace ft
         base    tree;
 
     public:
-        typedef map_iterator<typename base::iterator>                           iterator;
-        typedef map_const_iterator<typename base::const_iterator>               const_iterator;
-        typedef ft::reverse_iterator<iterator>                                  reverse_iterator;
-        typedef ft::reverse_iterator<const_iterator>                            const_reverse_iterator;
-        // typedef typename iterator_traits<iterator>::difference_type             difference_type;
-        // typedef typename std::size_t                                            size_type;
+        typedef map_iterator<typename base::iterator>                               iterator;
+        typedef map_const_iterator<typename base::const_iterator>                   const_iterator;
+        typedef ft::reverse_iterator<iterator>                                      reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>                                const_reverse_iterator;
+        // typedef typename iterator_traits<iterator>::difference_type              difference_type;
+        // typedef typename std::size_t                                             size_type;
 
         // Constructors / Destructor / Assignment
         explicit map( const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type() ); // default constructor (empty container)

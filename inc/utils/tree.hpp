@@ -14,7 +14,7 @@
 namespace ft
 {
 
-    /* ------------------------------ tree_node ------------------------------- */
+    /* ----------------------------- tree_node ------------------------------ */
 
     /*
     ** A general node template to be used in my implementation of 
@@ -97,7 +97,7 @@ namespace ft
     }
 
 
-    /* ------------------------ tree utility functions ------------------------ */
+    /* ----------------------- tree utility functions ----------------------- */
 
     /*
     ** A collection of useful algorithms and utility functions
@@ -149,7 +149,7 @@ namespace ft
     }
 
 
-    /* --------------------------- Tree Iterator ----------------------------- */
+    /* --------------------------- Tree Iterator ---------------------------- */
 
     /*
     ** A bidirectional_iterator, with typenames NodePtr and T
@@ -299,7 +299,7 @@ namespace ft
     }
 
 
-    /* ------------------------ Tree Const Iterator -------------------------- */
+    /* ------------------------ Tree Const Iterator ------------------------- */
 
     /*
     ** A bidirectional_iterator, with typenames ConstNodePtr and T
@@ -480,7 +480,7 @@ namespace ft
     }
 
 
-    /* ------------------------- Binary Search Tree -------------------------- */
+    /* ------------------------- Binary Search Tree ------------------------- */
 
     /*
     ** (Cormen, Leiserson, Rivest & Stein: 'Introduction to Algorithms' - 3rd Edition, Chapter 12)
@@ -1222,7 +1222,7 @@ namespace ft
         lhs.swap( rhs );
     }
 
-    /* --------------------------- Red Black Tree ---------------------------- */
+    /* --------------------------- Red Black Tree --------------------------- */
 
     /*
     ** (Cormen, Leiserson, Rivest & Stein: 'Introduction to Algorithms' - 3rd Edition, Chapter 13)
