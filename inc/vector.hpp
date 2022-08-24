@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 11:46:45 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 12:29:54 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,10 +454,12 @@ namespace ft
     }
 
     template <typename T, typename Alloc>
-    void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version
+    void vector<T, Alloc>::insert( iterator position, size_type n, const value_type& val ) // fill version // TASK: efficiency should be raised! (2x slower)
     {
         pointer pos = _vmake_pointer( position );
 
+        if ( n <= 0 )
+            return ;
         if ( pos == this->_end )
         {
             for ( size_type i = 0; i < n; i++ )
@@ -486,7 +488,7 @@ namespace ft
     template <typename T, typename Alloc>
     template <class InputIterator>
     void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last,
-                                    typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
+                                    typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version // TASK: efficiency should be raised! (10x slower)
     {
         this->_insert_range( position, first, last, ft::iterator_category( first ) );
     }
