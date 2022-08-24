@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 11:01:16 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 11:10:11 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ namespace ft
     ** (The C++ Standard Library - 2nd Edition / 9.3.3 & 9.5)
     */
 
+    // // if used with std::iterator_category typedefs
     // template <typename InputIterator>
     // inline typename iterator_traits<InputIterator>::difference_type
     // _distance( InputIterator first, InputIterator last, input_iterator_tag )
@@ -126,6 +127,7 @@ namespace ft
     //     return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
     // }
 
+    // if used with ft::iterator_categories
     template <typename InputIterator>
     inline typename iterator_traits<InputIterator>::difference_type
     distance( InputIterator first, InputIterator last )
