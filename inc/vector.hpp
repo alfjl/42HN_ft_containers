@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 11:30:04 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 11:46:45 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ namespace ft
 		typedef ft::random_access_iterator<const value_type>	const_iterator;
         typedef ft::reverse_iterator<iterator>					reverse_iterator;
 	    typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
-        // typedef iterator_traits<iterator>::difference_type	difference_type; // or:
         typedef std::ptrdiff_t									difference_type;
         typedef std::size_t										size_type;
 
@@ -128,8 +127,8 @@ namespace ft
 
     private:
         // Conversions:
-        iterator _make_iter( pointer ptr ); // maybe keep, maybe not (see begin())
-        const_iterator _make_iter( const_pointer ptr ) const; // maybe keep, maybe not (see begin())
+        iterator _make_iter( pointer ptr );
+        const_iterator _make_iter( const_pointer ptr ) const;
         pointer _vmake_pointer(iterator itr);
         const_pointer _vmake_pointer(const_iterator itr) const;
 
@@ -176,18 +175,6 @@ namespace ft
         }
     }
 
-    // typename T, typename Alloc>
-    // template <class InputIterator>
-    // vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc,
-    //                             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type *) : _allocator(alloc), _begin(nullptr), _end(nullptr), _capacity(0) // range constructor
-    // {
-    //     size_type   n = static_cast<size_type>( ft::distance( first, last ) );
-
-    //     this->_end = this->_begin = this->_vallocate( n );
-    //     for ( ; first != last; ++first )
-    //         this->push_back( *first );
-    // }
-
     template <typename T, typename Alloc>
     template <class InputIterator>
     vector<T, Alloc>::vector( InputIterator first, InputIterator last, const allocator_type& alloc,
@@ -229,14 +216,12 @@ namespace ft
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::begin()
     {
-        // return ( _make_iter( this->_begin ) ); // or just:
         return ( iterator( this->_begin ) );
     }
 
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::begin() const
     {
-        // return ( _make_iter( this->_begin ) ); // or just:
         return ( const_iterator( this->_begin ) );
     }
 
@@ -244,14 +229,12 @@ namespace ft
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::end()
     {
-        // return ( _make_iter( this->_end ) ); // or just:
         return ( iterator( this->_end ) );
     }
 
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::const_iterator vector<T, Alloc>::end() const
     {
-        // return ( _make_iter( this->_end ) ); // or just:
         return ( const_iterator( this->_end ) );
     }
 
@@ -352,9 +335,7 @@ namespace ft
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::reference vector<T, Alloc>::operator[]( size_type n )
     {
-        // return ( this->_begin + n ); // wrong: just pointer
         return ( *( this->_begin + n ) );
-        // return ( this->_begin[n] ); // also correct
     }
 
     template <typename T, typename Alloc>
@@ -445,7 +426,6 @@ namespace ft
     {
         if ( !( this->empty() ) )
         {
-            // this->_allocator.destroy( this->back() ); // is reference (return val from back()0 here ok, or do I need to first decrement _end and use this pointer?)
             --this->_end;
             this->_allocator.destroy( this->_end );
         }
@@ -488,10 +468,8 @@ namespace ft
             size_type       old_size = this->size();
             size_type       distance = static_cast<size_type>( ft::distance( this->_begin, pos ) );
 
-            // // resize (so you have the correct capacity, and already the first few elements)
             this->resize( old_size + n );
-            // // push all elements after the position of 'last' in the array
-            // // do it backwards, else some of the values might get overwritten
+
             iterator    temp_first = this->begin() + distance;
             iterator    temp_last = this->begin() + old_size;
             iterator    new_position = this->begin() + old_size + n;
@@ -513,64 +491,17 @@ namespace ft
         this->_insert_range( position, first, last, ft::iterator_category( first ) );
     }
 
-    // template <typename T, typename Alloc>
-    // template <class InputIterator>
-    // void vector<T, Alloc>::insert( iterator position, InputIterator first, InputIterator last,
-    //                                 typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type * ) // range version
-    // {
-        
-    //     InputIterator   temp = first;
-    //     pointer         pos = this->_vmake_pointer( position );
-    //     size_type       n = static_cast<size_type>( ft::distance( first, last ) );
-    //     size_type       distance = static_cast<size_type>( ft::distance( this->_begin, pos ) );
-    //     size_type       old_size = this->size();
-
-    //     if ( first == last )
-    //         return ;
-    //     if ( pos == this->_end )
-    //     {
-    //         for ( ; temp != last; ++temp )
-    //             this->push_back( *( temp ) );
-    //     }
-    //     else
-    //     {
-    //         // // resize (so you have the correct capacity, and already the first few elements)
-    //         this->resize( old_size + n );
-
-    //         // // push all elements after the position of 'last' in the array
-    //         // // do it backwards, else some of the values might get overwritten
-    //         iterator    temp_first = this->begin() + distance;
-    //         iterator    temp_last = this->begin() + old_size;
-    //         iterator    new_position = this->begin() + old_size + n;
-
-    //         while ( temp_last != temp_first )
-	// 	        *( --new_position ) = *( --temp_last );
-
-    //         pos = this->_begin + distance;
-    //         // // // insert the elements of first->last in the array 
-    //         for ( ; first != last; ++first )
-    //         {
-    //             // this->_allocator.construct( pos, *( temp ) );
-    //             *( pos ) = *( first );
-    //             ++pos;
-    //         }
-    //     }
-    // }
-
-
+    // (https://cplusplus.com/reference/vector/vector/erase/)
     // An invalid position or range causes undefined behavior.
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator position )
     {
-        // std::cout << "in erase( pos )" << std::endl; // TPO
         pointer     p = this->_vmake_pointer( position );
 
-        // std::cout << "in erase( pos ): *p = " << *p <<  std::endl; // TPO
         if ( p == ( this->_end - 1 ) )
             this->pop_back();
         else
         {
-        // std::cout << "in erase( pos ): in ELSE statement " << std::endl; // TPO
             for ( pointer it = p; it != this->_end; ++it)
             {
                 this->_allocator.destroy( it );
@@ -582,37 +513,15 @@ namespace ft
         return ( position );
     }
 
+    // (https://cplusplus.com/reference/vector/vector/erase/)
     // Iterators, pointers and references pointing to position (or first) and beyond are invalidated
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::iterator vector<T, Alloc>::erase( iterator first, iterator last )
     {
-        // pointer     temp, temp_two, temp_last;
-        // temp_two = temp = this->_vmake_pointer( first );
-        // temp_last = this->_vmake_pointer( last );
-
-        // if ( first == last )
-        //     return ( first );
-        // if ( first == --last )
-        //     return ( this->erase( first ) );
-        // if ( this->end() <= last )
-        //     _vdestruct_at_end( temp );
-        // else
-        // {            
-        //     for ( ; temp != temp_last; ++temp )
-        //         this->_allocator.destroy( temp );
-        //     for ( ; temp != this->_end ; ++temp )
-        //     {
-        //         this->_allocator.construct( temp_two++, *( temp ) );
-        //         this->_allocator.destroy( temp );
-        //     }
-        //     this->_vdestruct_at_end( temp_two );
-        // }
-        // return ( first );
-
         pointer temp_first = this->_vmake_pointer( first );
         pointer temp_last = this->_vmake_pointer( last );
+
         if ( first != last )
-            // _vdestruct_at_end( ft::copy( temp + ( last - first ), this->_end, temp ) );
             _vdestruct_at_end( ft::copy( temp_last, this->_end, temp_first ) );
         return ( first );
     }
@@ -667,10 +576,6 @@ namespace ft
         return ( this->_begin + ( itr - this->begin() ) );
     }
 
-    // checks n against max_size()
-    // checks if n smaller capacity
-    // returns n * 2, but maximum of max_size()
-
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::size_type vector<T, Alloc>::_vcalculate_size( size_type n) const
     {
@@ -686,10 +591,6 @@ namespace ft
         return ( n * 2 );
     }
 
-    // throws length_error if n > max_size()
-    // throws ( probably bad_alloc ) if memory run out ( in max_size() )
-    // sets _capacity to n
-    // allocates space for n objects and returns pointer
     template <typename T, typename Alloc>
     typename vector<T, Alloc>::pointer vector<T, Alloc>::_vallocate(size_type n)
     {
@@ -698,11 +599,6 @@ namespace ft
         return ( this->_allocator.allocate( n ) );
     }
 
-    // Check if space was allocated
-    // if yes:
-    // clear all elements
-    // clear allocated space
-    // set nullptr to _begin and _end
     template <typename T, typename Alloc>
     void vector<T, Alloc>::_vdeallocate( size_type n )
     {
@@ -804,7 +700,6 @@ namespace ft
     void vector<T, Alloc>::_insert_range( iterator position, InputIterator first, InputIterator last,
                         typename ft::forward_iterator_tag ) // range version: forward_iterator
     {
-        // InputIterator   temp = first;
         pointer         pos = this->_vmake_pointer( position );
         size_type       n = static_cast<size_type>( ft::distance( first, last ) );
         size_type       distance = static_cast<size_type>( ft::distance( this->_begin, pos ) );
@@ -819,11 +714,7 @@ namespace ft
         }
         else
         {
-            // // resize (so you have the correct capacity, and already the first few elements)
             this->resize( old_size + n );
-
-            // // push all elements after the position of 'last' in the array
-            // // do it backwards, else some of the values might get overwritten
             iterator    temp_first = this->begin() + distance;
             iterator    temp_last = this->begin() + old_size;
             iterator    new_position = this->begin() + old_size + n;
@@ -832,10 +723,8 @@ namespace ft
 		        *( --new_position ) = *( --temp_last );
 
             pos = this->_begin + distance;
-            // // // insert the elements of first->last in the array 
             for ( ; first != last; ++first )
             {
-                // this->_allocator.construct( pos, *( temp ) );
                 *( pos ) = *( first );
                 ++pos;
             }
