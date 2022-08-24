@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/22 15:23:06 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 11:01:16 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ namespace ft
     // if user wants to use 'input_iterator', std::typedefs need to be used
     // instead of self defined iterator_tags
     typedef std::output_iterator_tag			output_iterator_tag;
-    typedef std::input_iterator_tag			input_iterator_tag;
-    typedef std::forward_iterator_tag		forward_iterator_tag;
-    typedef std::bidirectional_iterator_tag	bidirectional_iterator_tag;
-    typedef std::random_access_iterator_tag	random_access_iterator_tag;
+    typedef std::input_iterator_tag			    input_iterator_tag;
+    typedef std::forward_iterator_tag		    forward_iterator_tag;
+    typedef std::bidirectional_iterator_tag	    bidirectional_iterator_tag;
+    typedef std::random_access_iterator_tag	    random_access_iterator_tag;
 
     /* ------------------------------ iterator ------------------------------ */
 
@@ -135,6 +135,14 @@ namespace ft
             ++r;
         return ( r );
     }
+
+    template <typename InputIterator>
+    inline typename iterator_traits<InputIterator>::iterator_category
+    iterator_category( const InputIterator&)
+    {
+        return ( typename iterator_traits<InputIterator>::iterator_category() );
+    }
+
 
     /* -------------------------- reverse_iterator -------------------------- */
     
