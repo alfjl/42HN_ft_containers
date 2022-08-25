@@ -17,7 +17,7 @@ namespace ft
     /* ----------------------------- tree_node ------------------------------ */
 
     /*
-    ** A general node template to be used in my implementation of 
+    ** A general node template to be used in my implementations of 
     ** Binary Search Tree (BST) and Red Black Tree (RBT)
     ** Colour is unused in BST and set to default 'BLACK'
     */
@@ -732,7 +732,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( iterator position, const value_type& value)
+    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( __attribute__( ( unused ) ) iterator position, const value_type& value)
     {
         // TASK: rewrite the hint part:
         // if the element is smaller than 'value', and the successor bigger, insert here.
@@ -742,10 +742,7 @@ namespace ft
         //     return ( this->_insert( position.base(), value ).first );
         // return ( this->_insert( _base._left, value ).first );
 
-
-        if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) )
-            return ( this->_insert( position.base(), value ).first );
-        return ( this->_insert( _base._left, value ).first );
+        return ( this->_insert( this->_base._left, value ).first );
     }
 
     template < typename T, typename Compare, typename Allocator>
