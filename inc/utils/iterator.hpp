@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/23 15:21:31 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 11:10:11 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/24 11:59:24 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,42 +101,42 @@ namespace ft
     ** (The C++ Standard Library - 2nd Edition / 9.3.3 & 9.5)
     */
 
-    // // if used with std::iterator_category typedefs
-    // template <typename InputIterator>
-    // inline typename iterator_traits<InputIterator>::difference_type
-    // _distance( InputIterator first, InputIterator last, input_iterator_tag )
-    // {
-    //     typename iterator_traits<InputIterator>::difference_type r( 0 );
-    //     for ( ; first != last; ++first )
-    //         ++r;
-    //     return ( r );
-    // }
-
-    // template <typename RandomAccessIterator>
-    // inline typename iterator_traits<RandomAccessIterator>::difference_type
-    // _distance( RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag )
-    // {
-    //     return ( last - first );
-    // }
-
-    // // also valid for forward and bidirectional iterator, since they inherit from input iterator
-    // template <typename InputIterator>
-    // inline typename iterator_traits<InputIterator>::difference_type
-    // distance( InputIterator first, InputIterator last )
-    // {
-    //     return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
-    // }
-
-    // if used with ft::iterator_categories
+    // used with std::iterator_category typedefs
     template <typename InputIterator>
     inline typename iterator_traits<InputIterator>::difference_type
-    distance( InputIterator first, InputIterator last )
+    _distance( InputIterator first, InputIterator last, input_iterator_tag )
     {
         typename iterator_traits<InputIterator>::difference_type r( 0 );
         for ( ; first != last; ++first )
             ++r;
         return ( r );
     }
+
+    template <typename RandomAccessIterator>
+    inline typename iterator_traits<RandomAccessIterator>::difference_type
+    _distance( RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag )
+    {
+        return ( last - first );
+    }
+
+    // also valid for forward and bidirectional iterator, since they inherit from input iterator
+    template <typename InputIterator>
+    inline typename iterator_traits<InputIterator>::difference_type
+    distance( InputIterator first, InputIterator last )
+    {
+        return ( _distance( first, last, typename iterator_traits<InputIterator>::iterator_category() ) );
+    }
+
+    // // used with ft::iterator_categories
+    // template <typename InputIterator>
+    // inline typename iterator_traits<InputIterator>::difference_type
+    // distance( InputIterator first, InputIterator last )
+    // {
+    //     typename iterator_traits<InputIterator>::difference_type r( 0 );
+    //     for ( ; first != last; ++first )
+    //         ++r;
+    //     return ( r );
+    // }
 
     template <typename InputIterator>
     inline typename iterator_traits<InputIterator>::iterator_category
@@ -164,6 +164,7 @@ namespace ft
     {
     public:
         typedef Iterator                                                iterator_type;
+        typedef typename iterator_traits<Iterator>::iterator_category   iterator_category;
         typedef typename iterator_traits<Iterator>::difference_type     difference_type;
         typedef typename iterator_traits<Iterator>::reference           reference;
         typedef typename iterator_traits<Iterator>::pointer             pointer;
