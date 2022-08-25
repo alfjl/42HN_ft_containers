@@ -601,6 +601,9 @@ namespace ft
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
         const_iterator _make_iter( const_node_type_ptr ptr ) const;
+        void _left_rotate( node_type_ptr position );
+        void _right_rotate( node_type_ptr position );
+        void _tree_fixup( node_type_ptr position );
 
     }; // red_black_tree
 
@@ -1075,7 +1078,7 @@ namespace ft
     ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator, bool> red_black_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
         node_type_ptr       position = &this->_base;
-        node_type_ptr       new_node = _create_node( value );
+        node_type_ptr       new_node = this->_create_node( value );
         bool                insert_flag = true;
 
         while ( rootptr != this->_null )
@@ -1107,15 +1110,108 @@ namespace ft
             position = position->_right;
         }
         else
-            destroy_node( new_node);
+            this->destroy_node( new_node);
         if ( insert_flag == true )
             ++( this->_size );
         this->_base._left->_parent = &this->_base;
         if ( ( position->_parent == this->_begin_node ) && ( position == position->_parent->_left ) )
             this->_begin_node = position;
+        this->_tree_fixup( position );
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
+// -------------------------------
+
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_left_rotate( node_type_ptr position )
+    {
+        node_type_ptr   right_node = position->_right;
+        position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
+        if ( right_node->_left != this->_null )
+            right_node->_left->_parent = position;
+        right_node->_parent = position->_parent; // link position’s parent to right_node
+        if ( position->_parent == this->_null )
+            this->base._left = right_node;
+        else if ( position == position->_parent->_left )
+            position->_parent->_left = right_node;
+        else
+            position->_parent->_right = right_node;
+        right_node->_left = position; // put position on right_node’s left
+        position->_parent = right_node;
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_right_rotate( node_type_ptr position )
+    {
+        node_type_ptr   left_node = position->_left;
+        position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
+        if ( left_node->_right != this->_null )
+            left_node->_right->_parent = position;
+        left_node->_parent = position->_parent; // link position’s parent to left_node
+        if ( position->_parent == this->_null )
+            this->base._left = left_node;
+        else if ( position == position->_parent->_right )
+            position->_parent->_right = left_node;
+        else
+            position->_parent->_left = left_node;
+        left_node->_right = position; // put position on left_node’s right
+        position->_parent = left_node;
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_tree_fixup( node_type_ptr position )
+    {
+        while ( position->_parent->_colour == RED )
+        {
+            node_type_ptr   uncle_node = &this->_base; // same level as parent node
+
+            if ( position->_parent == position->_parent->_parent->_left )
+            {
+                uncle_node = position->_parent->_parent->_right;
+                // 3 cases:
+                if ( uncle_node->_colour == RED ) // 1
+                {
+                    position->_parent->_colour = BLACK;
+                    uncle_node->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED:
+                    position = position->_parent->_parent;
+                }
+                else if ( position == position->_parent->_right ) // 2
+                {
+                    position = position->_parent;
+                    this->_left_rotate( position );
+                }
+                // 3
+                positione->_parent->_colour = BLACK:
+                position->_parent->_parent->_colour = RED:
+                this->_right_rotate( position->_parent->_parent );
+            }
+            else // same, but left & right inverted
+            {
+                uncle_node = position->_parent->_parent->_left;
+                // 3 cases:
+                if ( uncle_node->_colour == RED ) // 1
+                {
+                    position->_parent->_colour = BLACK;
+                    uncle_node->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED:
+                    position = position->_parent->_parent;
+                }
+                else if ( position == position->_parent->_left ) // 2
+                {
+                    position = position->_parent;
+                    this->_right_rotate( position );
+                }
+                // 3
+                positione->_parent->_colour = BLACK:
+                position->_parent->_parent->_colour = RED:
+                this->_left_rotate( position->_parent->_parent );
+            }
+        }
+        this->_base._left->_colour = BLACK;
+    }
+
+// -------------------------------
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
     {
@@ -1191,7 +1287,8 @@ namespace ft
     {
         node_type_ptr new_node = this->_node_allocator.allocate( 1 );
         this->_allocator.construct( &new_node->_data, value );
-        new_node->_colour = BLACK; // RED for Binary Search Tree
+        // new_node->_colour = BLACK; // RED for Red Black Tree
+        new_node->_colour = RED; // BLACK for Binary Search Tree
         new_node->_parent = this->_null;
         new_node->_left = this->_null;
         new_node->_right = this->_null;
