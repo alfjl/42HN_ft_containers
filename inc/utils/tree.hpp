@@ -1278,70 +1278,59 @@ namespace ft
                 {
                     sibling->_colour = BLACK;
                     position->_parent->_colour = RED;
-                    this->_left_rotate( position->_parent-> );
+                    this->_left_rotate( position->_parent );
                     sibling = position->_parent->_right;
                 }
                 if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
                 {
-                    
+                    sibling->_colour = RED;
+                    position = position->_parent;
                 }
+                else if ( sibling->_right->_colour == BLACK ) // 3
+                {
+                    sibling->_left->_colour = BLACK;
+                    sibling->_colour = RED;
+                    this->_right_rotate( sibling );
+                    sibling = position->_parent->_right;
+                }
+                // 4
+                sibling->_colour = position->_parent->_colour;
+                position->_parent->_colour = BLACK;
+                sibling->_right->_colour = BLACK;
+                this->_left_rotate( position->_parent );
+                position = this->_base->_left;
             }
             else
             {
-
-            }
-        position->_colour = BLACK;
-
-
-
-
-
-
-            
-
-            if ( position->_parent == position->_parent->_parent->_left )
-            {
-                uncle = position->_parent->_parent->_right;
-                // 3 cases:
-                if ( uncle->_colour == RED ) // 1
+                sibling = position->_parent->_left;
+                if ( sibling->_colour == RED ) // 1
                 {
-                    position->_parent->_colour = BLACK;
-                    uncle->_colour = BLACK;
-                    position->_parent->_parent->_colour = RED:
-                    position = position->_parent->_parent;
+                    sibling->_colour = BLACK;
+                    position->_parent->_colour = RED;
+                    this->_right_rotate( position->_parent );
+                    sibling = position->_parent->_left;
                 }
-                else if ( position == position->_parent->_right ) // 2
+                if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
                 {
+                    sibling->_colour = RED;
                     position = position->_parent;
-                    this->_left_rotate( position );
                 }
-                // 3
-                positione->_parent->_colour = BLACK:
-                position->_parent->_parent->_colour = RED:
-                this->_right_rotate( position->_parent->_parent );
-            }
-            else // same, but left & right inverted
-            {
-                uncle = position->_parent->_parent->_left;
-                // 3 cases:
-                if ( uncle->_colour == RED ) // 1
+                else if ( sibling->_left->_colour == BLACK ) // 3
                 {
-                    position->_parent->_colour = BLACK;
-                    uncle->_colour = BLACK;
-                    position->_parent->_parent->_colour = RED:
-                    position = position->_parent->_parent;
+                    sibling->_right->_colour = BLACK;
+                    sibling->_colour = RED;
+                    this->_left_rotate( sibling );
+                    sibling = position->_parent->_left;
                 }
-                else if ( position == position->_parent->_left ) // 2
-                {
-                    position = position->_parent;
-                    this->_right_rotate( position );
-                }
-                // 3
-                positione->_parent->_colour = BLACK:
-                position->_parent->_parent->_colour = RED:
-                this->_left_rotate( position->_parent->_parent );
+                // 4
+                sibling->_colour = position->_parent->_colour;
+                position->_parent->_colour = BLACK;
+                sibling->_left->_colour = BLACK;
+                this->_right_rotate( position->_parent );
+                position = this->_base->_left;
             }
         }
+        position->_colour = BLACK;
     }
 
 // -------------------------------
