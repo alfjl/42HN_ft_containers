@@ -604,6 +604,7 @@ namespace ft
         void _left_rotate( node_type_ptr position );
         void _right_rotate( node_type_ptr position );
         void _tree_fixup( node_type_ptr position );
+        void _tree_delete_fixup( node_type_ptr position );
 
     }; // red_black_tree
 
@@ -771,6 +772,39 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
+        // node_type_ptr node = position.base();
+
+        // if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
+        //     return ;
+        // if ( node == this->_begin_node )
+        // {
+        //     if ( node->_right->_right != nullptr )
+        //         this->_begin_node = tree_min<T>( node->_right );
+        //     else
+        //         this->_begin_node = this->_begin_node->_parent;
+        // }
+        // if ( node->_left == this->_null )
+        //     this->_transplant( node, node->_right );
+        // else if ( node->_right == this->_null )
+        //     this->_transplant( node, node->_left );
+        // else
+        // {
+        //     node_type_ptr replacement = tree_min<T>( node->_right );
+        //     if ( replacement->_parent != node )
+        //     {
+        //         this->_transplant( replacement, replacement->_right );
+        //         replacement->_right = node->_right;
+        //         replacement->_right->_parent = replacement;
+        //     }
+        //     this->_transplant( node, replacement );
+        //     replacement->_left = node->_left;
+        //     replacement->_left->_parent = replacement;
+        // }
+
+        // this->destroy_node( node ); // should catch the this->_null in the first if statement
+        // --( this->_size );
+
+
         node_type_ptr node = position.base();
 
         if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
@@ -782,25 +816,44 @@ namespace ft
             else
                 this->_begin_node = this->_begin_node->_parent;
         }
+
+        node_type_ptr   track_node = node;
+        node_state      original_track_node_colour = track_node->_colour;
+        node_type_ptr   replacement = &this->_base;
+
         if ( node->_left == this->_null )
+        {
+            replacement = node->_right;
             this->_transplant( node, node->_right );
+        }
         else if ( node->_right == this->_null )
+        {
+            replacement = node->_left;
             this->_transplant( node, node->_left );
+        }
         else
         {
-            node_type_ptr replacement = tree_min<T>( node->_right );
-            if ( replacement->_parent != node )
+            track_node = tree_min<T>( node->_right );
+            original_track_node_colour = track_node->_colour;
+            replacement = track_node->_right;
+            if ( track_node->_parent == node )
+                replacement->_parent = track_node;
+            else
             {
-                this->_transplant( replacement, replacement->_right );
-                replacement->_right = node->_right;
-                replacement->_right->_parent = replacement;
+                this->_transplant( track_node, track_node->_right );
+                track_node->_right = node->_right;
+                track_node->_right->_parent = track_node;
             }
-            this->_transplant( node, replacement );
-            replacement->_left = node->_left;
-            replacement->_left->_parent = replacement;
+            this->_transplant( node, track_node );
+            track_node->_left = node->_left;
+            track_node->_left->_parent = track_node;
+            track_node->_colour = node->_colour;
         }
+        if ( original_track_node_colour == BLACK )
+            _tree_delete_fixup( replacement );
 
-        this->destroy_node( node ); // should catch the this->_null in the first if statement
+
+        this->destroy_node( node ); // still correct? // should catch the this->_null in the first if statement
         --( this->_size );
     }
 
@@ -1163,16 +1216,16 @@ namespace ft
     {
         while ( position->_parent->_colour == RED )
         {
-            node_type_ptr   uncle_node = &this->_base; // same level as parent node
+            node_type_ptr   uncle = &this->_base; // same level as parent node
 
             if ( position->_parent == position->_parent->_parent->_left )
             {
-                uncle_node = position->_parent->_parent->_right;
+                uncle = position->_parent->_parent->_right;
                 // 3 cases:
-                if ( uncle_node->_colour == RED ) // 1
+                if ( uncle->_colour == RED ) // 1
                 {
                     position->_parent->_colour = BLACK;
-                    uncle_node->_colour = BLACK;
+                    uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED:
                     position = position->_parent->_parent;
                 }
@@ -1188,12 +1241,12 @@ namespace ft
             }
             else // same, but left & right inverted
             {
-                uncle_node = position->_parent->_parent->_left;
+                uncle = position->_parent->_parent->_left;
                 // 3 cases:
-                if ( uncle_node->_colour == RED ) // 1
+                if ( uncle->_colour == RED ) // 1
                 {
                     position->_parent->_colour = BLACK;
-                    uncle_node->_colour = BLACK;
+                    uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED:
                     position = position->_parent->_parent;
                 }
@@ -1209,6 +1262,86 @@ namespace ft
             }
         }
         this->_base._left->_colour = BLACK;
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_tree_delete_fixup( node_type_ptr position )
+    {
+        while ( position != this->_base._left && position->_colour == BLACK )
+        {
+            node_type_ptr   sibling = &this->_base; // same level as position
+
+            if ( position == position->_parent->_left )
+            {
+                sibling = position->_parent->_right;
+                if ( sibling->_colour == RED ) // 1
+                {
+                    sibling->_colour = BLACK;
+                    position->_parent->_colour = RED;
+                    this->_left_rotate( position->_parent-> );
+                    sibling = position->_parent->_right;
+                }
+                if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
+                {
+                    
+                }
+            }
+            else
+            {
+
+            }
+        position->_colour = BLACK;
+
+
+
+
+
+
+            
+
+            if ( position->_parent == position->_parent->_parent->_left )
+            {
+                uncle = position->_parent->_parent->_right;
+                // 3 cases:
+                if ( uncle->_colour == RED ) // 1
+                {
+                    position->_parent->_colour = BLACK;
+                    uncle->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED:
+                    position = position->_parent->_parent;
+                }
+                else if ( position == position->_parent->_right ) // 2
+                {
+                    position = position->_parent;
+                    this->_left_rotate( position );
+                }
+                // 3
+                positione->_parent->_colour = BLACK:
+                position->_parent->_parent->_colour = RED:
+                this->_right_rotate( position->_parent->_parent );
+            }
+            else // same, but left & right inverted
+            {
+                uncle = position->_parent->_parent->_left;
+                // 3 cases:
+                if ( uncle->_colour == RED ) // 1
+                {
+                    position->_parent->_colour = BLACK;
+                    uncle->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED:
+                    position = position->_parent->_parent;
+                }
+                else if ( position == position->_parent->_left ) // 2
+                {
+                    position = position->_parent;
+                    this->_right_rotate( position );
+                }
+                // 3
+                positione->_parent->_colour = BLACK:
+                position->_parent->_parent->_colour = RED:
+                this->_left_rotate( position->_parent->_parent );
+            }
+        }
     }
 
 // -------------------------------
