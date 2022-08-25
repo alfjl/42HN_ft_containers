@@ -603,8 +603,8 @@ namespace ft
         const_iterator _make_iter( const_node_type_ptr ptr ) const;
         void _left_rotate( node_type_ptr position );
         void _right_rotate( node_type_ptr position );
-        void _tree_fixup( node_type_ptr position );
-        void _tree_delete_fixup( node_type_ptr position );
+        void _tree_insert_fixup( node_type_ptr position );
+        void _tree_erase_fixup( node_type_ptr position );
 
     }; // red_black_tree
 
@@ -850,7 +850,7 @@ namespace ft
             track_node->_colour = node->_colour;
         }
         if ( original_track_node_colour == BLACK )
-            _tree_delete_fixup( replacement );
+            _tree_erase_fixup( replacement );
 
 
         this->destroy_node( node ); // still correct? // should catch the this->_null in the first if statement
@@ -1169,7 +1169,7 @@ namespace ft
         this->_base._left->_parent = &this->_base;
         if ( ( position->_parent == this->_begin_node ) && ( position == position->_parent->_left ) )
             this->_begin_node = position;
-        this->_tree_fixup( position );
+        this->_tree_insert_fixup( position );
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
@@ -1178,13 +1178,27 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_left_rotate( node_type_ptr position )
     {
+        // node_type_ptr   right_node = position->_right;
+        // position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
+        // if ( right_node->_left != this->_null )
+        //     right_node->_left->_parent = position;
+        // right_node->_parent = position->_parent; // link position’s parent to right_node
+        // if ( position->_parent == this->_null )
+        //     this->_base._left = right_node;
+        // else if ( position == position->_parent->_left )
+        //     position->_parent->_left = right_node;
+        // else
+        //     position->_parent->_right = right_node;
+        // right_node->_left = position; // put position on right_node’s left
+        // position->_parent = right_node;
+
         node_type_ptr   right_node = position->_right;
         position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
         if ( right_node->_left != this->_null )
             right_node->_left->_parent = position;
         right_node->_parent = position->_parent; // link position’s parent to right_node
-        if ( position->_parent == this->_null )
-            this->base._left = right_node;
+        if ( position->_parent == &this->_base )
+            this->_base._left = right_node;
         else if ( position == position->_parent->_left )
             position->_parent->_left = right_node;
         else
@@ -1196,13 +1210,27 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_right_rotate( node_type_ptr position )
     {
+        // node_type_ptr   left_node = position->_left;
+        // position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
+        // if ( left_node->_right != this->_null )
+        //     left_node->_right->_parent = position;
+        // left_node->_parent = position->_parent; // link position’s parent to left_node
+        // if ( position->_parent == this->_null )
+        //     this->_base._left = left_node;
+        // else if ( position == position->_parent->_right )
+        //     position->_parent->_right = left_node;
+        // else
+        //     position->_parent->_left = left_node;
+        // left_node->_right = position; // put position on left_node’s right
+        // position->_parent = left_node;
+
         node_type_ptr   left_node = position->_left;
         position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
         if ( left_node->_right != this->_null )
             left_node->_right->_parent = position;
         left_node->_parent = position->_parent; // link position’s parent to left_node
-        if ( position->_parent == this->_null )
-            this->base._left = left_node;
+        if ( position->_parent == &this->_base )
+            this->_base._left = left_node;
         else if ( position == position->_parent->_right )
             position->_parent->_right = left_node;
         else
@@ -1212,9 +1240,58 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_tree_fixup( node_type_ptr position )
+    void red_black_tree<T, Compare, Allocator>::_tree_insert_fixup( node_type_ptr position )
     {
-        while ( position->_parent->_colour == RED )
+        // while ( position->_parent->_colour == RED )
+        // {
+        //     node_type_ptr   uncle = &this->_base; // same level as parent node
+
+        //     if ( position->_parent == position->_parent->_parent->_left )
+        //     {
+        //         uncle = position->_parent->_parent->_right;
+        //         // 3 cases:
+        //         if ( uncle->_colour == RED ) // 1
+        //         {
+        //             position->_parent->_colour = BLACK;
+        //             uncle->_colour = BLACK;
+        //             position->_parent->_parent->_colour = RED;
+        //             position = position->_parent->_parent;
+        //         }
+        //         else if ( position == position->_parent->_right ) // 2
+        //         {
+        //             position = position->_parent;
+        //             this->_left_rotate( position );
+        //         }
+        //         // 3
+        //         position->_parent->_colour = BLACK;
+        //         position->_parent->_parent->_colour = RED;
+        //         this->_right_rotate( position->_parent->_parent );
+        //     }
+        //     else // same, but left & right inverted
+        //     {
+        //         uncle = position->_parent->_parent->_left;
+        //         // 3 cases:
+        //         if ( uncle->_colour == RED ) // 1
+        //         {
+        //             position->_parent->_colour = BLACK;
+        //             uncle->_colour = BLACK;
+        //             position->_parent->_parent->_colour = RED;
+        //             position = position->_parent->_parent;
+        //         }
+        //         else if ( position == position->_parent->_left ) // 2
+        //         {
+        //             position = position->_parent;
+        //             this->_right_rotate( position );
+        //         }
+        //         // 3
+        //         position->_parent->_colour = BLACK;
+        //         position->_parent->_parent->_colour = RED;
+        //         this->_left_rotate( position->_parent->_parent );
+        //     }
+        // }
+        // this->_base._left->_colour = BLACK;
+
+                while ( position->_parent->_colour == RED )
         {
             node_type_ptr   uncle = &this->_base; // same level as parent node
 
@@ -1226,18 +1303,21 @@ namespace ft
                 {
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
-                    position->_parent->_parent->_colour = RED:
+                    position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
                 }
-                else if ( position == position->_parent->_right ) // 2
+                else
                 {
-                    position = position->_parent;
-                    this->_left_rotate( position );
+                    if ( position == position->_parent->_right ) // 2
+                    {
+                        position = position->_parent;
+                        this->_left_rotate( position );
+                    }
+                    // 3
+                    position->_parent->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED;
+                    this->_right_rotate( position->_parent->_parent );
                 }
-                // 3
-                positione->_parent->_colour = BLACK:
-                position->_parent->_parent->_colour = RED:
-                this->_right_rotate( position->_parent->_parent );
             }
             else // same, but left & right inverted
             {
@@ -1247,26 +1327,94 @@ namespace ft
                 {
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
-                    position->_parent->_parent->_colour = RED:
+                    position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
                 }
-                else if ( position == position->_parent->_left ) // 2
+                else
                 {
-                    position = position->_parent;
-                    this->_right_rotate( position );
+                    if ( position == position->_parent->_left ) // 2
+                    {
+                        position = position->_parent;
+                        this->_right_rotate( position );
+                    }
+                    // 3
+                    position->_parent->_colour = BLACK;
+                    position->_parent->_parent->_colour = RED;
+                    this->_left_rotate( position->_parent->_parent );
                 }
-                // 3
-                positione->_parent->_colour = BLACK:
-                position->_parent->_parent->_colour = RED:
-                this->_left_rotate( position->_parent->_parent );
             }
         }
         this->_base._left->_colour = BLACK;
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_tree_delete_fixup( node_type_ptr position )
+    void red_black_tree<T, Compare, Allocator>::_tree_erase_fixup( node_type_ptr position )
     {
+        // while ( position != this->_base._left && position->_colour == BLACK )
+        // {
+        //     node_type_ptr   sibling = &this->_base; // same level as position
+
+        //     if ( position == position->_parent->_left )
+        //     {
+        //         sibling = position->_parent->_right;
+        //         if ( sibling->_colour == RED ) // 1
+        //         {
+        //             sibling->_colour = BLACK;
+        //             position->_parent->_colour = RED;
+        //             this->_left_rotate( position->_parent );
+        //             sibling = position->_parent->_right;
+        //         }
+        //         if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
+        //         {
+        //             sibling->_colour = RED;
+        //             position = position->_parent;
+        //         }
+        //         else if ( sibling->_right->_colour == BLACK ) // 3
+        //         {
+        //             sibling->_left->_colour = BLACK;
+        //             sibling->_colour = RED;
+        //             this->_right_rotate( sibling );
+        //             sibling = position->_parent->_right;
+        //         }
+        //         // 4
+        //         sibling->_colour = position->_parent->_colour;
+        //         position->_parent->_colour = BLACK;
+        //         sibling->_right->_colour = BLACK;
+        //         this->_left_rotate( position->_parent );
+        //         position = this->_base._left;
+        //     }
+        //     else
+        //     {
+        //         sibling = position->_parent->_left;
+        //         if ( sibling->_colour == RED ) // 1
+        //         {
+        //             sibling->_colour = BLACK;
+        //             position->_parent->_colour = RED;
+        //             this->_right_rotate( position->_parent );
+        //             sibling = position->_parent->_left;
+        //         }
+        //         if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
+        //         {
+        //             sibling->_colour = RED;
+        //             position = position->_parent;
+        //         }
+        //         else if ( sibling->_left->_colour == BLACK ) // 3
+        //         {
+        //             sibling->_right->_colour = BLACK;
+        //             sibling->_colour = RED;
+        //             this->_left_rotate( sibling );
+        //             sibling = position->_parent->_left;
+        //         }
+        //         // 4
+        //         sibling->_colour = position->_parent->_colour;
+        //         position->_parent->_colour = BLACK;
+        //         sibling->_left->_colour = BLACK;
+        //         this->_right_rotate( position->_parent );
+        //         position = this->_base._left;
+        //     }
+        // }
+        // position->_colour = BLACK;
+
         while ( position != this->_base._left && position->_colour == BLACK )
         {
             node_type_ptr   sibling = &this->_base; // same level as position
@@ -1286,19 +1434,22 @@ namespace ft
                     sibling->_colour = RED;
                     position = position->_parent;
                 }
-                else if ( sibling->_right->_colour == BLACK ) // 3
+                else
                 {
-                    sibling->_left->_colour = BLACK;
-                    sibling->_colour = RED;
-                    this->_right_rotate( sibling );
-                    sibling = position->_parent->_right;
+                    if ( sibling->_right->_colour == BLACK ) // 3
+                    {
+                        sibling->_left->_colour = BLACK;
+                        sibling->_colour = RED;
+                        this->_right_rotate( sibling );
+                        sibling = position->_parent->_right;
+                    }
+                    // 4
+                    sibling->_colour = position->_parent->_colour;
+                    position->_parent->_colour = BLACK;
+                    sibling->_right->_colour = BLACK;
+                    this->_left_rotate( position->_parent );
+                    position = this->_base._left;
                 }
-                // 4
-                sibling->_colour = position->_parent->_colour;
-                position->_parent->_colour = BLACK;
-                sibling->_right->_colour = BLACK;
-                this->_left_rotate( position->_parent );
-                position = this->_base->_left;
             }
             else
             {
@@ -1315,19 +1466,22 @@ namespace ft
                     sibling->_colour = RED;
                     position = position->_parent;
                 }
-                else if ( sibling->_left->_colour == BLACK ) // 3
+                else
                 {
-                    sibling->_right->_colour = BLACK;
-                    sibling->_colour = RED;
-                    this->_left_rotate( sibling );
-                    sibling = position->_parent->_left;
+                    if ( sibling->_left->_colour == BLACK ) // 3
+                    {
+                        sibling->_right->_colour = BLACK;
+                        sibling->_colour = RED;
+                        this->_left_rotate( sibling );
+                        sibling = position->_parent->_left;
+                    }
+                    // 4
+                    sibling->_colour = position->_parent->_colour;
+                    position->_parent->_colour = BLACK;
+                    sibling->_left->_colour = BLACK;
+                    this->_right_rotate( position->_parent );
+                    position = this->_base._left;
                 }
-                // 4
-                sibling->_colour = position->_parent->_colour;
-                position->_parent->_colour = BLACK;
-                sibling->_left->_colour = BLACK;
-                this->_right_rotate( position->_parent );
-                position = this->_base->_left;
             }
         }
         position->_colour = BLACK;
