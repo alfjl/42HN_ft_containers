@@ -1225,8 +1225,7 @@ namespace ft
             old_subtree->_parent->_left = new_subtree;
         else
             old_subtree->_parent->_right = new_subtree;
-        if ( new_subtree != this->_null )
-            new_subtree->_parent = old_subtree->_parent;
+        new_subtree->_parent = old_subtree->_parent;
     }
 
     template < typename T, typename Compare, typename Allocator>
