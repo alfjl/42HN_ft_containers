@@ -480,19 +480,31 @@ namespace ft
     }
 
 
-    /* ------------------------- Binary Search Tree ------------------------- */
+    /* --------------------------- Red Black Tree --------------------------- */
 
     /*
-    ** (Cormen, Leiserson, Rivest & Stein: 'Introduction to Algorithms' - 3rd Edition, Chapter 12)
-    ** We can represent such a tree by a linked data structure in which
-    ** each node is an object. In addition to a key and satellite data,
-    ** each node contains attributes left, right, and p [...]
-    ** If a child or the parent is missing, the appropriate attribute contains the value NIL.
-    ** The root node is the only node in the tree whose parent is NIL.
+    ** (Cormen, Leiserson, Rivest & Stein: 'Introduction to Algorithms' - 3rd Edition, Chapter 13)
+    ** A red-black tree is a binary search tree with one extra bit of storage per node:
+    ** its color, which can be either RED or BLACK.
+    ** By constraining the node colors on any simple path from the root to a leaf,
+    ** red-black trees ensure that no such path is more than twice as long as any other,
+    ** so that the tree is approximately balanced.
+    **
+    ** If a child or the parent of a node does not exist, the corresponding pointer attribute
+    ** of the node contains the value NIL. We shall regard these NILs as being pointers to
+    ** leaves (external nodes) of the binary search tree and the normal, key-bearing nodes
+    ** as being internal nodes of the tree.
+    **
+    ** A red-black tree [...] satisfies the following red-black properties:
+    ** 1. Every node is either red or black.
+    ** 2. The root is black.
+    ** 3. Every leaf ( NIL ) is black.
+    ** 4. If a node is red, then both its children are black.
+    ** 5. For each node, all simple paths from the node to descendant leaves contain the same number of black nodes
     */
 
     template <typename T, typename Compare, typename Allocator>
-    class binary_search_tree
+    class red_black_tree
     {
 
     private:
@@ -529,11 +541,11 @@ namespace ft
 
     public:
         // Constructors / Destructor / Assignment
-        explicit binary_search_tree( const value_compare& comp = Compare(), const allocator_type& alloc = Allocator() );
-	    binary_search_tree( const binary_search_tree& other );
-        ~binary_search_tree();
+        explicit red_black_tree( const value_compare& comp = Compare(), const allocator_type& alloc = Allocator() );
+	    red_black_tree( const red_black_tree& other );
+        ~red_black_tree();
 
-    	binary_search_tree& operator=( const binary_search_tree& other );
+    	red_black_tree& operator=( const red_black_tree& other );
 
         // Iterators:
         iterator begin();
@@ -557,7 +569,7 @@ namespace ft
         void erase( iterator position ); // iterator
         size_type erase( const value_type& value); // key
         void erase( iterator first, iterator last ); // range
-        void swap( binary_search_tree& x );
+        void swap( red_black_tree& x );
         void clear();
 
         // Operations:
@@ -583,20 +595,20 @@ namespace ft
         ft::pair<iterator, bool> _insert( node_type_ptr rootptr, const value_type& value ); // helper function for all insert methods
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
-        node_type_ptr _clone_tree( const binary_search_tree& other, const node_type_ptr& other_root ); // helper function for assignment operator
+        node_type_ptr _clone_tree( const red_black_tree& other, const node_type_ptr& other_root ); // helper function for assignment operator
         void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;
         node_type_ptr _create_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
         const_iterator _make_iter( const_node_type_ptr ptr ) const;
 
-    }; // binary_search_tree
+    }; // red_black_tree
 
-    /* binary_search_tree member functions */
+    /* red_black_tree member functions */
     /* public */
 
    template < typename T, typename Compare, typename Allocator>
-    binary_search_tree<T, Compare, Allocator>::binary_search_tree( const value_compare& comp, const allocator_type& alloc ) 
+    red_black_tree<T, Compare, Allocator>::red_black_tree( const value_compare& comp, const allocator_type& alloc ) 
     : _base(), _begin_node(&this->_base), _compare( comp ), _allocator( alloc ), _node_allocator( alloc ), _size( 0 )
     {
         _create_null();
@@ -605,7 +617,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    binary_search_tree<T, Compare, Allocator>::binary_search_tree( const binary_search_tree& src )
+    red_black_tree<T, Compare, Allocator>::red_black_tree( const red_black_tree& src )
     : _base(), _begin_node(&this->_base), _compare( src._compare ), _allocator( src._allocator ), _node_allocator( src._node_allocator ), _size( src._size )
     {
         _create_null();
@@ -620,7 +632,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    binary_search_tree<T, Compare, Allocator>::~binary_search_tree()
+    red_black_tree<T, Compare, Allocator>::~red_black_tree()
     {
         if (this->_base._left != this->_null)
         {
@@ -634,7 +646,7 @@ namespace ft
 
 
     template < typename T, typename Compare, typename Allocator>
-    binary_search_tree<T, Compare, Allocator>& binary_search_tree<T, Compare, Allocator>::operator=( const binary_search_tree& other )
+    red_black_tree<T, Compare, Allocator>& red_black_tree<T, Compare, Allocator>::operator=( const red_black_tree& other )
     {
         if ( this != &other )
         {
@@ -655,61 +667,61 @@ namespace ft
 
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::begin()
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::begin()
     {
         return ( iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::begin() const
+    typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::begin() const
     {
         return ( const_iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::end()
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::end()
     {
         return ( iterator( &this->_base ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::end() const
+    typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::end() const
     {
         return ( const_iterator( &this->_base ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::reverse_iterator binary_search_tree<T, Compare, Allocator>::rbegin()
+    typename red_black_tree<T, Compare, Allocator>::reverse_iterator red_black_tree<T, Compare, Allocator>::rbegin()
     {
         return ( reverse_iterator( &this->_base ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_reverse_iterator binary_search_tree<T, Compare, Allocator>::rbegin() const
+    typename red_black_tree<T, Compare, Allocator>::const_reverse_iterator red_black_tree<T, Compare, Allocator>::rbegin() const
     {
         return ( const_reverse_iterator( &this->_base ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::reverse_iterator binary_search_tree<T, Compare, Allocator>::rend()
+    typename red_black_tree<T, Compare, Allocator>::reverse_iterator red_black_tree<T, Compare, Allocator>::rend()
     {
         return ( reverse_iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_reverse_iterator binary_search_tree<T, Compare, Allocator>::rend() const
+    typename red_black_tree<T, Compare, Allocator>::const_reverse_iterator red_black_tree<T, Compare, Allocator>::rend() const
     {
         return ( const_reverse_iterator( this->_begin_node ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::size() const
+    typename red_black_tree<T, Compare, Allocator>::size_type red_black_tree<T, Compare, Allocator>::size() const
     {
         return ( this->_size);
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::max_size() const
+    typename red_black_tree<T, Compare, Allocator>::size_type red_black_tree<T, Compare, Allocator>::max_size() const
     {
         size_type alloc_max = this->_node_allocator.max_size();
         size_type numeric_max = std::numeric_limits<difference_type>::max();
@@ -726,13 +738,13 @@ namespace ft
     // Internally, map containers keep all their elements sorted by their key following the criterion specified by its comparison object. The elements are always inserted in its respective position following this ordering.
     // The parameters determine how many elements are inserted and to which values they are initialized:
     template < typename T, typename Compare, typename Allocator>
-    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::insert( const value_type& value)
+    ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator, bool> red_black_tree<T, Compare, Allocator>::insert( const value_type& value)
     {
         return ( this->_insert( this->_base._left, value ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::insert( __attribute__( ( unused ) ) iterator position, const value_type& value)
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::insert( __attribute__( ( unused ) ) iterator position, const value_type& value)
     {
         // TASK: rewrite the hint part:
         // if the element is smaller than 'value', and the successor bigger, insert here.
@@ -747,14 +759,14 @@ namespace ft
 
     template < typename T, typename Compare, typename Allocator>
     template <typename InputIterator>
-    void binary_search_tree<T, Compare, Allocator>::insert( InputIterator first, InputIterator last )
+    void red_black_tree<T, Compare, Allocator>::insert( InputIterator first, InputIterator last )
     {
         for ( ; first != last; ++first )
             this->insert( *( first ) );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::erase( iterator position )
+    void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
         node_type_ptr node = position.base();
 
@@ -790,7 +802,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::erase( const value_type& value)
+    typename red_black_tree<T, Compare, Allocator>::size_type red_black_tree<T, Compare, Allocator>::erase( const value_type& value)
     {
         iterator find_return = this->find( value );
 
@@ -801,14 +813,14 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::erase( iterator first, iterator last )
+    void red_black_tree<T, Compare, Allocator>::erase( iterator first, iterator last )
     {
         while ( first != last )
             this->erase( first++ );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::swap( binary_search_tree& x )
+    void red_black_tree<T, Compare, Allocator>::swap( red_black_tree& x )
     {
         if ( this != &x )
         {
@@ -839,7 +851,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::clear()
+    void red_black_tree<T, Compare, Allocator>::clear()
     {
         if ( this->_base._left != this->_null )
         {
@@ -850,7 +862,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::find( const value_type& value)
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::find( const value_type& value)
     {
         node_type_ptr rootptr = this->_base._left;
 
@@ -867,7 +879,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::find( const value_type& value) const
+    typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::find( const value_type& value) const
     {
         const_node_type_ptr rootptr = this->_base._left;
 
@@ -884,13 +896,13 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::size_type binary_search_tree<T, Compare, Allocator>::count( const value_type& value) const
+    typename red_black_tree<T, Compare, Allocator>::size_type red_black_tree<T, Compare, Allocator>::count( const value_type& value) const
     {
         return ( ( this->find( value ).base() == &this->_base ) ? 0 : 1 );
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::lower_bound( const value_type& value)
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::lower_bound( const value_type& value)
     {
         node_type_ptr       rootptr = this->_base._left;
         node_type_ptr       position = const_cast<node_type_ptr>( &this->_base );
@@ -909,7 +921,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::lower_bound( const value_type& value) const
+    typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::lower_bound( const value_type& value) const
     {
         const_node_type_ptr rootptr = this->_base._left;
         const_node_type_ptr position = const_cast<const_node_type_ptr>( &this->_base );
@@ -928,7 +940,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::upper_bound( const value_type& value)
+    typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::upper_bound( const value_type& value)
     {
         node_type_ptr       rootptr = this->_base._left;
         node_type_ptr       position = const_cast<node_type_ptr>( &this->_base );
@@ -947,7 +959,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::upper_bound( const value_type& value) const
+    typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::upper_bound( const value_type& value) const
     {
         const_node_type_ptr rootptr = this->_base._left;
         const_node_type_ptr position = const_cast<const_node_type_ptr>( &this->_base );
@@ -966,9 +978,9 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    ft::pair<typename binary_search_tree<T, Compare, Allocator>::const_iterator,
-        typename binary_search_tree<T, Compare, Allocator>::const_iterator> 
-        binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k ) const
+    ft::pair<typename red_black_tree<T, Compare, Allocator>::const_iterator,
+        typename red_black_tree<T, Compare, Allocator>::const_iterator> 
+        red_black_tree<T, Compare, Allocator>::equal_range( const value_type& k ) const
     {
         const_node_type_ptr                 rootptr = this->_base._left;
         const_node_type_ptr                 position = const_cast<const_node_type_ptr>( &this->_base );
@@ -989,9 +1001,9 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator,
-        typename binary_search_tree<T, Compare, Allocator>::iterator> 
-        binary_search_tree<T, Compare, Allocator>::equal_range( const value_type& k )
+    ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator,
+        typename red_black_tree<T, Compare, Allocator>::iterator> 
+        red_black_tree<T, Compare, Allocator>::equal_range( const value_type& k )
     {
         node_type_ptr                       rootptr = this->_base._left;
         node_type_ptr                       position = &this->_base;
@@ -1012,19 +1024,19 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::debug_print() const
+    void red_black_tree<T, Compare, Allocator>::debug_print() const
     {
         _debug_print_recursive_inverted( this->_base._left, 0, false );
     }
 
     template <typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::allocator_type binary_search_tree<T, Compare, Allocator>::get_allocator() const
+    typename red_black_tree<T, Compare, Allocator>::allocator_type red_black_tree<T, Compare, Allocator>::get_allocator() const
     {
         return ( this->_allocator );
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
+    void red_black_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
     {
         if ( node != nullptr ) // or this->_null? No, because this is caught in the clear() function before!
         {
@@ -1034,7 +1046,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::value_compare binary_search_tree<T, Compare, Allocator>::value_comp() const
+    typename red_black_tree<T, Compare, Allocator>::value_compare red_black_tree<T, Compare, Allocator>::value_comp() const
     {
         return ( this->_compare );
     }
@@ -1042,14 +1054,14 @@ namespace ft
     /* private */
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_create_null()
+    void red_black_tree<T, Compare, Allocator>::_create_null()
     {
         this->_null = this->_node_allocator.allocate( 1 );
         this->_node_allocator.construct( this->_null, value_type() );
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_init_root( node_type_ptr &new_node, node_type_ptr &position )
+    void red_black_tree<T, Compare, Allocator>::_init_root( node_type_ptr &new_node, node_type_ptr &position )
     {
         this->_base._left = new_node;
         this->_base._left->_parent = &this->_base;
@@ -1060,7 +1072,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    ft::pair<typename binary_search_tree<T, Compare, Allocator>::iterator, bool> binary_search_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
+    ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator, bool> red_black_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
         node_type_ptr       position = &this->_base;
         node_type_ptr       new_node = _create_node( value );
@@ -1105,7 +1117,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
+    void red_black_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
     {
         if ( old_subtree->_parent == &this->_base )
         {
@@ -1122,7 +1134,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    bool binary_search_tree<T, Compare, Allocator>::_node_has_children( node_type_ptr& node)
+    bool red_black_tree<T, Compare, Allocator>::_node_has_children( node_type_ptr& node)
     {
         if ( node->_left == this->_null && node->_right == this->_null )
             return ( false );
@@ -1130,8 +1142,8 @@ namespace ft
     }
     
     template < typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr 
-    binary_search_tree<T, Compare, Allocator>::_clone_tree( const binary_search_tree& other, const node_type_ptr& other_root )
+    typename red_black_tree<T, Compare, Allocator>::node_type_ptr 
+    red_black_tree<T, Compare, Allocator>::_clone_tree( const red_black_tree& other, const node_type_ptr& other_root )
     {
         if ( other_root == other._null ) // or nullptr?
             return ( this->_null ); // or nullptr?
@@ -1146,7 +1158,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
+    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
     {
         //INVERTED for better human readability
         if ( rootptr == nullptr )
@@ -1175,7 +1187,7 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    typename binary_search_tree<T, Compare, Allocator>::node_type_ptr binary_search_tree<T, Compare, Allocator>::_create_node( const value_type& value )
+    typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
     {
         node_type_ptr new_node = this->_node_allocator.allocate( 1 );
         this->_allocator.construct( &new_node->_data, value );
@@ -1187,7 +1199,7 @@ namespace ft
     }
 
     template < typename T, typename Compare, typename Allocator>
-    void binary_search_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
+    void red_black_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
     {
         if ( rootptr != this->_null )
         {
@@ -1202,19 +1214,19 @@ namespace ft
     }
 
     template <typename T, typename Compare, typename Allocator>
-    inline typename binary_search_tree<T, Compare, Allocator>::iterator binary_search_tree<T, Compare, Allocator>::_make_iter( node_type_ptr ptr )
+    inline typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::_make_iter( node_type_ptr ptr )
     {
         return ( iterator( ptr ) );
     }
 
     template <typename T, typename Compare, typename Allocator>
-    inline typename binary_search_tree<T, Compare, Allocator>::const_iterator binary_search_tree<T, Compare, Allocator>::_make_iter( const_node_type_ptr ptr ) const
+    inline typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::_make_iter( const_node_type_ptr ptr ) const
     {
         return ( const_iterator( ptr ) );
     }
 
     template <typename T, typename Compare, typename Allocator>
-    void swap( binary_search_tree<T, Compare, Allocator>& lhs, binary_search_tree<T, Compare, Allocator>& rhs )
+    void swap( red_black_tree<T, Compare, Allocator>& lhs, red_black_tree<T, Compare, Allocator>& rhs )
     {
         lhs.swap( rhs );
     }
@@ -1243,7 +1255,7 @@ namespace ft
 same number of black nodes
     */
     // template <typename T, typename Compare, typename Allocator>
-    // class red_black_tree : public binary_search_tree<typename T, typename Compare, typename Allocator>
+    // class red_black_tree : public red_black_tree<typename T, typename Compare, typename Allocator>
     // {
 
     //     // code...
