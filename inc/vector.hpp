@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 12:29:54 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/08/26 16:17:20 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 #include <limits>
 #include <stdexcept>
 
-#include "utils/type_traits.hpp"
-#include "utils/iterator.hpp"
-#include "utils/utility.hpp"
-#include "./algorithm.hpp"
+#include "./utils/algorithm.hpp"
+#include "./utils/iterator.hpp"
+#include "./utils/type_traits.hpp"
+#include "./utils/utility.hpp"
 
 #ifndef nullptr
 #define nullptr NULL

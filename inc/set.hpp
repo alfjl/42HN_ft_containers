@@ -3,12 +3,12 @@
 #include <memory>
 #include <stdexcept>
 
-#include "utils/type_traits.hpp"
-#include "utils/iterator.hpp"
-#include "utils/utility.hpp"
-#include "utils/functional.hpp"
-#include "utils/tree.hpp"
-#include "./algorithm.hpp"
+#include "./utils/algorithm.hpp"
+#include "./utils/functional.hpp"
+#include "./utils/iterator.hpp"
+#include "./utils/tree.hpp"
+#include "./utils/type_traits.hpp"
+#include "./utils/utility.hpp"
 
 #ifndef nullptr
 #define nullptr NULL
