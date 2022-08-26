@@ -1,6 +1,6 @@
 #pragma once
 
-// #include <iostream> // for debug_print() only! // comment in for usage of debug_print()
+#include <iostream> // for debug_print() only! // comment in for usage of debug_print()
 #include <memory>
 
 #include "./iterator.hpp"
@@ -578,7 +578,7 @@ namespace ft
         const_iterator upper_bound( const value_type& value ) const;
         ft::pair<iterator,iterator> equal_range( const value_type& value );
         ft::pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
-        // void debug_print() const; // only for debugging purposes // comment in for usage of debug_print()
+        void debug_print() const; // only for debugging purposes // comment in for usage of debug_print()
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
@@ -592,7 +592,7 @@ namespace ft
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
         node_type_ptr _clone_tree( const red_black_tree& other, const node_type_ptr& other_root ); // helper function for assignment operator
-        // void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;  // comment in for usage of debug_print()
+        void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;  // comment in for usage of debug_print()
         node_type_ptr _create_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
@@ -768,54 +768,89 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
+        // std::cout << " -------------------- e1 --------------------- " << std::endl; // TPO
         node_type_ptr node = position.base();
 
+        // std::cout << " -------------------- e2 --------------------- " << std::endl; // TPO
         if ( node == &this->_base || node == this->_null )
+        { // TPO
+        // std::cout << " -------------------- e3 --------------------- " << std::endl; // TPO
             return ;
+        } // TPO
 
+        // std::cout << " -------------------- e4 --------------------- " << std::endl; // TPO
         node_type_ptr   track_node = node;
         node_state      original_track_node_colour = track_node->_colour;
         node_type_ptr   replacement = &this->_base;
 
+        // std::cout << " -------------------- e5 --------------------- " << std::endl; // TPO
         if ( node->_left == this->_null )
         {
+        // std::cout << " -------------------- e6 --------------------- " << std::endl; // TPO
             replacement = node->_right;
             this->_transplant( node, node->_right );
+        // std::cout << " -------------------- e7 --------------------- " << std::endl; // TPO
         }
         else if ( node->_right == this->_null )
         {
+        // std::cout << " -------------------- e8 --------------------- " << std::endl; // TPO
             replacement = node->_left;
             this->_transplant( node, node->_left );
+        // std::cout << " -------------------- e9 --------------------- " << std::endl; // TPO
         }
         else
         {
+        // std::cout << " -------------------- e10 --------------------- " << std::endl; // TPO
             track_node = tree_min<T>( node->_right );
             original_track_node_colour = track_node->_colour;
             replacement = track_node->_right;
+        // std::cout << " -------------------- e11 --------------------- " << std::endl; // TPO
             if ( track_node->_parent == node )
+            { // TPO
+        // std::cout << " -------------------- e12 --------------------- " << std::endl; // TPO
                 replacement->_parent = track_node;
+            } // TPO
             else
             {
+        // std::cout << " -------------------- e13 --------------------- " << std::endl; // TPO
                 this->_transplant( track_node, track_node->_right );
                 track_node->_right = node->_right;
                 track_node->_right->_parent = track_node;
+        // std::cout << " -------------------- e14 --------------------- " << std::endl; // TPO
             }
+        // std::cout << " -------------------- e15 --------------------- " << std::endl; // TPO
             this->_transplant( node, track_node );
             track_node->_left = node->_left;
             track_node->_left->_parent = track_node;
             track_node->_colour = node->_colour;
+        // std::cout << " -------------------- e16 --------------------- " << std::endl; // TPO
         }
         if ( node == this->_begin_node )
         {
+        // std::cout << " -------------------- e17 --------------------- " << std::endl; // TPO
             if ( node->_right != this->_null )
+            { // TPO
+        // std::cout << " -------------------- e18 --------------------- " << std::endl; // TPO
                 this->_begin_node = tree_min<T>( node->_right );
+        // std::cout << " -------------------- e19 --------------------- " << std::endl; // TPO
+            } // TPO
             else
+            { // TPO
+        // std::cout << " -------------------- e20 --------------------- " << std::endl; // TPO
                 this->_begin_node = this->_begin_node->_parent;
+            } // TPO
+        // std::cout << " -------------------- e21 --------------------- " << std::endl; // TPO
         }
         if ( original_track_node_colour == BLACK )
+        { // TPO
+        // std::cout << " -------------------- e22 --------------------- " << std::endl; // TPO
             _tree_erase_fixup( replacement );
+        } // TPO
+        // std::cout << " -------------------- e23 --------------------- " << std::endl; // TPO
         this->destroy_node( node );
+        // std::cout << " -------------------- e24 --------------------- " << std::endl; // TPO
         --( this->_size );
+        // std::cout << " -------------------- e25 --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1041,11 +1076,11 @@ namespace ft
     }
 
     // for debugging purposes only  // comment in for usage of debug_print()
-    // template <typename T, typename Compare, typename Allocator>
-    // void red_black_tree<T, Compare, Allocator>::debug_print() const
-    // {
-    //     _debug_print_recursive_inverted( this->_base._left, 0, false );
-    // }
+    template <typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::debug_print() const
+    {
+        _debug_print_recursive_inverted( this->_base._left, 0, false );
+    }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::allocator_type red_black_tree<T, Compare, Allocator>::get_allocator() const
@@ -1092,46 +1127,79 @@ namespace ft
     template <typename T, typename Compare, typename Allocator>
     ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator, bool> red_black_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
+        // std::cout << " -------------------- _1 --------------------- " << std::endl; // TPO
         node_type_ptr       position = &this->_base;
         node_type_ptr       new_node = this->_create_node( value );
         bool                insert_flag = true;
 
+        // std::cout << " -------------------- _2 --------------------- " << std::endl; // TPO
         while ( rootptr != this->_null )
         {
+        // std::cout << " -------------------- _3 --------------------- " << std::endl; // TPO
             position = rootptr;
             if ( this->_compare( new_node->_data, rootptr->_data ) )
+            { // TPO
+        // std::cout << " -------------------- _4 --------------------- " << std::endl; // TPO
                 rootptr = rootptr->_left;
+            } // TPO
             else if ( this->_compare( rootptr->_data, new_node->_data ) )
+            { // TPO
+        // std::cout << " -------------------- _5 --------------------- " << std::endl; // TPO
                 rootptr = rootptr->_right;
+            } // TPO
             else
             {
+        // std::cout << " -------------------- _6 --------------------- " << std::endl; // TPO
                 insert_flag = false;
                 break ;
             }
+        // std::cout << " -------------------- _7 --------------------- " << std::endl; // TPO
         }
         new_node->_parent = position;
+        // std::cout << " -------------------- _8 --------------------- " << std::endl; // TPO
         if ( position == &this->_base ) // empty tree
+        { // TPO
+        // std::cout << " -------------------- _9 --------------------- " << std::endl; // TPO
             this->_init_root( new_node, position );
+        } // TPO
         else if ( this->_compare( new_node->_data, position->_data ) )
         {
+        // std::cout << " -------------------- _10 --------------------- " << std::endl; // TPO
             position->_left = new_node;
             new_node->_parent = position;
             position = position->_left;
+        // std::cout << " -------------------- _11 --------------------- " << std::endl; // TPO
         }
         else if ( this->_compare( position->_data, new_node->_data ) )
         {
+        // std::cout << " -------------------- _12 --------------------- " << std::endl; // TPO
             position->_right = new_node;
             new_node->_parent = position;
             position = position->_right;
+        // std::cout << " -------------------- _13 --------------------- " << std::endl; // TPO
         }
         else
+        { // TPO
+        // std::cout << " -------------------- _14 --------------------- " << std::endl; // TPO
             this->destroy_node( new_node);
+        } // TPO
         if ( insert_flag == true )
+        { // TPO
+        // std::cout << " -------------------- _15 --------------------- " << std::endl; // TPO
             ++( this->_size );
+        } // TPO
+        // std::cout << " -------------------- _16 --------------------- " << std::endl; // TPO
         this->_base._left->_parent = &this->_base;
+        // std::cout << " -------------------- _17 --------------------- " << std::endl; // TPO
         if ( ( position->_parent == this->_begin_node ) && ( position == position->_parent->_left ) )
+        { // TPO
+        // std::cout << " -------------------- _18 --------------------- " << std::endl; // TPO
             this->_begin_node = position;
+        // std::cout << " -------------------- _19 --------------------- " << std::endl; // TPO
+        } // TPO
+        // std::cout << " -------------------- _20 --------------------- " << std::endl; // TPO
         this->_tree_insert_fixup( position );
+        // std::cout << " -------------------- _21 --------------------- " << std::endl; // TPO
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
@@ -1142,7 +1210,7 @@ namespace ft
         {
             this->_base._left = new_subtree;
             this->_base._left->_parent = &this->_base;
-            this->_base._left->_parent->_left = new_subtree;
+            // this->_base._left->_parent->_left = new_subtree; // unnecessary!
         }
         else if ( old_subtree == old_subtree->_parent->_left )
             old_subtree->_parent->_left = new_subtree;
@@ -1176,34 +1244,34 @@ namespace ft
     }
 
     // for debugging purposes only  // comment in for usage of debug_print()
-    // template <typename T, typename Compare, typename Allocator>
-    // void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
-    // {
-    //     //INVERTED for better human readability
-    //     if ( rootptr == nullptr )
-    //         return ;
+    template <typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
+    {
+        //INVERTED for better human readability
+        if ( rootptr == nullptr )
+            return ;
 
-    //     _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
+        _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
 
-    //     for ( int i = 0; i < level; i++ )
-    //     std::cout << "\t";
+        for ( int i = 0; i < level; i++ )
+        std::cout << "\t";
 
-    //     if ( rootptr->_parent != &this->_base )
-    //         std::cout << ( is_right ? "┌──" : "└──" );
-    //     else
-    //         std::cout << "├──";
+        if ( rootptr->_parent != &this->_base )
+            std::cout << ( is_right ? "┌──" : "└──" );
+        else
+            std::cout << "├──";
         
-    //     if ( rootptr->_colour == RED )
-    //         std::cout << "\033[31m";
-    //     else
-    //         std::cout << "\033[30m";
-    //     if (rootptr == this->_null)
-    //         std::cout << " null\033[37m\n";
-    //     else
-    //         std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
+        if ( rootptr->_colour == RED )
+            std::cout << "\033[31m";
+        else
+            std::cout << "\033[30m";
+        if (rootptr == this->_null)
+            std::cout << " null\033[37m\n";
+        else
+            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
 
-    //     _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
-    // }
+        _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
+    }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
@@ -1247,6 +1315,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_left_rotate( node_type_ptr position )
     {
+        // std::cout << " -------------------- LR IN --------------------- " << std::endl; // TPO
         node_type_ptr   right_node = position->_right;
 
         position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
@@ -1261,11 +1330,13 @@ namespace ft
             position->_parent->_right = right_node;
         right_node->_left = position; // put position on right_node’s left
         position->_parent = right_node;
+        // std::cout << " -------------------- LR OUT --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_right_rotate( node_type_ptr position )
     {
+        // std::cout << " -------------------- RR IN --------------------- " << std::endl; // TPO
         node_type_ptr   left_node = position->_left;
 
         position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
@@ -1280,142 +1351,206 @@ namespace ft
             position->_parent->_left = left_node;
         left_node->_right = position; // put position on left_node’s right
         position->_parent = left_node;
+        // std::cout << " -------------------- RR OUT --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_insert_fixup( node_type_ptr position )
     {
+        // if ( position == this->_null) // needed here?
+        //     return ;
+        // std::cout << " -------------------- F 1 --------------------- " << std::endl; // TPO
         while ( position->_parent->_colour == RED )
         {
+        // std::cout << " -------------------- F 2 --------------------- " << std::endl; // TPO
             node_type_ptr   uncle = &this->_base; // same level as parent node
 
             if ( position->_parent == position->_parent->_parent->_left )
             {
+        // std::cout << " -------------------- F 3 --------------------- " << std::endl; // TPO
                 uncle = position->_parent->_parent->_right;
                 // 3 cases:
+        // std::cout << " -------------------- F 4 --------------------- " << std::endl; // TPO
                 if ( uncle->_colour == RED ) // 1
                 {
+        // std::cout << " -------------------- F 5 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
+        // std::cout << " -------------------- F 6 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
+        // std::cout << " -------------------- F 7 --------------------- " << std::endl; // TPO
                     if ( position == position->_parent->_right ) // 2
                     {
+        // std::cout << " -------------------- F 8 --------------------- " << std::endl; // TPO
                         position = position->_parent;
                         this->_left_rotate( position );
+        // std::cout << " -------------------- F 9 --------------------- " << std::endl; // TPO
                     }
                     // 3
+        // std::cout << " -------------------- F 10 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     this->_right_rotate( position->_parent->_parent );
+        // std::cout << " -------------------- F 11 --------------------- " << std::endl; // TPO
                 }
+        // std::cout << " -------------------- F 12 --------------------- " << std::endl; // TPO
             }
             else
             {
+        // std::cout << " -------------------- F 13 --------------------- " << std::endl; // TPO
                 uncle = position->_parent->_parent->_left;
                 // 3 cases:
                 if ( uncle->_colour == RED ) // 1
                 {
+        // std::cout << " -------------------- F 14 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
+        // std::cout << " -------------------- F 15 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
+        // std::cout << " -------------------- F 16 --------------------- " << std::endl; // TPO
                     if ( position == position->_parent->_left ) // 2
                     {
+        // std::cout << " -------------------- F 17 --------------------- " << std::endl; // TPO
                         position = position->_parent;
                         this->_right_rotate( position );
+        // std::cout << " -------------------- F 18 --------------------- " << std::endl; // TPO
                     }
                     // 3
+        // std::cout << " -------------------- F 19 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     this->_left_rotate( position->_parent->_parent );
+        // std::cout << " -------------------- F 20 --------------------- " << std::endl; // TPO
                 }
+        // std::cout << " -------------------- F 21 --------------------- " << std::endl; // TPO
             }
         }
+        // std::cout << " -------------------- F 22 --------------------- " << std::endl; // TPO
         this->_base._left->_colour = BLACK;
+        // std::cout << " -------------------- F 23 --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_erase_fixup( node_type_ptr position )
     {
+        // std::cout << " -------------------- EF 1 --------------------- " << std::endl; // TPO
         if ( position == this->_null)
+        {
+        // std::cout << " -------------------- EF 2 --------------------- " << std::endl; // TPO
             return ;
+        }
+        // std::cout << " -------------------- EF 3 --------------------- " << std::endl; // TPO
         while ( position != this->_base._left && position->_colour == BLACK )
         {
+        // std::cout << " -------------------- EF 4 --------------------- " << std::endl; // TPO
             node_type_ptr   sibling = &this->_base; // same level as position
 
+        // std::cout << " -------------------- EF 5 --------------------- " << std::endl; // TPO
             if ( position == position->_parent->_left )
             {
+        // std::cout << " -------------------- EF 6 --------------------- " << std::endl; // TPO
                 sibling = position->_parent->_right;
+        // std::cout << " -------------------- EF 7 --------------------- " << std::endl; // TPO
                 if ( sibling->_colour == RED ) // 1
                 {
+        // std::cout << " -------------------- EF 8 --------------------- " << std::endl; // TPO
                     sibling->_colour = BLACK;
                     position->_parent->_colour = RED;
                     this->_left_rotate( position->_parent );
                     sibling = position->_parent->_right;
+        // std::cout << " -------------------- EF 9 --------------------- " << std::endl; // TPO
                 }
+        // std::cout << " -------------------- EF 10 --------------------- " << std::endl; // TPO
+                if ( sibling == this->_null) // TPO
+                    return ; // TPO
                 if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
                 {
+        // std::cout << " -------------------- EF 11 --------------------- " << std::endl; // TPO
                     sibling->_colour = RED;
                     position = position->_parent;
+        // std::cout << " -------------------- EF 12 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
+        // std::cout << " -------------------- EF 13 --------------------- " << std::endl; // TPO
                     if ( sibling->_right->_colour == BLACK ) // 3
                     {
+        // std::cout << " -------------------- EF 14 --------------------- " << std::endl; // TPO
                         sibling->_left->_colour = BLACK;
                         sibling->_colour = RED;
                         this->_right_rotate( sibling );
                         sibling = position->_parent->_right;
+        // std::cout << " -------------------- EF 15 --------------------- " << std::endl; // TPO
                     }
                     // 4
+        // std::cout << " -------------------- EF 16 --------------------- " << std::endl; // TPO
                     sibling->_colour = position->_parent->_colour;
                     position->_parent->_colour = BLACK;
                     sibling->_right->_colour = BLACK;
                     this->_left_rotate( position->_parent );
                     position = this->_base._left;
+        // std::cout << " -------------------- EF 17 --------------------- " << std::endl; // TPO
                 }
             }
             else
             {
+        // std::cout << " -------------------- EF 18 --------------------- " << std::endl; // TPO
                 sibling = position->_parent->_left;
+        // std::cout << " -------------------- EF 19 --------------------- " << std::endl; // TPO
                 if ( sibling->_colour == RED ) // 1
                 {
+        // std::cout << " -------------------- EF 20 --------------------- " << std::endl; // TPO
                     sibling->_colour = BLACK;
                     position->_parent->_colour = RED;
                     this->_right_rotate( position->_parent );
                     sibling = position->_parent->_left;
+        // std::cout << " -------------------- EF 21 --------------------- " << std::endl; // TPO
                 }
+                if ( sibling == this->_null) // TPO
+                    return ; // TPO
                 if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
                 {
+        // std::cout << " -------------------- EF 22 --------------------- " << std::endl; // TPO
                     sibling->_colour = RED;
                     position = position->_parent;
+        // std::cout << " -------------------- EF 23 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
+        // std::cout << " -------------------- EF 24 --------------------- " << std::endl; // TPO
                     if ( sibling->_left->_colour == BLACK ) // 3
                     {
+        // std::cout << " -------------------- EF 25 --------------------- " << std::endl; // TPO
                         sibling->_right->_colour = BLACK;
                         sibling->_colour = RED;
                         this->_left_rotate( sibling );
                         sibling = position->_parent->_left;
+        // std::cout << " -------------------- EF 26 --------------------- " << std::endl; // TPO
                     }
                     // 4
+        // std::cout << " -------------------- EF 27 --------------------- " << std::endl; // TPO
                     sibling->_colour = position->_parent->_colour;
                     position->_parent->_colour = BLACK;
                     sibling->_left->_colour = BLACK;
                     this->_right_rotate( position->_parent );
                     position = this->_base._left;
+        // std::cout << " -------------------- EF 28 --------------------- " << std::endl; // TPO
                 }
+        // std::cout << " -------------------- EF 29 --------------------- " << std::endl; // TPO
             }
+        // std::cout << " -------------------- EF 30 --------------------- " << std::endl; // TPO
         }
+        // std::cout << " -------------------- EF 31 --------------------- " << std::endl; // TPO
         position->_colour = BLACK;
+        // std::cout << " -------------------- EF 32 --------------------- " << std::endl; // TPO
     }
 
     /* red_black_tree non-member functions */
