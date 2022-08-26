@@ -223,8 +223,6 @@ namespace ft
     template <typename T, typename Compare, typename Alloc>
     typename set<T,Compare,Alloc>::iterator set<T,Compare,Alloc>::insert(__attribute__((unused)) iterator position, const value_type& val ) // with hint
     {
-        // typename base::iterator x = position.base();
-
         return ( this->tree.insert( val ).first );
     }
 
