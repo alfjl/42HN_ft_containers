@@ -253,8 +253,7 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator++( int )
     {
-        tree_iterator   it = *( this ); // or:
-        // tree_iterator   it( *( this ) );
+        tree_iterator   it = *( this );
 
         ++( *( this ) );
         return ( it );
@@ -277,8 +276,7 @@ namespace ft
     template <typename NodePtr, typename T>
     tree_iterator<NodePtr, T>  tree_iterator<NodePtr, T>::operator--( int )
     {
-        tree_iterator   it = *( this ); // or:
-        // tree_iterator   it( *( this ) );
+        tree_iterator   it = *( this );
 
         --( *( this ) );
         return ( it );
@@ -410,8 +408,7 @@ namespace ft
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>  tree_const_iterator<ConstNodePtr, T>::operator++( int )
     {
-        tree_const_iterator   it = *( this ); // or:
-        // tree_const_iterator   it( *( this ) );
+        tree_const_iterator   it = *( this );
 
         ++( *( this ) );
         return ( it );
@@ -434,8 +431,7 @@ namespace ft
     template <typename ConstNodePtr, typename T>
     tree_const_iterator<ConstNodePtr, T>  tree_const_iterator<ConstNodePtr, T>::operator--( int )
     {
-        tree_const_iterator   it = *( this ); // or:
-        // tree_const_iterator   it( *( this ) );
+        tree_const_iterator   it = *( this );
 
         --( *( this ) );
         return ( it );
