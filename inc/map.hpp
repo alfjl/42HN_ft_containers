@@ -333,7 +333,6 @@ namespace ft
 
     private:
         typedef ft::red_black_tree<value_type, value_compare, allocator_type>   base;
-        // typedef ft::binary_search_tree<value_type, value_compare, allocator_type>   base; // needs to be adapted to RB Tree, after initial testing phase!
 
         base    tree;
 
