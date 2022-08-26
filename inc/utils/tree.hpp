@@ -772,50 +772,10 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
-        // node_type_ptr node = position.base();
-
-        // if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
-        //     return ;
-        // if ( node == this->_begin_node )
-        // {
-        //     if ( node->_right->_right != nullptr )
-        //         this->_begin_node = tree_min<T>( node->_right );
-        //     else
-        //         this->_begin_node = this->_begin_node->_parent;
-        // }
-        // if ( node->_left == this->_null )
-        //     this->_transplant( node, node->_right );
-        // else if ( node->_right == this->_null )
-        //     this->_transplant( node, node->_left );
-        // else
-        // {
-        //     node_type_ptr replacement = tree_min<T>( node->_right );
-        //     if ( replacement->_parent != node )
-        //     {
-        //         this->_transplant( replacement, replacement->_right );
-        //         replacement->_right = node->_right;
-        //         replacement->_right->_parent = replacement;
-        //     }
-        //     this->_transplant( node, replacement );
-        //     replacement->_left = node->_left;
-        //     replacement->_left->_parent = replacement;
-        // }
-
-        // this->destroy_node( node ); // should catch the this->_null in the first if statement
-        // --( this->_size );
-
-
         node_type_ptr node = position.base();
 
-        if ( node == &this->_base || node == this->_null ) // do I need that? Do I need this->_base in general? Or check against size == 0
+        if ( node == &this->_base || node == this->_null )
             return ;
-        if ( node == this->_begin_node )
-        {
-            if ( node->_right->_right != nullptr )
-                this->_begin_node = tree_min<T>( node->_right );
-            else
-                this->_begin_node = this->_begin_node->_parent;
-        }
 
         node_type_ptr   track_node = node;
         node_state      original_track_node_colour = track_node->_colour;
@@ -849,11 +809,16 @@ namespace ft
             track_node->_left->_parent = track_node;
             track_node->_colour = node->_colour;
         }
+        if ( node == this->_begin_node )
+        {
+            if ( node->_right != this->_null )
+                this->_begin_node = tree_min<T>( node->_right );
+            else
+                this->_begin_node = this->_begin_node->_parent;
+        }
         if ( original_track_node_colour == BLACK )
             _tree_erase_fixup( replacement );
-
-
-        this->destroy_node( node ); // still correct? // should catch the this->_null in the first if statement
+        this->destroy_node( node );
         --( this->_size );
     }
 
@@ -890,7 +855,7 @@ namespace ft
             if ( this->_size == 0 )
             {
                 this->_begin_node = &this->_base;
-                this->_base._left = this->_null; // necessary here? isn't that handed over above already?
+                this->_base._left = this->_null;
             }
             else
             {
@@ -899,7 +864,7 @@ namespace ft
             if ( x._size == 0 )
             {
                 x._begin_node = &x._base;
-                x._base._left = x._null; // necessary here? isn't that handed over above already?
+                x._base._left = x._null;
             }
             else
                 x._base._left->_parent = &x._base;
@@ -1094,7 +1059,7 @@ namespace ft
     template <typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::destroy_node( node_type_ptr node )
     {
-        if ( node != nullptr ) // or this->_null? No, because this is caught in the clear() function before!
+        if ( node != nullptr )
         {
             this->_allocator.destroy( &node->_data );
             this->_node_allocator.deallocate( node, 1 );
@@ -1173,26 +1138,119 @@ namespace ft
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
-// -------------------------------
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
+    {
+        if ( old_subtree->_parent == &this->_base )
+        {
+            this->_base._left = new_subtree;
+            this->_base._left->_parent = &this->_base;
+            this->_base._left->_parent->_left = new_subtree;
+        }
+        else if ( old_subtree == old_subtree->_parent->_left )
+            old_subtree->_parent->_left = new_subtree;
+        else
+            old_subtree->_parent->_right = new_subtree;
+        new_subtree->_parent = old_subtree->_parent;
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    bool red_black_tree<T, Compare, Allocator>::_node_has_children( node_type_ptr& node)
+    {
+        if ( node->_left == this->_null && node->_right == this->_null )
+            return ( false );
+        return ( true );
+    }
+    
+    template < typename T, typename Compare, typename Allocator>
+    typename red_black_tree<T, Compare, Allocator>::node_type_ptr 
+    red_black_tree<T, Compare, Allocator>::_clone_tree( const red_black_tree& other, const node_type_ptr& other_root )
+    {
+        if ( other_root == other._null ) // or nullptr?
+            return ( this->_null ); // or nullptr?
+        node_type_ptr copy_node = this->_create_node( other_root->_data );
+        copy_node->_left = this->_clone_tree( other, other_root->_left );
+        if ( copy_node->_left != this->_null )
+            copy_node->_left->_parent = copy_node;        
+        copy_node->_right = this->_clone_tree( other, other_root->_right );
+        if ( copy_node->_right != this->_null )
+            copy_node->_right->_parent = copy_node;
+        return ( copy_node );
+    }
+
+    template <typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
+    {
+        //INVERTED for better human readability
+        if ( rootptr == nullptr )
+            return ;
+
+        _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
+
+        for ( int i = 0; i < level; i++ )
+        std::cout << "\t";
+
+        if ( rootptr->_parent != &this->_base )
+            std::cout << ( is_right ? "┌──" : "└──" );
+        else
+            std::cout << "├──";
+        
+        if ( rootptr->_colour == RED )
+            std::cout << "\033[31m";
+        else
+            std::cout << "\033[30m";
+        if (rootptr == this->_null)
+            std::cout << " null\033[37m\n";
+        else
+            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
+
+        _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
+    }
+
+    template <typename T, typename Compare, typename Allocator>
+    typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
+    {
+        node_type_ptr new_node = this->_node_allocator.allocate( 1 );
+        this->_allocator.construct( &new_node->_data, value );
+        new_node->_colour = RED;
+        new_node->_parent = this->_null;
+        new_node->_left = this->_null;
+        new_node->_right = this->_null;
+        return ( new_node );
+    }
+
+    template < typename T, typename Compare, typename Allocator>
+    void red_black_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
+    {
+        if ( rootptr != this->_null )
+        {
+            if ( rootptr->_left != this->_null )
+                _clear( rootptr->_left );
+            if  ( rootptr->_right != this->_null )
+                _clear( rootptr->_right );
+            destroy_node( rootptr );
+            rootptr = this->_null;
+        }
+        this->_size = 0;
+    }
+
+    template <typename T, typename Compare, typename Allocator>
+    inline typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::_make_iter( node_type_ptr ptr )
+    {
+        return ( iterator( ptr ) );
+    }
+
+    template <typename T, typename Compare, typename Allocator>
+    inline typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::_make_iter( const_node_type_ptr ptr ) const
+    {
+        return ( const_iterator( ptr ) );
+    }
 
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_left_rotate( node_type_ptr position )
     {
-        // node_type_ptr   right_node = position->_right;
-        // position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
-        // if ( right_node->_left != this->_null )
-        //     right_node->_left->_parent = position;
-        // right_node->_parent = position->_parent; // link position’s parent to right_node
-        // if ( position->_parent == this->_null )
-        //     this->_base._left = right_node;
-        // else if ( position == position->_parent->_left )
-        //     position->_parent->_left = right_node;
-        // else
-        //     position->_parent->_right = right_node;
-        // right_node->_left = position; // put position on right_node’s left
-        // position->_parent = right_node;
-
         node_type_ptr   right_node = position->_right;
+
         position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
         if ( right_node->_left != this->_null )
             right_node->_left->_parent = position;
@@ -1210,21 +1268,8 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_right_rotate( node_type_ptr position )
     {
-        // node_type_ptr   left_node = position->_left;
-        // position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
-        // if ( left_node->_right != this->_null )
-        //     left_node->_right->_parent = position;
-        // left_node->_parent = position->_parent; // link position’s parent to left_node
-        // if ( position->_parent == this->_null )
-        //     this->_base._left = left_node;
-        // else if ( position == position->_parent->_right )
-        //     position->_parent->_right = left_node;
-        // else
-        //     position->_parent->_left = left_node;
-        // left_node->_right = position; // put position on left_node’s right
-        // position->_parent = left_node;
-
         node_type_ptr   left_node = position->_left;
+
         position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
         if ( left_node->_right != this->_null )
             left_node->_right->_parent = position;
@@ -1242,56 +1287,7 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_insert_fixup( node_type_ptr position )
     {
-        // while ( position->_parent->_colour == RED )
-        // {
-        //     node_type_ptr   uncle = &this->_base; // same level as parent node
-
-        //     if ( position->_parent == position->_parent->_parent->_left )
-        //     {
-        //         uncle = position->_parent->_parent->_right;
-        //         // 3 cases:
-        //         if ( uncle->_colour == RED ) // 1
-        //         {
-        //             position->_parent->_colour = BLACK;
-        //             uncle->_colour = BLACK;
-        //             position->_parent->_parent->_colour = RED;
-        //             position = position->_parent->_parent;
-        //         }
-        //         else if ( position == position->_parent->_right ) // 2
-        //         {
-        //             position = position->_parent;
-        //             this->_left_rotate( position );
-        //         }
-        //         // 3
-        //         position->_parent->_colour = BLACK;
-        //         position->_parent->_parent->_colour = RED;
-        //         this->_right_rotate( position->_parent->_parent );
-        //     }
-        //     else // same, but left & right inverted
-        //     {
-        //         uncle = position->_parent->_parent->_left;
-        //         // 3 cases:
-        //         if ( uncle->_colour == RED ) // 1
-        //         {
-        //             position->_parent->_colour = BLACK;
-        //             uncle->_colour = BLACK;
-        //             position->_parent->_parent->_colour = RED;
-        //             position = position->_parent->_parent;
-        //         }
-        //         else if ( position == position->_parent->_left ) // 2
-        //         {
-        //             position = position->_parent;
-        //             this->_right_rotate( position );
-        //         }
-        //         // 3
-        //         position->_parent->_colour = BLACK;
-        //         position->_parent->_parent->_colour = RED;
-        //         this->_left_rotate( position->_parent->_parent );
-        //     }
-        // }
-        // this->_base._left->_colour = BLACK;
-
-                while ( position->_parent->_colour == RED )
+        while ( position->_parent->_colour == RED )
         {
             node_type_ptr   uncle = &this->_base; // same level as parent node
 
@@ -1319,7 +1315,7 @@ namespace ft
                     this->_right_rotate( position->_parent->_parent );
                 }
             }
-            else // same, but left & right inverted
+            else
             {
                 uncle = position->_parent->_parent->_left;
                 // 3 cases:
@@ -1350,71 +1346,8 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_erase_fixup( node_type_ptr position )
     {
-        // while ( position != this->_base._left && position->_colour == BLACK )
-        // {
-        //     node_type_ptr   sibling = &this->_base; // same level as position
-
-        //     if ( position == position->_parent->_left )
-        //     {
-        //         sibling = position->_parent->_right;
-        //         if ( sibling->_colour == RED ) // 1
-        //         {
-        //             sibling->_colour = BLACK;
-        //             position->_parent->_colour = RED;
-        //             this->_left_rotate( position->_parent );
-        //             sibling = position->_parent->_right;
-        //         }
-        //         if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
-        //         {
-        //             sibling->_colour = RED;
-        //             position = position->_parent;
-        //         }
-        //         else if ( sibling->_right->_colour == BLACK ) // 3
-        //         {
-        //             sibling->_left->_colour = BLACK;
-        //             sibling->_colour = RED;
-        //             this->_right_rotate( sibling );
-        //             sibling = position->_parent->_right;
-        //         }
-        //         // 4
-        //         sibling->_colour = position->_parent->_colour;
-        //         position->_parent->_colour = BLACK;
-        //         sibling->_right->_colour = BLACK;
-        //         this->_left_rotate( position->_parent );
-        //         position = this->_base._left;
-        //     }
-        //     else
-        //     {
-        //         sibling = position->_parent->_left;
-        //         if ( sibling->_colour == RED ) // 1
-        //         {
-        //             sibling->_colour = BLACK;
-        //             position->_parent->_colour = RED;
-        //             this->_right_rotate( position->_parent );
-        //             sibling = position->_parent->_left;
-        //         }
-        //         if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
-        //         {
-        //             sibling->_colour = RED;
-        //             position = position->_parent;
-        //         }
-        //         else if ( sibling->_left->_colour == BLACK ) // 3
-        //         {
-        //             sibling->_right->_colour = BLACK;
-        //             sibling->_colour = RED;
-        //             this->_left_rotate( sibling );
-        //             sibling = position->_parent->_left;
-        //         }
-        //         // 4
-        //         sibling->_colour = position->_parent->_colour;
-        //         position->_parent->_colour = BLACK;
-        //         sibling->_left->_colour = BLACK;
-        //         this->_right_rotate( position->_parent );
-        //         position = this->_base._left;
-        //     }
-        // }
-        // position->_colour = BLACK;
-
+        if ( position == this->_null)
+            return ;
         while ( position != this->_base._left && position->_colour == BLACK )
         {
             node_type_ptr   sibling = &this->_base; // same level as position
@@ -1487,180 +1420,12 @@ namespace ft
         position->_colour = BLACK;
     }
 
-// -------------------------------
-    template < typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_transplant( node_type_ptr old_subtree, node_type_ptr new_subtree )
-    {
-        if ( old_subtree->_parent == &this->_base )
-        {
-            this->_base._left = new_subtree;
-            this->_base._left->_parent = &this->_base;
-            this->_base._left->_parent->_left = new_subtree;
-        }
-        else if ( old_subtree == old_subtree->_parent->_left )
-            old_subtree->_parent->_left = new_subtree;
-        else
-            old_subtree->_parent->_right = new_subtree;
-        new_subtree->_parent = old_subtree->_parent;
-    }
-
-    template < typename T, typename Compare, typename Allocator>
-    bool red_black_tree<T, Compare, Allocator>::_node_has_children( node_type_ptr& node)
-    {
-        if ( node->_left == this->_null && node->_right == this->_null )
-            return ( false );
-        return ( true );
-    }
-    
-    template < typename T, typename Compare, typename Allocator>
-    typename red_black_tree<T, Compare, Allocator>::node_type_ptr 
-    red_black_tree<T, Compare, Allocator>::_clone_tree( const red_black_tree& other, const node_type_ptr& other_root )
-    {
-        if ( other_root == other._null ) // or nullptr?
-            return ( this->_null ); // or nullptr?
-        node_type_ptr copy_node = this->_create_node( other_root->_data );
-        copy_node->_left = this->_clone_tree( other, other_root->_left );
-        if ( copy_node->_left->_left != nullptr )
-            copy_node->_left->_parent = copy_node;        
-        copy_node->_right = this->_clone_tree( other, other_root->_right );
-        if ( copy_node->_right->_right != nullptr )
-            copy_node->_right->_parent = copy_node;
-        return ( copy_node );
-    }
-
-    template <typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
-    {
-        //INVERTED for better human readability
-        if ( rootptr == nullptr )
-            return ;
-
-        _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
-
-        for ( int i = 0; i < level; i++ )
-        std::cout << "\t";
-
-        if ( rootptr->_parent != &this->_base )
-            std::cout << ( is_right ? "┌──" : "└──" );
-        else
-            std::cout << "├──";
-        
-        if ( rootptr->_colour == RED )
-            std::cout << "\033[31m";
-        else
-            std::cout << "\033[30m";
-        if (rootptr == this->_null)
-            std::cout << " null\033[37m\n";
-        else
-            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
-
-        _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
-    }
-
-    template <typename T, typename Compare, typename Allocator>
-    typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
-    {
-        node_type_ptr new_node = this->_node_allocator.allocate( 1 );
-        this->_allocator.construct( &new_node->_data, value );
-        // new_node->_colour = BLACK; // RED for Red Black Tree
-        new_node->_colour = RED; // BLACK for Binary Search Tree
-        new_node->_parent = this->_null;
-        new_node->_left = this->_null;
-        new_node->_right = this->_null;
-        return ( new_node );
-    }
-
-    template < typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_clear( node_type_ptr& rootptr)
-    {
-        if ( rootptr != this->_null )
-        {
-            if ( rootptr->_left != this->_null )
-                _clear( rootptr->_left );
-            if  ( rootptr->_right != this->_null )
-                _clear( rootptr->_right );
-            destroy_node( rootptr );
-            rootptr = this->_null;
-        }
-        this->_size = 0;
-    }
-
-    template <typename T, typename Compare, typename Allocator>
-    inline typename red_black_tree<T, Compare, Allocator>::iterator red_black_tree<T, Compare, Allocator>::_make_iter( node_type_ptr ptr )
-    {
-        return ( iterator( ptr ) );
-    }
-
-    template <typename T, typename Compare, typename Allocator>
-    inline typename red_black_tree<T, Compare, Allocator>::const_iterator red_black_tree<T, Compare, Allocator>::_make_iter( const_node_type_ptr ptr ) const
-    {
-        return ( const_iterator( ptr ) );
-    }
+    /* red_black_tree non-member functions */
 
     template <typename T, typename Compare, typename Allocator>
     void swap( red_black_tree<T, Compare, Allocator>& lhs, red_black_tree<T, Compare, Allocator>& rhs )
     {
         lhs.swap( rhs );
     }
-
-    /* --------------------------- Red Black Tree --------------------------- */
-
-    /*
-    ** (Cormen, Leiserson, Rivest & Stein: 'Introduction to Algorithms' - 3rd Edition, Chapter 13)
-    ** A red-black tree is a binary search tree with one extra bit of storage per node:
-    ** its color, which can be either RED or BLACK.
-    ** By constraining the node colors on any simple path from the root to a leaf,
-    ** red-black trees ensure that no such path is more than twice as long as any other,
-    ** so that the tree is approximately balanced.
-    **
-    ** If a child or the parent of a node does not exist, the corresponding pointer attribute
-    ** of the node contains the value NIL. We shall regard these NILs as being pointers to
-    ** leaves (external nodes) of the binary search tree and the normal, key-bearing nodes
-    ** as being internal nodes of the tree.
-    **
-    ** A red-black tree [...] satisfies the following red-black properties:
-    ** 1. Every node is either red or black.
-    ** 2. The root is black.
-    ** 3. Every leaf ( NIL ) is black.
-    ** 4. If a node is red, then both its children are black.
-    ** 5. For each node, all simple paths from the node to descendant leaves contain the
-same number of black nodes
-    */
-    // template <typename T, typename Compare, typename Allocator>
-    // class red_black_tree : public red_black_tree<typename T, typename Compare, typename Allocator>
-    // {
-
-    //     // code...
-
-    //     // queries (search min, max, successor, precursor) from BST
-
-    //     // updates (insert, delete/erase) <- recolour and reorder (via rotation = right_rotate(node) left_rotate(node))
-    //     // RB_insert(x) -> tree_insert(x)
-    //         // -> might violate rule that red node needs black parent
-    //         // solution: move problem up the tree, until we can fix it via recolouring and/or rotation
-    //         // steps:
-    //         // tree_insert(x) (BST)
-    //         // colour x = red
-    //         //  (walk up the tree) while x != root && colour x == red
-    //         // 6 cases (3 left, and 3 right):
-    //         // if p[p[x]] == p[p[x]]->_left
-    //             // 3 cases:
-    //             // 1. y = p[p[x]]->_right (= uncle/aunt of x)
-    //             // if colour[y] == RED -> we recolour   CASE 1
-    //               // else if x == p[x]->_right  CASE 2
-    //               // after that do CASE 3
-    //         // else: do it the same but right, instead of left
-    //         // after that, always colour root to BLACK (just in case)
-
-
-    //         // 3 CASES:
-    //         // CASE 1:
-    //             // recolour p[x], p[p[x]] & y and change x to p[p[x]] (and go on in the loop) -> pushes the problem up the tree
-    //         // CASE 2:
-    //             // left rotation on p[x] so x is now left child
-    //         // CASE 3
-    //             // right rotate of p[p[x]]
-
-    // }; // red_black_tree
 
 } // namespace ft
