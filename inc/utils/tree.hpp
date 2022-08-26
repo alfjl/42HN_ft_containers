@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream> // for debug_print() only!
+// #include <iostream> // for debug_print() only! // comment in for usage of debug_print()
 #include <memory>
 
 #include "./iterator.hpp"
@@ -582,7 +582,7 @@ namespace ft
         const_iterator upper_bound( const value_type& value ) const;
         ft::pair<iterator,iterator> equal_range( const value_type& value );
         ft::pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
-        void debug_print() const; // only for debugging purposes
+        // void debug_print() const; // only for debugging purposes // comment in for usage of debug_print()
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
@@ -596,7 +596,7 @@ namespace ft
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
         node_type_ptr _clone_tree( const red_black_tree& other, const node_type_ptr& other_root ); // helper function for assignment operator
-        void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;
+        // void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;  // comment in for usage of debug_print()
         node_type_ptr _create_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
@@ -1044,11 +1044,12 @@ namespace ft
         return ( ft::make_pair( iterator( position ), iterator( position ) ) );
     }
 
-    template <typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::debug_print() const
-    {
-        _debug_print_recursive_inverted( this->_base._left, 0, false );
-    }
+    // for debugging purposes only  // comment in for usage of debug_print()
+    // template <typename T, typename Compare, typename Allocator>
+    // void red_black_tree<T, Compare, Allocator>::debug_print() const
+    // {
+    //     _debug_print_recursive_inverted( this->_base._left, 0, false );
+    // }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::allocator_type red_black_tree<T, Compare, Allocator>::get_allocator() const
@@ -1178,34 +1179,35 @@ namespace ft
         return ( copy_node );
     }
 
-    template <typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
-    {
-        //INVERTED for better human readability
-        if ( rootptr == nullptr )
-            return ;
+    // for debugging purposes only  // comment in for usage of debug_print()
+    // template <typename T, typename Compare, typename Allocator>
+    // void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
+    // {
+    //     //INVERTED for better human readability
+    //     if ( rootptr == nullptr )
+    //         return ;
 
-        _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
+    //     _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
 
-        for ( int i = 0; i < level; i++ )
-        std::cout << "\t";
+    //     for ( int i = 0; i < level; i++ )
+    //     std::cout << "\t";
 
-        if ( rootptr->_parent != &this->_base )
-            std::cout << ( is_right ? "┌──" : "└──" );
-        else
-            std::cout << "├──";
+    //     if ( rootptr->_parent != &this->_base )
+    //         std::cout << ( is_right ? "┌──" : "└──" );
+    //     else
+    //         std::cout << "├──";
         
-        if ( rootptr->_colour == RED )
-            std::cout << "\033[31m";
-        else
-            std::cout << "\033[30m";
-        if (rootptr == this->_null)
-            std::cout << " null\033[37m\n";
-        else
-            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
+    //     if ( rootptr->_colour == RED )
+    //         std::cout << "\033[31m";
+    //     else
+    //         std::cout << "\033[30m";
+    //     if (rootptr == this->_null)
+    //         std::cout << " null\033[37m\n";
+    //     else
+    //         std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
 
-        _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
-    }
+    //     _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
+    // }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
