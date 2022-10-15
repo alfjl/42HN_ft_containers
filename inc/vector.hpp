@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/26 16:17:20 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/15 12:15:55 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,7 @@ namespace ft
         if ( this != &other )
         {
             this->_vdeallocate( this->_capacity );
+            this->_capacity = 0;
             this->_allocator = other._allocator;
             size_type n = other.capacity();
             this->_begin = this->_vallocate( n );
@@ -277,7 +278,7 @@ namespace ft
     typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
     {
             size_type alloc_max = this->_allocator.max_size();
-            size_type numeric_max = std::numeric_limits<size_type>::max() / 2;
+            size_type numeric_max = std::numeric_limits<difference_type>::max();
             return ( ( alloc_max < numeric_max ) ? alloc_max : numeric_max );
     }
 
@@ -582,15 +583,28 @@ namespace ft
     typename vector<T, Alloc>::size_type vector<T, Alloc>::_vcalculate_size( size_type n) const
     {
         const size_type temp_max_size = this->max_size();
-        const size_type temp_capacity = this->capacity();
+        size_type temp_capacity = this->capacity();
     
+        // if ( n > temp_max_size )
+        //     throw std::length_error( "ft::vector" );
+        // if ( n < temp_capacity )
+        //     return ( temp_capacity );
+        // if ( n >= temp_capacity && n >= temp_max_size / 2 )
+        //     return ( temp_max_size );
+        // // return ( n * 2 );
+        // temp_capacity *= 2;
+        // return ( ( n > temp_capacity) ? n : temp_capacity );
+
         if ( n > temp_max_size )
             throw std::length_error( "ft::vector" );
         if ( n < temp_capacity )
             return ( temp_capacity );
-        if ( n >= temp_capacity && n >= temp_max_size / 2 )
+        if (temp_capacity >= temp_max_size / 2 )
             return ( temp_max_size );
-        return ( n * 2 );
+        // return ( n * 2 );
+        temp_capacity *= 2;
+        return ( ( n > temp_capacity) ? n : temp_capacity );
+
     }
 
     template <typename T, typename Alloc>
@@ -644,10 +658,11 @@ namespace ft
     template <typename T, typename Alloc>
     void vector<T, Alloc>::_vresize_empty_vector( size_type n )
     {
+        size_type old_capacity = this->capacity();
         pointer     temp_begin = this->_vallocate( n );
 
         if ( this->_begin != nullptr )
-            this->_allocator.deallocate(this->_begin, this->capacity());
+            this->_allocator.deallocate(this->_begin, old_capacity);
         this->_end = this->_begin = temp_begin;
     }
 
