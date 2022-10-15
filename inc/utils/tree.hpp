@@ -526,7 +526,8 @@ namespace ft
         typedef ft::reverse_iterator<iterator>                              reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>                        const_reverse_iterator;
 
-    private:
+    // private: // TODO: Change back to private
+    public:
         node_type           _base; // first node in tree. _base->_left is root node
         node_type_ptr       _null; // every node_direction without attached child points onto this node (instead of nullptr)
         node_type_ptr       _begin_node; // left-most node, a.k.a node with smallest key
@@ -1182,6 +1183,7 @@ namespace ft
         { // TPO
         // std::cout << " -------------------- _14 --------------------- " << std::endl; // TPO
             this->destroy_node( new_node);
+            return ( ft::make_pair( this->_make_iter( position ), insert_flag ) ); // DONE: 1.) add return statement
         } // TPO
         if ( insert_flag == true )
         { // TPO
@@ -1360,7 +1362,8 @@ namespace ft
         // if ( position == this->_null) // needed here?
         //     return ;
         // std::cout << " -------------------- F 1 --------------------- " << std::endl; // TPO
-        while ( position->_parent->_colour == RED )
+        // while ( position->_parent->_colour == RED && position != this->_base._left ) // DONE: 1.) added '&& position != this->_base._left'
+        while ( position->_parent->_colour == RED ) // DONE: 1.) added '&& position != this->_base._left'
         {
         // std::cout << " -------------------- F 2 --------------------- " << std::endl; // TPO
             node_type_ptr   uncle = &this->_base; // same level as parent node
@@ -1469,8 +1472,8 @@ namespace ft
         // std::cout << " -------------------- EF 9 --------------------- " << std::endl; // TPO
                 }
         // std::cout << " -------------------- EF 10 --------------------- " << std::endl; // TPO
-                if ( sibling == this->_null) // TPO
-                    return ; // TPO
+                // if ( sibling == this->_null) // TPO
+                //     return ; // TPO
                 if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
                 {
         // std::cout << " -------------------- EF 11 --------------------- " << std::endl; // TPO
@@ -1514,8 +1517,8 @@ namespace ft
                     sibling = position->_parent->_left;
         // std::cout << " -------------------- EF 21 --------------------- " << std::endl; // TPO
                 }
-                if ( sibling == this->_null) // TPO
-                    return ; // TPO
+                // if ( sibling == this->_null) // TPO
+                //     return ; // TPO
                 if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
                 {
         // std::cout << " -------------------- EF 22 --------------------- " << std::endl; // TPO

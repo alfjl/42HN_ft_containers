@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/15 12:15:55 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/15 14:04:59 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -584,16 +584,6 @@ namespace ft
     {
         const size_type temp_max_size = this->max_size();
         size_type temp_capacity = this->capacity();
-    
-        // if ( n > temp_max_size )
-        //     throw std::length_error( "ft::vector" );
-        // if ( n < temp_capacity )
-        //     return ( temp_capacity );
-        // if ( n >= temp_capacity && n >= temp_max_size / 2 )
-        //     return ( temp_max_size );
-        // // return ( n * 2 );
-        // temp_capacity *= 2;
-        // return ( ( n > temp_capacity) ? n : temp_capacity );
 
         if ( n > temp_max_size )
             throw std::length_error( "ft::vector" );
@@ -601,7 +591,6 @@ namespace ft
             return ( temp_capacity );
         if (temp_capacity >= temp_max_size / 2 )
             return ( temp_max_size );
-        // return ( n * 2 );
         temp_capacity *= 2;
         return ( ( n > temp_capacity) ? n : temp_capacity );
 
