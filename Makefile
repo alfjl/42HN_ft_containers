@@ -6,7 +6,7 @@
 #    By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/11 15:45:41 by alanghan          #+#    #+#              #
-#    Updated: 2022/08/01 09:59:10 by alanghan         ###   ########.fr        #
+#    Updated: 2022/10/17 16:58:36 by alanghan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,8 @@ CC = c++
 FTNAME = ft_containers
 STDNAME = std_containers
 FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
-SRC = intramain.cpp
+SRC = main.cpp
 HEADERS = ./inc/*.hpp ./inc/utils/*.hpp
-# HEADERS = ./inc/*.hpp
 
 .PHONY: all clean fclean re
 
