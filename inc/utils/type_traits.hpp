@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/24 10:00:41 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:48:06 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,150 @@ namespace   ft
 
     template <>
     struct is_integral<unsigned long long>  : public true_type {};
+
+
+
+    // const
+
+    template <>
+    struct is_integral<const bool>                : public true_type {};
+
+    template <>
+    struct is_integral<const char>                : public true_type {};
+
+    template <>
+    struct is_integral<const char16_t>            : public true_type {};
+
+    template <>
+    struct is_integral<const char32_t>            : public true_type {};
+
+    template <>
+    struct is_integral<const wchar_t>             : public true_type {};
+
+    template <>
+    struct is_integral<const signed char>         : public true_type {};
+ 
+    template <>
+    struct is_integral<const short>               : public true_type {};
+
+    template <>
+    struct is_integral<const int>                 : public true_type {};
+
+    template <>
+    struct is_integral<const long>                : public true_type {};
+
+    template <>
+    struct is_integral<const long long>           : public true_type {};
+
+    template <>
+    struct is_integral<const unsigned char>       : public true_type {};
+
+    template <>
+    struct is_integral<const unsigned short>      : public true_type {};
+
+    template <>
+    struct is_integral<const unsigned int>        : public true_type {};
+
+    template <>
+    struct is_integral<const unsigned long>       : public true_type {};
+
+    template <>
+    struct is_integral<const unsigned long long>  : public true_type {};
+
+
+    // volatile
+
+    template <>
+    struct is_integral<volatile bool>                : public true_type {};
+
+    template <>
+    struct is_integral<volatile char>                : public true_type {};
+
+    template <>
+    struct is_integral<volatile char16_t>            : public true_type {};
+
+    template <>
+    struct is_integral<volatile char32_t>            : public true_type {};
+
+    template <>
+    struct is_integral<volatile wchar_t>             : public true_type {};
+
+    template <>
+    struct is_integral<volatile signed char>         : public true_type {};
+ 
+    template <>
+    struct is_integral<volatile short>               : public true_type {};
+
+    template <>
+    struct is_integral<volatile int>                 : public true_type {};
+
+    template <>
+    struct is_integral<volatile long>                : public true_type {};
+
+    template <>
+    struct is_integral<volatile long long>           : public true_type {};
+
+    template <>
+    struct is_integral<volatile unsigned char>       : public true_type {};
+
+    template <>
+    struct is_integral<volatile unsigned short>      : public true_type {};
+
+    template <>
+    struct is_integral<volatile unsigned int>        : public true_type {};
+
+    template <>
+    struct is_integral<volatile unsigned long>       : public true_type {};
+
+    template <>
+    struct is_integral<volatile unsigned long long>  : public true_type {};
+
+
+    // const volatile
+
+    template <>
+    struct is_integral<const volatile bool>                : public true_type {};
+
+    template <>
+    struct is_integral<const volatile char>                : public true_type {};
+
+    template <>
+    struct is_integral<const volatile char16_t>            : public true_type {};
+
+    template <>
+    struct is_integral<const volatile char32_t>            : public true_type {};
+
+    template <>
+    struct is_integral<const volatile wchar_t>             : public true_type {};
+
+    template <>
+    struct is_integral<const volatile signed char>         : public true_type {};
+ 
+    template <>
+    struct is_integral<const volatile short>               : public true_type {};
+
+    template <>
+    struct is_integral<const volatile int>                 : public true_type {};
+
+    template <>
+    struct is_integral<const volatile long>                : public true_type {};
+
+    template <>
+    struct is_integral<const volatile long long>           : public true_type {};
+
+    template <>
+    struct is_integral<const volatile unsigned char>       : public true_type {};
+
+    template <>
+    struct is_integral<const volatile unsigned short>      : public true_type {};
+
+    template <>
+    struct is_integral<const volatile unsigned int>        : public true_type {};
+
+    template <>
+    struct is_integral<const volatile unsigned long>       : public true_type {};
+
+    template <>
+    struct is_integral<const volatile unsigned long long>  : public true_type {};
 
 } // namespace  ft
