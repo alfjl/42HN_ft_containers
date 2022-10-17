@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream> // for debug_print() only! // comment in for usage of debug_print()
+// #include <iostream> // for debug_print() only! // comment in for usage of debug_print()
 #include <memory>
 
 #include "./iterator.hpp"
@@ -526,8 +526,7 @@ namespace ft
         typedef ft::reverse_iterator<iterator>                              reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>                        const_reverse_iterator;
 
-    // private: // TODO: Change back to private
-    public:
+    private:
         node_type           _base; // first node in tree. _base->_left is root node
         node_type_ptr       _null; // every node_direction without attached child points onto this node (instead of nullptr)
         node_type_ptr       _begin_node; // left-most node, a.k.a node with smallest key
@@ -579,7 +578,7 @@ namespace ft
         const_iterator upper_bound( const value_type& value ) const;
         ft::pair<iterator,iterator> equal_range( const value_type& value );
         ft::pair<const_iterator,const_iterator> equal_range( const value_type& value ) const;
-        void debug_print() const; // only for debugging purposes // comment in for usage of debug_print()
+        // void debug_print() const; // only for debugging purposes // comment in for usage of debug_print()
 
         // Allocator / Compare:
         allocator_type get_allocator() const;
@@ -593,7 +592,7 @@ namespace ft
         void _transplant( node_type_ptr old_subtree, node_type_ptr new_subtree ); // helper function for erase()
         bool _node_has_children( node_type_ptr& node);
         node_type_ptr _clone_tree( const red_black_tree& other, const node_type_ptr& other_root ); // helper function for assignment operator
-        void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;  // comment in for usage of debug_print()
+        // void _debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const;  // comment in for usage of debug_print()
         node_type_ptr _create_node( const value_type& value );
         void _clear( node_type_ptr& rootptr);
         iterator _make_iter( node_type_ptr ptr );
@@ -750,11 +749,6 @@ namespace ft
         // TASK: rewrite the hint part:
         // if the element is smaller than 'value', and the successor bigger, insert here.
 
-        // old/wrong version
-        // if ( ( this->_compare( position.base()->_data, value ) && this->_compare( value, position.base()->_data ) ) )
-        //     return ( this->_insert( position.base(), value ).first );
-        // return ( this->_insert( _base._left, value ).first );
-
         return ( this->_insert( this->_base._left, value ).first );
     }
 
@@ -769,104 +763,54 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
-        // TODO: idea: check against Steffens _erase(), if that solves the issue!
-        // node_type_ptr pos = position.base();
-        // if (pos == this->_begin_node)
-        // {
-        //     ++position;
-        //     this->_begin_node = position.base();
-        // }
-        // this->_erase(this->_base._left, pos);
-        // if (this->_base._left != nullptr)
-        // {
-        //     this->_base._left->_parent = &this->_base;
-        //     this->_base._left->_color = BLACK;
-        // }
-        // this->destroy_node(pos);       // std::cout << " -------------------- e1 --------------------- " << std::endl; // TPO
         node_type_ptr node = position.base();
 
-        // std::cout << " -------------------- e2 --------------------- " << std::endl; // TPO
-        if ( node == &this->_base || node == this->_null ) // is this check needed here?
-        { // TPO
-        // std::cout << " -------------------- e3 --------------------- " << std::endl; // TPO
+        if ( node == &this->_base || node == this->_null )
             return ;
-        } // TPO
 
-        // std::cout << " -------------------- e4 --------------------- " << std::endl; // TPO
         node_type_ptr   track_node = node;
         node_state      original_track_node_colour = track_node->_colour;
         node_type_ptr   replacement = &this->_base;
 
-        // std::cout << " -------------------- e5 --------------------- " << std::endl; // TPO
         if ( node->_left == this->_null )
         {
-        // std::cout << " -------------------- e6 --------------------- " << std::endl; // TPO
             replacement = node->_right;
             this->_transplant( node, node->_right );
-        // std::cout << " -------------------- e7 --------------------- " << std::endl; // TPO
         }
         else if ( node->_right == this->_null )
         {
-        // std::cout << " -------------------- e8 --------------------- " << std::endl; // TPO
             replacement = node->_left;
             this->_transplant( node, node->_left );
-        // std::cout << " -------------------- e9 --------------------- " << std::endl; // TPO
         }
         else
         {
-        // std::cout << " -------------------- e10 --------------------- " << std::endl; // TPO
             track_node = tree_min<T>( node->_right );
             original_track_node_colour = track_node->_colour;
             replacement = track_node->_right;
-        // std::cout << " -------------------- e11 --------------------- " << std::endl; // TPO
             if ( track_node->_parent == node )
-            { // TPO
-        // std::cout << " -------------------- e12 --------------------- " << std::endl; // TPO
                 replacement->_parent = track_node;
-            } // TPO
             else
             {
-        // std::cout << " -------------------- e13 --------------------- " << std::endl; // TPO
                 this->_transplant( track_node, track_node->_right );
                 track_node->_right = node->_right;
                 track_node->_right->_parent = track_node;
-        // std::cout << " -------------------- e14 --------------------- " << std::endl; // TPO
             }
-        // std::cout << " -------------------- e15 --------------------- " << std::endl; // TPO
             this->_transplant( node, track_node );
             track_node->_left = node->_left;
             track_node->_left->_parent = track_node;
             track_node->_colour = node->_colour;
-        // std::cout << " -------------------- e16 --------------------- " << std::endl; // TPO
         }
         if ( node == this->_begin_node )
         {
-        // std::cout << " -------------------- e17 --------------------- " << std::endl; // TPO
             if ( node->_right != this->_null )
-            { // TPO
-        // std::cout << " -------------------- e18 --------------------- " << std::endl; // TPO
                 this->_begin_node = tree_min<T>( node->_right );
-                // this->_begin_node = tree_min<T>( this->_begin_node->_right ); // maybe something to change????
-        // std::cout << " -------------------- e19 --------------------- " << std::endl; // TPO
-            } // TPO
             else
-            { // TPO
-        // std::cout << " -------------------- e20 --------------------- " << std::endl; // TPO
                 this->_begin_node = this->_begin_node->_parent;
-            } // TPO
-        // std::cout << " -------------------- e21 --------------------- " << std::endl; // TPO
         }
         if ( original_track_node_colour == BLACK )
-        { // TPO
-        // std::cout << " -------------------- e22 --------------------- " << std::endl; // TPO
             _tree_erase_fixup( replacement );
-        } // TPO
-        // std::cout << " -------------------- e23 --------------------- " << std::endl; // TPO
         this->destroy_node( node );
-        // std::cout << " -------------------- e24 --------------------- " << std::endl; // TPO
         --( this->_size );
-        // std::cout << " -------------------- e25 --------------------- " << std::endl; // TPO
- 
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1091,12 +1035,12 @@ namespace ft
         return ( ft::make_pair( iterator( position ), iterator( position ) ) );
     }
 
-    // for debugging purposes only  // comment in for usage of debug_print()
-    template <typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::debug_print() const
-    {
-        _debug_print_recursive_inverted( this->_base._left, 0, false );
-    }
+    // // for debugging purposes only  // comment in for usage of debug_print()
+    // template <typename T, typename Compare, typename Allocator>
+    // void red_black_tree<T, Compare, Allocator>::debug_print() const
+    // {
+    //     _debug_print_recursive_inverted( this->_base._left, 0, false );
+    // }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::allocator_type red_black_tree<T, Compare, Allocator>::get_allocator() const
@@ -1228,35 +1172,35 @@ namespace ft
         return ( copy_node );
     }
 
-    // for debugging purposes only  // comment in for usage of debug_print()
-    template <typename T, typename Compare, typename Allocator>
-    void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
-    {
-        //INVERTED for better human readability
-        if ( rootptr == nullptr )
-            return ;
+    // // for debugging purposes only  // comment in for usage of debug_print()
+    // template <typename T, typename Compare, typename Allocator>
+    // void red_black_tree<T, Compare, Allocator>::_debug_print_recursive_inverted( const node_type_ptr& rootptr, int level, bool is_right ) const
+    // {
+    //     //INVERTED for better human readability
+    //     if ( rootptr == nullptr )
+    //         return ;
 
-        _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
+    //     _debug_print_recursive_inverted( rootptr->_right,  level + 1, true );
 
-        for ( int i = 0; i < level; i++ )
-        std::cout << "\t";
+    //     for ( int i = 0; i < level; i++ )
+    //     std::cout << "\t";
 
-        if ( rootptr->_parent != &this->_base )
-            std::cout << ( is_right ? "┌──" : "└──" );
-        else
-            std::cout << "├──";
+    //     if ( rootptr->_parent != &this->_base )
+    //         std::cout << ( is_right ? "┌──" : "└──" );
+    //     else
+    //         std::cout << "├──";
         
-        if ( rootptr->_colour == RED )
-            std::cout << "\033[31m";
-        else
-            std::cout << "\033[30m";
-        if (rootptr == this->_null)
-            std::cout << " null\033[37m\n";
-        else
-            std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
+    //     if ( rootptr->_colour == RED )
+    //         std::cout << "\033[31m";
+    //     else
+    //         std::cout << "\033[30m";
+    //     if (rootptr == this->_null)
+    //         std::cout << " null\033[37m\n";
+    //     else
+    //         std::cout << " " << rootptr->_data.first << " / " << rootptr->_data.second << "\033[37m\n";
 
-        _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
-    }
+    //     _debug_print_recursive_inverted( rootptr->_left, level + 1, false );
+    // }
 
     template <typename T, typename Compare, typename Allocator>
     typename red_black_tree<T, Compare, Allocator>::node_type_ptr red_black_tree<T, Compare, Allocator>::_create_node( const value_type& value )
