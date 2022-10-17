@@ -1332,7 +1332,6 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_left_rotate( node_type_ptr position )
     {
-        // std::cout << " -------------------- LR IN --------------------- " << std::endl; // TPO
         node_type_ptr   right_node = position->_right;
 
         position->_right = right_node->_left; // turn right_nodes’s left subtree into positions’s right subtree
@@ -1347,13 +1346,11 @@ namespace ft
             position->_parent->_right = right_node;
         right_node->_left = position; // put position on right_node’s left
         position->_parent = right_node;
-        // std::cout << " -------------------- LR OUT --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_right_rotate( node_type_ptr position )
     {
-        // std::cout << " -------------------- RR IN --------------------- " << std::endl; // TPO
         node_type_ptr   left_node = position->_left;
 
         position->_left = left_node->_right; // turn left_nodes’s right subtree into positions’s left subtree
@@ -1368,7 +1365,6 @@ namespace ft
             position->_parent->_left = left_node;
         left_node->_right = position; // put position on left_node’s right
         position->_parent = left_node;
-        // std::cout << " -------------------- RR OUT --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
