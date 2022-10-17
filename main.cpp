@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/17 19:21:20 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/17 19:34:06 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,24 @@
 #include <sys/time.h>
 #include <ctime>
 #include <string>
+#include <cstdlib>
 
 #define RESET   "\033[0m"
 #define GREEN   "\033[32m"
 #define YELLOW  "\033[33m"
 #define CYAN    "\033[36m"
 #define BLUE    "\033[34m"
+
+// for vectore stress test
+#define MAX_RAM 4294967296
+#define BUFFER_SIZE 4096
+struct Buffer
+{
+	int idx;
+	char buff[BUFFER_SIZE];
+};
+
+#define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
 #if STD
 
@@ -811,6 +823,46 @@ int main()
     // yoo and yar are not equal
     // yoo is less than yar
     // yoo is less than or equal to yar
+
+    /* ---------------------------------------------------------------------- */
+
+    // vector stress test
+    std::cout << "\n - vector stress test: " << std::endl;
+
+	const int seed = std::atoi("4189344022");
+	srand(seed);
+
+	ft::vector<std::string> vector_str;
+	ft::vector<int> vector_int;
+	ft::vector<Buffer> vector_buffer;
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::map<int, int> map_int;
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		vector_buffer.push_back(Buffer());
+	}
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		const int idx = rand() % COUNT;
+		vector_buffer[idx].idx = 5;
+	}
+	ft::vector<Buffer>().swap(vector_buffer);
+
+	try
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			const int idx = rand() % COUNT;
+			vector_buffer.at(idx);
+			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
+		}
+	}
+	catch(const std::exception& e)
+	{
+		//NORMAL ! :P
+	}
 
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
