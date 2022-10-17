@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/11 09:58:32 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/15 14:04:59 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/17 12:58:03 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,16 +144,16 @@ namespace ft
         // Assign Helper Functions
         template <class InputIterator>
             void _assign_range( InputIterator first, InputIterator last,
-                                typename ft::input_iterator_tag ); // range version: input_iterator
+                                typename ft::forward_iterator_tag ); // range version: forward_iterator
         template <class InputIterator>
             void _assign_range( InputIterator first, InputIterator last,
-                                typename ft::forward_iterator_tag ); // range version: forward_iterator
-        template <class InputIterator>
-            void _insert_range( iterator position, InputIterator first, InputIterator last,
                                 typename ft::input_iterator_tag ); // range version: input_iterator
         template <class InputIterator>
             void _insert_range( iterator position, InputIterator first, InputIterator last,
                                 typename ft::forward_iterator_tag ); // range version: forward_iterator
+        template <class InputIterator>
+            void _insert_range( iterator position, InputIterator first, InputIterator last,
+                                typename ft::input_iterator_tag ); // range version: input_iterator
                         
     }; // vector
 
@@ -658,16 +658,6 @@ namespace ft
     template <typename T, typename Alloc>
     template <class InputIterator>
     void vector<T, Alloc>::_assign_range( InputIterator first, InputIterator last,
-                                    typename ft::input_iterator_tag ) // range version: input_iterator
-    {
-        this->clear();
-        for ( ; first != last; first++)
-            this->push_back( *( first ) );
-    }
-
-    template <typename T, typename Alloc>
-    template <class InputIterator>
-    void vector<T, Alloc>::_assign_range( InputIterator first, InputIterator last,
                                     typename ft::forward_iterator_tag ) // range version: forward_iterator
     {
         size_type   n = static_cast<size_type>( ft::distance( first, last ) );
@@ -684,21 +674,12 @@ namespace ft
 
     template <typename T, typename Alloc>
     template <class InputIterator>
-    void vector<T, Alloc>::_insert_range( iterator position, InputIterator first, InputIterator last,
-                        typename ft::input_iterator_tag ) // range version: input_iterator
+    void vector<T, Alloc>::_assign_range( InputIterator first, InputIterator last,
+                                    typename ft::input_iterator_tag ) // range version: input_iterator
     {
-        if ( first == last )
-            return ;
-        if ( position == this->end() )
-        {
-            for ( ; first != last; ++first )
-                this->push_back( *( first ) );
-        }
-        else if ( first != last )
-        {
-            vector tmp(first, last);
-            insert(position, tmp.begin(), tmp.end());
-        }
+        this->clear();
+        for ( ; first != last; first++)
+            this->push_back( *( first ) );
     }
 
     template <typename T, typename Alloc>
@@ -734,6 +715,25 @@ namespace ft
                 *( pos ) = *( first );
                 ++pos;
             }
+        }
+    }
+
+   template <typename T, typename Alloc>
+    template <class InputIterator>
+    void vector<T, Alloc>::_insert_range( iterator position, InputIterator first, InputIterator last,
+                        typename ft::input_iterator_tag ) // range version: input_iterator
+    {
+        if ( first == last )
+            return ;
+        if ( position == this->end() )
+        {
+            for ( ; first != last; ++first )
+                this->push_back( *( first ) );
+        }
+        else if ( first != last )
+        {
+            vector tmp(first, last);
+            insert(position, tmp.begin(), tmp.end());
         }
     }
 
