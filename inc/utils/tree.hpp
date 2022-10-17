@@ -960,7 +960,7 @@ namespace ft
             else
                 return ( const_iterator( rootptr ) );
         }
-        return ( &this->_base ); //is this correct? Not const_iterator( this->_base)???
+        return ( &this->_base );
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1143,80 +1143,49 @@ namespace ft
     template <typename T, typename Compare, typename Allocator>
     ft::pair<typename red_black_tree<T, Compare, Allocator>::iterator, bool> red_black_tree<T, Compare, Allocator>::_insert( node_type_ptr rootptr, const value_type& value )
     {
-        // std::cout << " -------------------- _1 --------------------- " << std::endl; // TPO
         node_type_ptr       position = &this->_base;
         node_type_ptr       new_node = this->_create_node( value );
         bool                insert_flag = true;
 
-        // std::cout << " -------------------- _2 --------------------- " << std::endl; // TPO
         while ( rootptr != this->_null )
         {
-        // std::cout << " -------------------- _3 --------------------- " << std::endl; // TPO
             position = rootptr;
             if ( this->_compare( new_node->_data, rootptr->_data ) )
-            { // TPO
-        // std::cout << " -------------------- _4 --------------------- " << std::endl; // TPO
                 rootptr = rootptr->_left;
-            } // TPO
             else if ( this->_compare( rootptr->_data, new_node->_data ) )
-            { // TPO
-        // std::cout << " -------------------- _5 --------------------- " << std::endl; // TPO
                 rootptr = rootptr->_right;
-            } // TPO
             else
             {
-        // std::cout << " -------------------- _6 --------------------- " << std::endl; // TPO
                 insert_flag = false;
                 break ;
             }
-        // std::cout << " -------------------- _7 --------------------- " << std::endl; // TPO
         }
         new_node->_parent = position;
-        // std::cout << " -------------------- _8 --------------------- " << std::endl; // TPO
         if ( position == &this->_base ) // empty tree
-        { // TPO
-        // std::cout << " -------------------- _9 --------------------- " << std::endl; // TPO
             this->_init_root( new_node, position );
-        } // TPO
         else if ( this->_compare( new_node->_data, position->_data ) )
         {
-        // std::cout << " -------------------- _10 --------------------- " << std::endl; // TPO
             position->_left = new_node;
             new_node->_parent = position;
             position = position->_left;
-        // std::cout << " -------------------- _11 --------------------- " << std::endl; // TPO
         }
         else if ( this->_compare( position->_data, new_node->_data ) )
         {
-        // std::cout << " -------------------- _12 --------------------- " << std::endl; // TPO
             position->_right = new_node;
             new_node->_parent = position;
             position = position->_right;
-        // std::cout << " -------------------- _13 --------------------- " << std::endl; // TPO
         }
         else
-        { // TPO
-        // std::cout << " -------------------- _14 --------------------- " << std::endl; // TPO
+        {
             this->destroy_node( new_node);
-            return ( ft::make_pair( this->_make_iter( position ), insert_flag ) ); // DONE: 1.) add return statement
-        } // TPO
+            return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
+        }
         if ( insert_flag == true )
-        { // TPO
-        // std::cout << " -------------------- _15 --------------------- " << std::endl; // TPO
             ++( this->_size );
-        } // TPO
-        // std::cout << " -------------------- _16 --------------------- " << std::endl; // TPO
         this->_base._left->_parent = &this->_base;
-        // std::cout << " -------------------- _17 --------------------- " << std::endl; // TPO
         if ( ( position->_parent == this->_begin_node ) && ( position == position->_parent->_left ) )
-        { // TPO
-        // std::cout << " -------------------- _18 --------------------- " << std::endl; // TPO
             this->_begin_node = position;
-        // std::cout << " -------------------- _19 --------------------- " << std::endl; // TPO
-        } // TPO
-        // std::cout << " -------------------- _20 --------------------- " << std::endl; // TPO
         this->_tree_insert_fixup( position );
-        // std::cout << " -------------------- _21 --------------------- " << std::endl; // TPO
         return ( ft::make_pair( this->_make_iter( position ), insert_flag ) );
     }
 
@@ -1227,7 +1196,6 @@ namespace ft
         {
             this->_base._left = new_subtree;
             this->_base._left->_parent = &this->_base;
-            // this->_base._left->_parent->_left = new_subtree; // unnecessary!
         }
         else if ( old_subtree == old_subtree->_parent->_left )
             old_subtree->_parent->_left = new_subtree;
@@ -1248,8 +1216,8 @@ namespace ft
     typename red_black_tree<T, Compare, Allocator>::node_type_ptr 
     red_black_tree<T, Compare, Allocator>::_clone_tree( const red_black_tree& other, const node_type_ptr& other_root )
     {
-        if ( other_root == other._null ) // or nullptr?
-            return ( this->_null ); // or nullptr?
+        if ( other_root == other._null )
+            return ( this->_null );
         node_type_ptr copy_node = this->_create_node( other_root->_data );
         copy_node->_left = this->_clone_tree( other, other_root->_left );
         if ( copy_node->_left != this->_null )
