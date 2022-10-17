@@ -1459,116 +1459,77 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_erase_fixup( node_type_ptr position )
     {
-        // // std::cout << " -------------------- EF 1 --------------------- " << std::endl; // TPO
-        // if ( position == this->_null)
-        // {
-        // // std::cout << " -------------------- EF 2 --------------------- " << std::endl; // TPO
-        //     return ;
-        // }
-        // std::cout << " -------------------- EF 3 --------------------- " << std::endl; // TPO
+
         while ( position != this->_base._left && position->_colour == BLACK )
         {
-        // std::cout << " -------------------- EF 4 --------------------- " << std::endl; // TPO
             node_type_ptr   sibling = &this->_base; // same level as position
 
-        // std::cout << " -------------------- EF 5 --------------------- " << std::endl; // TPO
             if ( position == position->_parent->_left )
             {
-        // std::cout << " -------------------- EF 6 --------------------- " << std::endl; // TPO
                 sibling = position->_parent->_right;
-        // std::cout << " -------------------- EF 7 --------------------- " << std::endl; // TPO
                 if ( sibling->_colour == RED ) // 1
                 {
-        // std::cout << " -------------------- EF 8 --------------------- " << std::endl; // TPO
                     sibling->_colour = BLACK;
                     position->_parent->_colour = RED;
                     this->_left_rotate( position->_parent );
                     sibling = position->_parent->_right;
-        // std::cout << " -------------------- EF 9 --------------------- " << std::endl; // TPO
                 }
-        // std::cout << " -------------------- EF 10 --------------------- " << std::endl; // TPO
-                // if ( sibling == this->_null) // TPO
-                //     return ; // TPO
                 if ( sibling->_left->_colour == BLACK && sibling->_right->_colour == BLACK ) // 2
                 {
-        // std::cout << " -------------------- EF 11 --------------------- " << std::endl; // TPO
                     sibling->_colour = RED;
                     position = position->_parent;
-        // std::cout << " -------------------- EF 12 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
-        // std::cout << " -------------------- EF 13 --------------------- " << std::endl; // TPO
                     if ( sibling->_right->_colour == BLACK ) // 3
                     {
-        // std::cout << " -------------------- EF 14 --------------------- " << std::endl; // TPO
                         sibling->_left->_colour = BLACK;
                         sibling->_colour = RED;
                         this->_right_rotate( sibling );
                         sibling = position->_parent->_right;
-        // std::cout << " -------------------- EF 15 --------------------- " << std::endl; // TPO
                     }
                     // 4
-        // std::cout << " -------------------- EF 16 --------------------- " << std::endl; // TPO
                     sibling->_colour = position->_parent->_colour;
                     position->_parent->_colour = BLACK;
                     sibling->_right->_colour = BLACK;
                     this->_left_rotate( position->_parent );
                     position = this->_base._left;
-        // std::cout << " -------------------- EF 17 --------------------- " << std::endl; // TPO
                 }
             }
             else
             {
-        // std::cout << " -------------------- EF 18 --------------------- " << std::endl; // TPO
                 sibling = position->_parent->_left;
-        // std::cout << " -------------------- EF 19 --------------------- " << std::endl; // TPO
                 if ( sibling->_colour == RED ) // 1
                 {
-        // std::cout << " -------------------- EF 20 --------------------- " << std::endl; // TPO
                     sibling->_colour = BLACK;
                     position->_parent->_colour = RED;
                     this->_right_rotate( position->_parent );
                     sibling = position->_parent->_left;
-        // std::cout << " -------------------- EF 21 --------------------- " << std::endl; // TPO
                 }
-                // if ( sibling == this->_null) // TPO
-                //     return ; // TPO
                 if ( sibling->_right->_colour == BLACK && sibling->_left->_colour == BLACK ) // 2
                 {
-        // std::cout << " -------------------- EF 22 --------------------- " << std::endl; // TPO
                     sibling->_colour = RED;
                     position = position->_parent;
-        // std::cout << " -------------------- EF 23 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
-        // std::cout << " -------------------- EF 24 --------------------- " << std::endl; // TPO
                     if ( sibling->_left->_colour == BLACK ) // 3
                     {
-        // std::cout << " -------------------- EF 25 --------------------- " << std::endl; // TPO
                         sibling->_right->_colour = BLACK;
                         sibling->_colour = RED;
                         this->_left_rotate( sibling );
                         sibling = position->_parent->_left;
-        // std::cout << " -------------------- EF 26 --------------------- " << std::endl; // TPO
                     }
                     // 4
-        // std::cout << " -------------------- EF 27 --------------------- " << std::endl; // TPO
                     sibling->_colour = position->_parent->_colour;
                     position->_parent->_colour = BLACK;
                     sibling->_left->_colour = BLACK;
                     this->_right_rotate( position->_parent );
                     position = this->_base._left;
-        // std::cout << " -------------------- EF 28 --------------------- " << std::endl; // TPO
                 }
-        // std::cout << " -------------------- EF 29 --------------------- " << std::endl; // TPO
             }
-        // std::cout << " -------------------- EF 30 --------------------- " << std::endl; // TPO
         }
-        // std::cout << " -------------------- EF 31 --------------------- " << std::endl; // TPO
         position->_colour = BLACK;
-        // std::cout << " -------------------- EF 32 --------------------- " << std::endl; // TPO
     }
 
     /* red_black_tree non-member functions */
