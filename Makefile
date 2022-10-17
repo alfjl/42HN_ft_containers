@@ -6,14 +6,14 @@
 #    By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/11 15:45:41 by alanghan          #+#    #+#              #
-#    Updated: 2022/10/17 16:58:36 by alanghan         ###   ########.fr        #
+#    Updated: 2022/10/17 18:21:26 by alanghan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = c++
 FTNAME = ft_containers
 STDNAME = std_containers
-FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
+FLAGS = -Wall -Wextra -Werror -std=c++98
 SRC = main.cpp
 HEADERS = ./inc/*.hpp ./inc/utils/*.hpp
 
@@ -22,16 +22,16 @@ HEADERS = ./inc/*.hpp ./inc/utils/*.hpp
 all: $(FTNAME) $(STDNAME)
 
 $(FTNAME): $(SRC) $(HEADERS)
-    @$(CC) $(FLAGS) $(SRC) -o $(FTNAME)
+	@$(CC) $(FLAGS) $(SRC) -o $(FTNAME)
 	
 $(STDNAME): $(SRC) $(HEADERS)
-    @$(CC) $(FLAGS) $(SRC) -o $(STDNAME) -DSTD
-	
+	@$(CC) $(FLAGS) $(SRC) -o $(STDNAME) -DSTD
+
 clean:
-    @rm -f *.o *~
-	
+	@rm -f *.o *~
+
 fclean: clean
-    @rm -f $(FTNAME)
-    @rm -f $(STDNAME)
+	@rm -f $(FTNAME)
+	@rm -f $(STDNAME)
 
 re: fclean all
