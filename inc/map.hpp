@@ -404,7 +404,7 @@ namespace ft
         allocator_type get_allocator() const;
 
         // Debugging:
-        void debug_print() const; // for debugging purposes only! // comment in for usage of debug_print()
+        // void debug_print() const; // for debugging purposes only! // comment in for usage of debug_print()
 
     }; // map
 
@@ -671,11 +671,11 @@ namespace ft
     }
 
     // for debugging purposes only! // comment in for usage of debug_print()
-    template <typename Key, typename T, typename Compare, typename Alloc>
-    void map<Key,T,Compare,Alloc>::debug_print() const
-    {
-        tree.debug_print();
-    }
+    // template <typename Key, typename T, typename Compare, typename Alloc>
+    // void map<Key,T,Compare,Alloc>::debug_print() const
+    // {
+    //     tree.debug_print();
+    // }
 
     /* map non-member functions */
 
