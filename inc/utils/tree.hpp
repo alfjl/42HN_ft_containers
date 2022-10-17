@@ -1374,86 +1374,60 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_insert_fixup( node_type_ptr position )
     {
-        // if ( position == this->_null) // needed here?
-        //     return ;
-        // std::cout << " -------------------- F 1 --------------------- " << std::endl; // TPO
-        // while ( position->_parent->_colour == RED && position != this->_base._left ) // DONE: 1.) added '&& position != this->_base._left'
-        while ( position->_parent->_colour == RED ) // DONE: 1.) added '&& position != this->_base._left'
+        while ( position->_parent->_colour == RED )
         {
-        // std::cout << " -------------------- F 2 --------------------- " << std::endl; // TPO
             node_type_ptr   uncle = &this->_base; // same level as parent node
 
             if ( position->_parent == position->_parent->_parent->_left )
             {
-        // std::cout << " -------------------- F 3 --------------------- " << std::endl; // TPO
                 uncle = position->_parent->_parent->_right;
                 // 3 cases:
-        // std::cout << " -------------------- F 4 --------------------- " << std::endl; // TPO
                 if ( uncle->_colour == RED ) // 1
                 {
-        // std::cout << " -------------------- F 5 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
-        // std::cout << " -------------------- F 6 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
-        // std::cout << " -------------------- F 7 --------------------- " << std::endl; // TPO
                     if ( position == position->_parent->_right ) // 2
                     {
-        // std::cout << " -------------------- F 8 --------------------- " << std::endl; // TPO
                         position = position->_parent;
                         this->_left_rotate( position );
-        // std::cout << " -------------------- F 9 --------------------- " << std::endl; // TPO
                     }
                     // 3
-        // std::cout << " -------------------- F 10 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     this->_right_rotate( position->_parent->_parent );
-        // std::cout << " -------------------- F 11 --------------------- " << std::endl; // TPO
                 }
-        // std::cout << " -------------------- F 12 --------------------- " << std::endl; // TPO
             }
             else
             {
-        // std::cout << " -------------------- F 13 --------------------- " << std::endl; // TPO
                 uncle = position->_parent->_parent->_left;
                 // 3 cases:
                 if ( uncle->_colour == RED ) // 1
                 {
-        // std::cout << " -------------------- F 14 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     uncle->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     position = position->_parent->_parent;
-        // std::cout << " -------------------- F 15 --------------------- " << std::endl; // TPO
                 }
                 else
                 {
-        // std::cout << " -------------------- F 16 --------------------- " << std::endl; // TPO
                     if ( position == position->_parent->_left ) // 2
                     {
-        // std::cout << " -------------------- F 17 --------------------- " << std::endl; // TPO
                         position = position->_parent;
                         this->_right_rotate( position );
-        // std::cout << " -------------------- F 18 --------------------- " << std::endl; // TPO
                     }
                     // 3
-        // std::cout << " -------------------- F 19 --------------------- " << std::endl; // TPO
                     position->_parent->_colour = BLACK;
                     position->_parent->_parent->_colour = RED;
                     this->_left_rotate( position->_parent->_parent );
-        // std::cout << " -------------------- F 20 --------------------- " << std::endl; // TPO
                 }
-        // std::cout << " -------------------- F 21 --------------------- " << std::endl; // TPO
             }
         }
-        // std::cout << " -------------------- F 22 --------------------- " << std::endl; // TPO
         this->_base._left->_colour = BLACK;
-        // std::cout << " -------------------- F 23 --------------------- " << std::endl; // TPO
     }
 
     template < typename T, typename Compare, typename Allocator>
