@@ -769,11 +769,24 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::erase( iterator position )
     {
-        // std::cout << " -------------------- e1 --------------------- " << std::endl; // TPO
+        // TODO: idea: check against Steffens _erase(), if that solves the issue!
+        // node_type_ptr pos = position.base();
+        // if (pos == this->_begin_node)
+        // {
+        //     ++position;
+        //     this->_begin_node = position.base();
+        // }
+        // this->_erase(this->_base._left, pos);
+        // if (this->_base._left != nullptr)
+        // {
+        //     this->_base._left->_parent = &this->_base;
+        //     this->_base._left->_color = BLACK;
+        // }
+        // this->destroy_node(pos);       // std::cout << " -------------------- e1 --------------------- " << std::endl; // TPO
         node_type_ptr node = position.base();
 
         // std::cout << " -------------------- e2 --------------------- " << std::endl; // TPO
-        if ( node == &this->_base || node == this->_null )
+        if ( node == &this->_base || node == this->_null ) // is this check needed here?
         { // TPO
         // std::cout << " -------------------- e3 --------------------- " << std::endl; // TPO
             return ;
@@ -833,6 +846,7 @@ namespace ft
             { // TPO
         // std::cout << " -------------------- e18 --------------------- " << std::endl; // TPO
                 this->_begin_node = tree_min<T>( node->_right );
+                // this->_begin_node = tree_min<T>( this->_begin_node->_right ); // maybe something to change????
         // std::cout << " -------------------- e19 --------------------- " << std::endl; // TPO
             } // TPO
             else
@@ -852,6 +866,7 @@ namespace ft
         // std::cout << " -------------------- e24 --------------------- " << std::endl; // TPO
         --( this->_size );
         // std::cout << " -------------------- e25 --------------------- " << std::endl; // TPO
+ 
     }
 
     template < typename T, typename Compare, typename Allocator>
@@ -1444,12 +1459,12 @@ namespace ft
     template < typename T, typename Compare, typename Allocator>
     void red_black_tree<T, Compare, Allocator>::_tree_erase_fixup( node_type_ptr position )
     {
-        // std::cout << " -------------------- EF 1 --------------------- " << std::endl; // TPO
-        if ( position == this->_null)
-        {
-        // std::cout << " -------------------- EF 2 --------------------- " << std::endl; // TPO
-            return ;
-        }
+        // // std::cout << " -------------------- EF 1 --------------------- " << std::endl; // TPO
+        // if ( position == this->_null)
+        // {
+        // // std::cout << " -------------------- EF 2 --------------------- " << std::endl; // TPO
+        //     return ;
+        // }
         // std::cout << " -------------------- EF 3 --------------------- " << std::endl; // TPO
         while ( position != this->_base._left && position->_colour == BLACK )
         {
