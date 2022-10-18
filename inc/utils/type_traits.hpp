@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/18 10:36:27 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 10:39:28 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ namespace   ft
 
     // template <>
     // struct is_integral<unsigned long long>  : public true_type {}; // = C++11 Extension
-
 
 
     // const
