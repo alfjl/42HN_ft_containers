@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/18 15:32:31 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 15:47:13 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,26 @@ struct Buffer
     #define FT "FT";
 
 #endif
+
+
+template<typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+	{
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
+
+	typedef typename ft::stack<T>::container_type::iterator iterator;
+
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
 int main()
 {
@@ -293,6 +313,22 @@ int main()
     // 4 -- 1
     // 3 -- 1
     // 2 -- 1
+
+    /* ---------------------------------------------------------------------- */
+
+    // intra test MutantStack
+    std::cout << "\n - intra test MutantStack: " << std::endl;
+
+    MutantStack<char> iterable_stack;
+    for (char letter = 'a'; letter <= 'z'; letter++)
+        iterable_stack.push(letter);
+    for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
+    {
+        std::cout << *it;
+    }
+
+    // Output: ***********************
+    // abcdefghijklmnopqrstuvwxyz
 
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
@@ -939,21 +975,21 @@ int main()
     // map regular insert
     std::cout << "\n - map regular insert: " << std::endl;
 
-	ft::map<char, int> test_map;
+    ft::map<char, int> test_map;
 
-	test_map.insert(ft::pair<char, int>('a', 500));
-	std::cout << "test_map.size(): " << test_map.size() << std::endl;
-	std::cout << "test_map.max_size(): " << test_map.max_size() << std::endl;
+    test_map.insert(ft::pair<char, int>('a', 500));
+    std::cout << "test_map.size(): " << test_map.size() << std::endl;
+    std::cout << "test_map.max_size(): " << test_map.max_size() << std::endl;
 
-	test_map.insert(ft::pair<char, int>('b', 600));
-	std::cout << "test_map.size(): " << test_map.size() << std::endl;
+    test_map.insert(ft::pair<char, int>('b', 600));
+    std::cout << "test_map.size(): " << test_map.size() << std::endl;
 
-	ft::map<char, int> test_map2;
-	test_map2.insert(ft::pair<char, int>('c', 1));
-	std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
+    ft::map<char, int> test_map2;
+    test_map2.insert(ft::pair<char, int>('c', 1));
+    std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
 
-	test_map2.insert(ft::pair<char, int>('d', 2));
-	std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
+    test_map2.insert(ft::pair<char, int>('d', 2));
+    std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
 
     // Output: ***********************
     // test_map.size(): 1
