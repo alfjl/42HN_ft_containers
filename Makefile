@@ -6,14 +6,14 @@
 #    By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/11 15:45:41 by alanghan          #+#    #+#              #
-#    Updated: 2022/10/17 18:21:26 by alanghan         ###   ########.fr        #
+#    Updated: 2022/10/18 11:08:22 by alanghan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = c++
 FTNAME = ft_containers
 STDNAME = std_containers
-FLAGS = -Wall -Wextra -Werror -std=c++98
+FLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 SRC = main.cpp
 HEADERS = ./inc/*.hpp ./inc/utils/*.hpp
 
