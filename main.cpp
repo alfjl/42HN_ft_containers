@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/18 13:22:34 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 15:32:31 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1146,6 +1146,210 @@ int main()
     std::cout << GREEN << "\n          ***************************" << std::endl;
     std::cout          <<   "          *           SET           *" << std::endl;
     std::cout          <<   "          ***************************" << RESET << std::endl;
+
+    /* ---------------------------------------------------------------------- */
+
+    // set regular insert
+    std::cout << "\n - set regular insert: " << std::endl;
+
+	ft::set<int> test_set;
+
+	test_set.insert(500);
+	std::cout << "test_set.size(): " << test_set.size() << std::endl;
+	std::cout << "test_set.max_size(): " << test_set.max_size() << std::endl;
+
+	test_set.insert(600);
+	std::cout << "test_set.size(): " << test_set.size() << std::endl;
+
+	ft::set<int> test_set2;
+	test_set2.insert(1);
+	std::cout << "test_set2.size(): " << test_set2.size() << std::endl;
+
+	test_set2.insert(2);
+	std::cout << "test_set2.size(): " << test_set2.size() << std::endl;
+
+    // Output: ***********************
+    // test_set.size(): 1
+    // test_set.max_size(): 576460752303423487
+    // test_set.size(): 2
+    // test_set2.size(): 1
+    // test_set2.size(): 2
+
+    /* ---------------------------------------------------------------------- */
+   
+    // set insert/erase iterator safety
+    std::cout << "\n - set insert/erase iterator safety: " << std::endl;
+    ft::set<int> test_set222;
+
+    for (int i = 0; i < 9; ++i) {
+        test_set222.insert(i + 1);
+    }
+
+    ft::set<int>::iterator it_five = test_set222.begin();
+    for (int i = 0; i < 4; ++i)
+        ++it_five;
+
+    std::cout << "After construction" << std::endl;
+    for (ft::set<int>::iterator it = test_set222.begin(); it != test_set222.end(); ++it)
+        std::cout << &(*it) << " " << *it << std::endl;
+
+    std::cout << "it_five BEFORE everything: " << &(*it_five) << " " << *it_five << "\n" << std::endl;
+
+
+    test_set222.insert(11);
+
+    std::cout << "After insert 11" << std::endl;
+    for (ft::set<int>::iterator it = test_set222.begin(); it != test_set222.end(); ++it)
+        std::cout << &(*it) << " " << *it << std::endl;
+
+    std::cout << "it_five AFTER insert 11 everything: " << &(*it_five) << " " << *it_five << "\n" << std::endl;
+
+    
+    test_set222.erase(4);
+
+    std::cout << "After erase 4" << std::endl;
+    for (ft::set<int>::iterator it = test_set222.begin(); it != test_set222.end(); ++it)
+        std::cout << &(*it) << " " << *it << std::endl;
+
+    std::cout << "it_five AFTER erase 4 everything: " << &(*it_five) << " " << *it_five << "\n" << std::endl;
+    
+    // Output: ***********************
+    // all addresses should remain the same, throughout the insertion and erasing
+    // it_six should point to the same node until the end (address and value))
+    
+    /* ---------------------------------------------------------------------- */
+
+    // set swap
+    std::cout << "\n - set swap: " << std::endl;
+
+	test_set2.swap(test_set);
+	std::cout << "test_set.size(): " << test_set.size() << std::endl;
+	std::cout << "test_set2.size(): " << test_set2.size() << std::endl;
+
+    // Output: ***********************
+    // test_set.size(): 2
+    // test_set2.size(): 2
+
+    /* ---------------------------------------------------------------------- */
+
+    // set iterators (+ begin() and end())
+    std::cout << "\n - set iterators (+ begin() and end()): " << std::endl;
+
+    ft::set<int>::iterator set_it;
+
+    for (set_it = test_set.begin(); set_it != test_set.end(); ++set_it)
+        std::cout << *set_it << std::endl;
+
+
+    ft::set<int>::iterator set_it2;
+
+    for (set_it2 = test_set2.begin(); set_it2 != test_set2.end(); ++set_it2)
+        std::cout << *set_it2 << std::endl;
+
+    // Output: ***********************
+    // 1
+    // 2
+    // 500
+    // 600
+
+    /* ---------------------------------------------------------------------- */
+
+    // set::equal_range
+    std::cout << "\n - set::equal_range: " << std::endl;
+
+    ft::set<int> myset;
+
+    myset.insert(10);
+    myset.insert(20);
+    myset.insert(30);
+
+    ft::pair<ft::set<int>::iterator,ft::set<int>::iterator> ret_set;
+    ret_set = myset.equal_range(20);
+
+    std::cout << "lower bound points to: ";
+    std::cout << *ret_set.first << '\n';
+
+    std::cout << "upper bound points to: ";
+    std::cout << *ret_set.second << '\n';
+
+    // Output: ***********************
+    // lower bound points to: 20
+    // upper bound points to: 30
+
+    /* ---------------------------------------------------------------------- */
+    
+    // set::find
+    std::cout << "\n - set::find: " << std::endl;
+
+    ft::set<int> mmyset;
+    ft::set<int>::iterator sit;
+
+    mmyset.insert(50);
+    mmyset.insert(100);
+    mmyset.insert(150);
+    mmyset.insert(200);
+
+    sit = mmyset.find(100);
+    if (sit != mmyset.end())
+        mmyset.erase (sit);
+
+    // print content:
+    std::cout << "elements in myset:" << '\n';
+    std::cout << "50 => " << *mmyset.find(50) << '\n';
+    std::cout << "150 => " << *mmyset.find(150) << '\n';
+    std::cout << "200 => " << *mmyset.find(200) << '\n';
+
+    // Output: ***********************
+    // elements in myset:
+    // 50 => 50
+    // 150 => 150
+    // 200 => 200
+
+    /* ---------------------------------------------------------------------- */
+
+    // assignment operator with sets
+    std::cout << "\n - assignment operator with sets: " << std::endl;
+
+    ft::set<char> sfirst;
+    ft::set<char> ssecond;
+
+    sfirst.insert('x');
+    sfirst.insert('y');
+    sfirst.insert('z');
+
+    ssecond = sfirst;              // second now contains 3 ints
+    sfirst = ft::set<char>();  // and first is now empty
+
+    std::cout << "Size of sfirst: " << sfirst.size() << '\n';
+    std::cout << "Size of ssecond: " << ssecond.size() << '\n';
+
+    // Output: ***********************
+    // Size of sfirst: 0
+    // Size of ssecond: 3
+
+    /* ---------------------------------------------------------------------- */
+    
+    // insert & erase big set
+    std::cout << "\n - insert & erase big set: " << std::endl;
+
+    ft::set<int> set;
+    // srand(time(0)); // can not be used to compare output of ft & std, since the seed would be different every time you compile
+    srand(5);
+    for (size_t i = 0; i < 1000000; ++i)
+        set.insert(std::rand() % 1000000);
+    std::cout << "test_set set.size() = " << set.size() << std::endl;
+    ft::set<int> set2(set);	
+    std::cout << "test_set set2.size() = " << set2.size() << std::endl;
+    ft::set<int> set3(set2.begin(), set2.end());
+    std::cout << "test_set set3.size() = " << set3.size() << std::endl;
+    set.erase(set.begin(), set.end());	
+    std::cout << "test_set set.size() = " << set.size() << std::endl;
+
+    // Output: ***********************
+    // test_set set.size() = 632433
+    // test_set set2.size() = 632433
+    // test_set set3.size() = 632433
+    // test_set set.size() = 0
 
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
