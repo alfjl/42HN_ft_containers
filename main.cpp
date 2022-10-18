@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/17 19:34:06 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 10:23:23 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ int main()
 
     std::cout << "\nA simple tester for the most important functionalities of the STL containers and\nclasses we had to recode for our 42 Heilbronn project 'ft_containers'.\n";
     std::cout << "All functions can be run under the namespaces std and ft, to draw a comparison." << std::endl;
-    std::cout << "Many of the standard tests are taken from cplusplus.com and adpated." << std::endl;
+    std::cout << "Many of the standard tests for pair, stack and vector are taken from cplusplus.com and adpated." << std::endl;
+    std::cout << "Thank you also NL27 (https://github.com/NL27) for your inspiration regarding some of the map tests." << std::endl;
 
     std::cout << "\n -------------- IN ";
     std::cout << FT;
@@ -826,8 +827,8 @@ int main()
 
     /* ---------------------------------------------------------------------- */
 
-    // vector stress test
-    std::cout << "\n - vector stress test: " << std::endl;
+    // vector stress test from intra main
+    std::cout << "\n - vector stress test from intra main: " << std::endl;
 
 	const int seed = std::atoi("4189344022");
 	srand(seed);
@@ -864,6 +865,22 @@ int main()
 		//NORMAL ! :P
 	}
 
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
+	}
+
+	int intra_sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		intra_sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << intra_sum << std::endl;
+
+    // Output: ***********************
+    // should be constant with the same seed: 0
+
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
 
@@ -877,6 +894,69 @@ int main()
 
     /* ---------------------------------------------------------------------- */
 
+    // map regular insert
+    std::cout << "\n - map regular insert: " << std::endl;
+
+	ft::map<char, int> test_map;
+
+	test_map.insert(ft::pair<char, int>('a', 500));
+	std::cout << "test_map.size(): " << test_map.size() << std::endl;
+	std::cout << "test_map.max_size(): " << test_map.max_size() << std::endl;
+
+	test_map.insert(ft::pair<char, int>('b', 600));
+	std::cout << "test_map.size(): " << test_map.size() << std::endl;
+
+	ft::map<char, int> test_map2;
+	test_map2.insert(ft::pair<char, int>('c', 1));
+	std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
+
+	test_map2.insert(ft::pair<char, int>('d', 2));
+	std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
+
+    // Output: ***********************
+    // test_map.size(): 1
+    // test_map.max_size(): 461168601842738790
+    // test_map.size(): 2
+    // test_map2.size(): 1
+    // test_map2.size(): 2
+
+    /* ---------------------------------------------------------------------- */
+
+    // map swap
+    std::cout << "\n - map swap: " << std::endl;
+
+	test_map2.swap(test_map);
+	std::cout << "test_map.size(): " << test_map.size() << std::endl;
+	std::cout << "test_map2.size(): " << test_map2.size() << std::endl;
+
+    // Output: ***********************
+    // test_map.size(): 2
+    // test_map2.size(): 2
+
+    /* ---------------------------------------------------------------------- */
+
+    // map iterators (+ begin() and end())
+    std::cout << "\n - map iterators (+ begin() and end()): " << std::endl;
+
+	ft::map<char,int>::iterator map_it;
+
+	for (map_it = test_map.begin(); map_it != test_map.end(); ++map_it)
+    std::cout << map_it->first << " => " << map_it->second << std::endl;
+
+
+	ft::map<char,int>::iterator map_it2;
+
+	for (map_it2 = test_map2.begin(); map_it2 != test_map2.end(); ++map_it2)
+    std::cout << map_it2->first << " => " << map_it2->second << std::endl;
+
+    // Output: ***********************
+    // c => 1
+    // d => 2
+    // a => 500
+    // b => 600
+
+    /* ---------------------------------------------------------------------- */
+
     // insert & erase huge map
     std::cout << "\n - insert & erase huge map: " << std::endl;
 
@@ -885,13 +965,13 @@ int main()
     srand(5);
     for (size_t i = 0; i < 1000000; ++i)
     		map.insert(ft::make_pair<int, std::string>(std::rand() % 1000000, "performance: " + std::to_string(i)));
-    std::cout << "Map map.size() = " << map.size() << std::endl;
+    std::cout << "test_map map.size() = " << map.size() << std::endl;
     ft::map<int, std::string> map2(map);	
-    std::cout << "Map map2.size() = " << map2.size() << std::endl;
+    std::cout << "test_map map2.size() = " << map2.size() << std::endl;
     ft::map<int, std::string> map3(map2.begin(), map2.end());
-    std::cout << "Map map3.size() = " << map3.size() << std::endl;
+    std::cout << "test_map map3.size() = " << map3.size() << std::endl;
     map.erase(map.begin(), map.end());	
-    std::cout << "Map map.size() = " << map.size() << std::endl;
+    std::cout << "test_map map.size() = " << map.size() << std::endl;
 
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
