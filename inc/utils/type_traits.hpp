@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:29 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/17 18:20:36 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 10:36:27 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ namespace   ft
     template <>
     struct is_integral<long>                : public true_type {};
 
-    template <>
-    struct is_integral<long long>           : public true_type {};
+    // template <>
+    // struct is_integral<long long>           : public true_type {}; // = C++11 Extension
 
     template <>
     struct is_integral<unsigned char>       : public true_type {};
@@ -94,8 +94,8 @@ namespace   ft
     template <>
     struct is_integral<unsigned long>       : public true_type {};
 
-    template <>
-    struct is_integral<unsigned long long>  : public true_type {};
+    // template <>
+    // struct is_integral<unsigned long long>  : public true_type {}; // = C++11 Extension
 
 
 
@@ -128,8 +128,8 @@ namespace   ft
     template <>
     struct is_integral<const long>                : public true_type {};
 
-    template <>
-    struct is_integral<const long long>           : public true_type {};
+    // template <>
+    // struct is_integral<const long long>           : public true_type {}; // = C++11 Extension
 
     template <>
     struct is_integral<const unsigned char>       : public true_type {};
@@ -143,8 +143,8 @@ namespace   ft
     template <>
     struct is_integral<const unsigned long>       : public true_type {};
 
-    template <>
-    struct is_integral<const unsigned long long>  : public true_type {};
+    // template <>
+    // struct is_integral<const unsigned long long>  : public true_type {}; // = C++11 Extension
 
 
     // volatile
@@ -176,8 +176,8 @@ namespace   ft
     template <>
     struct is_integral<volatile long>                : public true_type {};
 
-    template <>
-    struct is_integral<volatile long long>           : public true_type {};
+    // template <>
+    // struct is_integral<volatile long long>           : public true_type {}; // = C++11 Extension
 
     template <>
     struct is_integral<volatile unsigned char>       : public true_type {};
@@ -191,8 +191,8 @@ namespace   ft
     template <>
     struct is_integral<volatile unsigned long>       : public true_type {};
 
-    template <>
-    struct is_integral<volatile unsigned long long>  : public true_type {};
+    // template <>
+    // struct is_integral<volatile unsigned long long>  : public true_type {}; // = C++11 Extension
 
 
     // const volatile
@@ -224,8 +224,8 @@ namespace   ft
     template <>
     struct is_integral<const volatile long>                : public true_type {};
 
-    template <>
-    struct is_integral<const volatile long long>           : public true_type {};
+    // template <>
+    // struct is_integral<const volatile long long>           : public true_type {}; // = C++11 Extension
 
     template <>
     struct is_integral<const volatile unsigned char>       : public true_type {};
@@ -239,7 +239,7 @@ namespace   ft
     template <>
     struct is_integral<const volatile unsigned long>       : public true_type {};
 
-    template <>
-    struct is_integral<const volatile unsigned long long>  : public true_type {};
+    // template <>
+    // struct is_integral<const volatile unsigned long long>  : public true_type {}; // = C++11 Extension
 
 } // namespace  ft
