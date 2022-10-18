@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/18 10:23:23 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 13:22:34 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@
 #define BUFFER_SIZE 4096
 struct Buffer
 {
-	int idx;
-	char buff[BUFFER_SIZE];
+    int idx;
+    char buff[BUFFER_SIZE];
 };
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
@@ -67,7 +67,7 @@ int main()
 
     std::cout << "\nA simple tester for the most important functionalities of the STL containers and\nclasses we had to recode for our 42 Heilbronn project 'ft_containers'.\n";
     std::cout << "All functions can be run under the namespaces std and ft, to draw a comparison." << std::endl;
-    std::cout << "Many of the standard tests for pair, stack and vector are taken from cplusplus.com and adpated." << std::endl;
+    std::cout << "Many of the standard tests for pair, stack and vector are taken from http://cplusplus.com and adpated." << std::endl;
     std::cout << "Thank you also NL27 (https://github.com/NL27) for your inspiration regarding some of the map tests." << std::endl;
 
     std::cout << "\n -------------- IN ";
@@ -720,7 +720,7 @@ int main()
 
     std::cout << "nmyvector contains:";
     for (unsigned i=0; i<nmyvector.size(); ++i)
-    std::cout << ' ' << nmyvector[i];
+        std::cout << ' ' << nmyvector[i];
     std::cout << '\n';
 
     // Output: ***********************
@@ -734,21 +734,36 @@ int main()
     ft::vector<int> noo (3,100);   // three ints with a value of 100
     ft::vector<int> nar (5,200);   // five ints with a value of 200
 
+    ft::vector<int>::iterator v_it = noo.begin();
+    std::cout << "BEFORE: v_it points on: " << *v_it << std::endl;
+    int *v_ptr = &nar[1];
+    std::cout << "BEFORE: v_ptr points on: " << *v_ptr << std::endl;
+    int &v_ref = nar[4];
+    std::cout << "BEFORE: v_ref points on: " << v_ref << std::endl;
+
     noo.swap(nar);
 
     std::cout << "noo contains:";
     for (unsigned i=0; i<noo.size(); i++)
-    std::cout << ' ' << noo[i];
+        std::cout << ' ' << noo[i];
     std::cout << '\n';
 
     std::cout << "nar contains:";
     for (unsigned i=0; i<nar.size(); i++)
-    std::cout << ' ' << nar[i];
+        std::cout << ' ' << nar[i];
     std::cout << '\n';
-
+    std::cout << "AFTER: v_it points on: " << *v_it << std::endl;
+    std::cout << "AFTER: v_ptr points on: " << *v_ptr << std::endl;
+    std::cout << "AFTER: v_ref points on: " << v_ref << std::endl;
     // Output: ***********************
-    // noo contains: 200 200 200 200 200 
+    // BEFORE: v_it points on: 100
+    // BEFORE: v_ptr points on: 200
+    // BEFORE: v_ref points on: 200
+    // noo contains: 200 200 200 200 200
     // nar contains: 100 100 100
+    // AFTER: v_it points on: 100
+    // AFTER: v_ptr points on: 200
+    // AFTER: v_ref points on: 200
 
     /* ---------------------------------------------------------------------- */
 
@@ -827,55 +842,82 @@ int main()
 
     /* ---------------------------------------------------------------------- */
 
+    // vector comparisons with const_iterator & iterator
+    std::cout << "\n - vector comparisons with const_iterator & iterator: " << std::endl;
+
+    ft::vector<int> hoo;   // empty vector
+    
+    hoo.push_back(0);
+    hoo.push_back(1);
+    hoo.push_back(2);
+    hoo.push_back(3);
+    hoo.push_back(4);
+
+    ft::vector<int>::iterator itt = ( hoo.begin() + 1 );
+    ft::vector<int>::const_iterator c_itt = ( hoo.begin() + 3 );
+    
+    std::cout << "*itt: " << *itt << std::endl;
+    std::cout << "*c_itt: " << *c_itt << std::endl;
+    std::cout << "*itt > *c_itt = " << ( *itt > *c_itt ) << std::endl;
+    std::cout << "itt > c_itt = " << ( itt > c_itt ) << std::endl;
+
+    // Output: ***********************
+    // *itt: 1
+    // *c_itt: 3
+    // *itt > *c_itt = 0
+    // itt > c_itt = 0
+
+    /* ---------------------------------------------------------------------- */
+
     // vector stress test from intra main
     std::cout << "\n - vector stress test from intra main: " << std::endl;
 
-	const int seed = std::atoi("4189344022");
-	srand(seed);
+    const int seed = std::atoi("4189344022");
+    srand(seed);
 
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-	ft::map<int, int> map_int;
+    ft::vector<std::string> vector_str;
+    ft::vector<int> vector_int;
+    ft::vector<Buffer> vector_buffer;
+    ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+    ft::map<int, int> map_int;
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		vector_buffer.push_back(Buffer());
-	}
+    for (int i = 0; i < COUNT; i++)
+    {
+        vector_buffer.push_back(Buffer());
+    }
 
-	for (int i = 0; i < COUNT; i++)
-	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
+    for (int i = 0; i < COUNT; i++)
+    {
+        const int idx = rand() % COUNT;
+        vector_buffer[idx].idx = 5;
+    }
+    ft::vector<Buffer>().swap(vector_buffer);
 
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-		}
-	}
-	catch(const std::exception& e)
-	{
-		//NORMAL ! :P
-	}
+    try
+    {
+        for (int i = 0; i < COUNT; i++)
+        {
+            const int idx = rand() % COUNT;
+            vector_buffer.at(idx);
+            std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        //NORMAL ! :P
+    }
 
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
+    for (int i = 0; i < COUNT; ++i)
+    {
+        map_int.insert(ft::make_pair(rand(), rand()));
+    }
 
-	int intra_sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		intra_sum += map_int[access];
-	}
+    int intra_sum = 0;
+    for (int i = 0; i < 10000; i++)
+    {
+        int access = rand();
+        intra_sum += map_int[access];
+    }
 	std::cout << "should be constant with the same seed: " << intra_sum << std::endl;
 
     // Output: ***********************
@@ -921,6 +963,48 @@ int main()
     // test_map2.size(): 2
 
     /* ---------------------------------------------------------------------- */
+   
+    // map insert/erase iterator safety
+    std::cout << "\n - map insert/erase iterator safety: " << std::endl;
+    ft::map<int, int> test_map222;
+
+    for (int i = 0; i < 9; ++i) {
+        test_map222.insert(ft::make_pair(i + 1, i + 1));
+    }
+
+    ft::map<int, int>::iterator it_six = test_map222.begin();
+    for (int i = 0; i < 5; ++i)
+        ++it_six;
+
+    std::cout << "After construction" << std::endl;
+    for (ft::map<int, int>::iterator it = test_map222.begin(); it != test_map222.end(); ++it)
+        std::cout << &it->first << " " << it->first << std::endl;
+
+    std::cout << "it_six BEFORE everything: "<< &it_six->first << " " << it_six->first << "\n" << std::endl;
+
+
+    test_map222.insert(ft::make_pair(11, 11));
+
+    std::cout << "After insert 11" << std::endl;
+    for (ft::map<int, int>::iterator it = test_map222.begin(); it != test_map222.end(); ++it)
+        std::cout << &it->first << " " << it->first << std::endl;
+
+    std::cout << "it_six AFTER insert 11 everything: "<< &it_six->first << " " << it_six->first << "\n" << std::endl;
+
+    
+    test_map222.erase(5);
+
+    std::cout << "After erase 5" << std::endl;
+    for (ft::map<int, int>::iterator it = test_map222.begin(); it != test_map222.end(); ++it)
+        std::cout << &it->first << " " << it->first << std::endl;
+
+    std::cout << "it_six AFTER erase 5 everything: "<< &it_six->first << " " << it_six->first << "\n" << std::endl;
+    
+    // Output: ***********************
+    // all addresses should remain the same, throughout the insertion and erasing
+    // it_six should point to the same node until the end (address and value))
+    
+    /* ---------------------------------------------------------------------- */
 
     // map swap
     std::cout << "\n - map swap: " << std::endl;
@@ -938,16 +1022,16 @@ int main()
     // map iterators (+ begin() and end())
     std::cout << "\n - map iterators (+ begin() and end()): " << std::endl;
 
-	ft::map<char,int>::iterator map_it;
+    ft::map<char,int>::iterator map_it;
 
-	for (map_it = test_map.begin(); map_it != test_map.end(); ++map_it)
-    std::cout << map_it->first << " => " << map_it->second << std::endl;
+    for (map_it = test_map.begin(); map_it != test_map.end(); ++map_it)
+        std::cout << map_it->first << " => " << map_it->second << std::endl;
 
 
-	ft::map<char,int>::iterator map_it2;
+    ft::map<char,int>::iterator map_it2;
 
-	for (map_it2 = test_map2.begin(); map_it2 != test_map2.end(); ++map_it2)
-    std::cout << map_it2->first << " => " << map_it2->second << std::endl;
+    for (map_it2 = test_map2.begin(); map_it2 != test_map2.end(); ++map_it2)
+        std::cout << map_it2->first << " => " << map_it2->second << std::endl;
 
     // Output: ***********************
     // c => 1
@@ -957,14 +1041,89 @@ int main()
 
     /* ---------------------------------------------------------------------- */
 
-    // insert & erase huge map
-    std::cout << "\n - insert & erase huge map: " << std::endl;
+    // map::equal_range
+    std::cout << "\n - map::equal_range: " << std::endl;
+
+    ft::map<char,int> mymap;
+
+    mymap['a'] = 10;
+    mymap['b'] = 20;
+    mymap['c'] = 30;
+
+    ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+    ret = mymap.equal_range('b');
+
+    std::cout << "lower bound points to: ";
+    std::cout << ret.first->first << " => " << ret.first->second << '\n';
+
+    std::cout << "upper bound points to: ";
+    std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+    // Output: ***********************
+    // lower bound points to: b => 20
+    // upper bound points to: c => 30
+
+    /* ---------------------------------------------------------------------- */
+    
+    // map::find
+    std::cout << "\n - map::find: " << std::endl;
+
+    ft::map<char,int> mmymap;
+    ft::map<char,int>::iterator bit;
+
+    mmymap['a']=50;
+    mmymap['b']=100;
+    mmymap['c']=150;
+    mmymap['d']=200;
+
+    bit = mmymap.find('b');
+    if (bit != mmymap.end())
+        mmymap.erase (bit);
+
+    // print content:
+    std::cout << "elements in mymap:" << '\n';
+    std::cout << "a => " << mmymap.find('a')->second << '\n';
+    std::cout << "c => " << mmymap.find('c')->second << '\n';
+    std::cout << "d => " << mmymap.find('d')->second << '\n';
+
+    // Output: ***********************
+    // elements in mymap:
+    // a => 50
+    // c => 150
+    // d => 200
+
+    /* ---------------------------------------------------------------------- */
+
+    // assignment operator with maps
+    std::cout << "\n - assignment operator with maps: " << std::endl;
+
+    ft::map<char,int> kfirst;
+    ft::map<char,int> ksecond;
+
+    kfirst['x'] = 8;
+    kfirst['y'] = 16;
+    kfirst['z'] = 32;
+
+    ksecond = kfirst;              // second now contains 3 ints
+    kfirst = ft::map<char,int>();  // and first is now empty
+
+    std::cout << "Size of kfirst: " << kfirst.size() << '\n';
+    std::cout << "Size of ksecond: " << ksecond.size() << '\n';
+
+    // Output: ***********************
+    // Size of kfirst: 0
+    // Size of ksecond: 3
+
+    /* ---------------------------------------------------------------------- */
+    
+    // insert & erase big map
+    std::cout << "\n - insert & erase big map: " << std::endl;
 
     ft::map<int, std::string> map;
     // srand(time(0)); // can not be used to compare output of ft & std, since the seed would be different every time you compile
     srand(5);
     for (size_t i = 0; i < 1000000; ++i)
-    		map.insert(ft::make_pair<int, std::string>(std::rand() % 1000000, "performance: " + std::to_string(i)));
+        map.insert(ft::make_pair<int, std::string>(std::rand() % 1000000, "performance: " + std::to_string(i)));
     std::cout << "test_map map.size() = " << map.size() << std::endl;
     ft::map<int, std::string> map2(map);	
     std::cout << "test_map map2.size() = " << map2.size() << std::endl;
@@ -975,7 +1134,11 @@ int main()
 
     std::cout << GREEN << "\n --------------------------------------------- " << RESET << std::endl;
 
-
+    // Output: ***********************
+    // test_map map.size() = 632433
+    // test_map map2.size() = 632433
+    // test_map map3.size() = 632433
+    // test_map map.size() = 0
 
 
     /* ################################ SET ################################# */
