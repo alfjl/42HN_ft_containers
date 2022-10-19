@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 19:04:09 by alanghan          #+#    #+#             */
-/*   Updated: 2022/10/18 15:47:13 by alanghan         ###   ########.fr       */
+/*   Updated: 2022/10/18 16:53:39 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,7 @@ int main()
     std::cout << "mystack2.top() is now " << mystack2.top() << '\n';
 
     // Output: ***********************
-    // mystack.top() is now 15
+    // mystack2.top() is now 15
 
     /* ---------------------------------------------------------------------- */
 
@@ -436,7 +436,7 @@ int main()
     std::cout << '\n';
 
     // Output: ***********************
-    // myvector contains: 5 4 3 2 1
+    // smyvector contains: 5 4 3 2 1
 
     /* ---------------------------------------------------------------------- */
 
@@ -567,6 +567,7 @@ int main()
     // capacity changed: 64
     // capacity changed: 128
     // making lar grow:
+    // capacity : 100
     // capacity changed: 100
 
     /* ---------------------------------------------------------------------- */
@@ -820,7 +821,7 @@ int main()
     bmyvector.push_back (1101);
     bmyvector.push_back (2202);
 
-    std::cout << "myvector contains:";
+    std::cout << "bmyvector contains:";
     for (unsigned i=0; i<bmyvector.size(); i++)
     std::cout << ' ' << bmyvector[i];
     std::cout << '\n';
@@ -1251,7 +1252,7 @@ int main()
     
     // Output: ***********************
     // all addresses should remain the same, throughout the insertion and erasing
-    // it_six should point to the same node until the end (address and value))
+    // it_five should point to the same node until the end (address and value))
     
     /* ---------------------------------------------------------------------- */
 
