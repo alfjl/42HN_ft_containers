@@ -38,6 +38,8 @@ Get in contact with allocators for the first time (not just new and delete).
 
 Learn how to read the STL source code and see the difference (and historic development) between different C++ generations.
 
+Get a better understanding of the lineage from C to C++, and how they are connected internally.
+
 Concern myself with trees as data structures (e.g. binary search tree, red-black tree). Understanding some of the pros and cons of different tree types.
 
 ## Testing
