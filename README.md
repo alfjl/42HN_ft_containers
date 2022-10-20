@@ -26,6 +26,20 @@ Implement the following containers and necessary add-ons:
 
 ## Learnings
 
+TODO: (just a rough draft/collection)
+
+Learn how to really use the C++ references cplusplus.com and cppreference.com.
+
+Understand the inner workings of STL containers.
+
+Get a better understanding of how iterators work.
+
+Get in contact with allocators for the first time (not just new and delete).
+
+Learn how to read the STL source code and see the difference (and historic development) between different C++ generations.
+
+Concern myself with trees as data structures (e.g. binary search tree, red-black tree). Understanding some of the pros and cons of different tree types.
+
 ## Testing
 
 The main.cpp provided is only a limited test, to pass the evaluation guidelines of this project.
