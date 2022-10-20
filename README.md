@@ -7,4 +7,4 @@ Besides this, I've tested my code with the following testers and mains (includin
 * [Mikastiv / ft_containers-terminator](https://github.com/Mikastiv/ft_containers-terminator) (including its benchmark tester)
 * [the tester of fellow 42 Heilbronn peer Aktai0n](https://github.com/Aktai0n/ft_containers-42Heilbronn)
 * [the main of fellow 42 Heilbronn peer JL1709](https://github.com/JL1709/ft_containers)
-* [the main of fellow 42 Heilbronn peer ](https://github.com/JeremieSiller/ft_containers)
+* [the main of fellow 42 Heilbronn peer JeremieSiller](https://github.com/JeremieSiller/ft_containers)
