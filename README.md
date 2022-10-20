@@ -8,6 +8,8 @@ As all C++ projects at the core curriculum of School 42, the students code has t
 
 ## Learnings
 
+---
+
 ### Testing
 
 The main.cpp provided is only a limited test, to pass the evaluation guidelines of this project.
@@ -21,6 +23,8 @@ To make sure my code was working as sound as possible, I've tested my code with 
 
 Being a school project and the first time for me to come in contact with the inner workings of the STL containers, I don't presume my implementation to be bulletproof.  
 Thus, I'm very happy about every constructive feedback I can get!  
+
+---
 
 ### Resources
 
