@@ -1,6 +1,6 @@
 # 42HN_ft_containers
 
-The goal of the **ft_containers** project is to reimplement some of the C++ STL containers, in order to get a deeper understanding on how they work.  
+The goal of the **ft_containers** project is to reimplement some of the C++ STL containers, in order to get a deeper understanding of how they work.  
 Additionally, since map and set include an implementation of a red-black tree, the second main goal of this project is to get a better understanding of different trees as data structures.  
 As all C++ projects at the core curriculum of School 42, the students code has to comply with the C++98 standard.
 
