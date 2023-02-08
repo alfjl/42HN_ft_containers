@@ -7,7 +7,7 @@ As all C++ projects at the core curriculum of School 42, the students code has t
 ## Description
 
 Take the structure of each standard container as reference. Comply with the C++98 standard, so any later feature of the containers MUST NOT be implemented, but every C++98 feature (even deprecated ones) is expected.  
-The namespace must be ft. There can't be more public functions than in the original implementation.  
+The namespace must be 'ft'. There can't be more public functions than in the original implementation.  
 You must use the std::allocator. If the container has an iterator system, you have to implement it.
 Implement the following containers and necessary add-ons:
 
