@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2023/02/09 13:22:16 by alanghan         ###   ########.fr       */
+/*   Updated: 2023/02/09 13:23:22 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,9 @@ namespace   ft
 
 
     template <typename T1, typename T2>
-    inline ft::pair<T1,T2> make_pair( T1 x, T2 y )
+    inline pair<T1,T2> make_pair( T1 x, T2 y )
     {
-        return ( ft::pair<T1, T2>( x, y ) );
+        return ( pair<T1, T2>( x, y ) );
     }
 
 
