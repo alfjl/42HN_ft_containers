@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2023/02/09 13:20:26 by alanghan         ###   ########.fr       */
+/*   Updated: 2023/02/09 13:22:16 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ namespace   ft
     struct pair
     {
     
-    public:
         typedef T1  first_type;
         typedef T2  second_type;
 
