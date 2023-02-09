@@ -6,7 +6,7 @@
 /*   By: alanghan <alanghan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/20 13:33:21 by alanghan          #+#    #+#             */
-/*   Updated: 2022/08/18 14:51:08 by alanghan         ###   ########.fr       */
+/*   Updated: 2023/02/09 13:20:26 by alanghan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace   ft
             this->second = pr.second;
         }
         return ( *( this ) );
-    } // assignation constructor
+    } // assignement constructor
 
     template <typename T1, typename T2>
     inline bool operator==( const pair<T1, T2>& lhs, const pair<T1, T2>& rhs )
